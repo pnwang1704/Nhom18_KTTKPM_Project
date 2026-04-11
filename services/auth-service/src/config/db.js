@@ -1,8 +1,5 @@
-const { Pool } = require('pg');
-const { postgresUrl } = require('./env');
+const { PrismaClient } = require('@prisma/client');
 
-const pool = new Pool({
-  connectionString: postgresUrl
-});
+const prisma = new PrismaClient();
 
-module.exports = pool;
+module.exports = prisma;
