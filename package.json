@@ -1,0 +1,14 @@
+{
+  "name": "ecommerce-microservices-mvp",
+  "private": true,
+  "workspaces": [
+    "services/*",
+    "frontend"
+  ],
+  "scripts": {
+    "dev:gateway": "npm run dev --workspace api-gateway",
+    "start:gateway": "npm run start --workspace api-gateway",
+    "dev:auth": "npm run dev --workspace auth-service",
+    "start:auth": "npm run start --workspace auth-service"
+  }
+}
