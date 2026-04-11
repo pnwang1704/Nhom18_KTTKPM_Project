@@ -1,9 +1,20 @@
 function requireRole(role) {
   return (req, res, next) => {
-    return res.status(501).json({
-      success: false,
-      message: `Role guard for ${role} is reserved for the next iteration.`
-    });
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized'
+      });
+    }
+
+    if (req.user.role !== role) {
+      return res.status(403).json({
+        success: false,
+        message: 'Forbidden'
+      });
+    }
+
+    return next();
   };
 }
 

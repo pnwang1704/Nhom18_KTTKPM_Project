@@ -1,42 +1,51 @@
-function register(req, res) {
-  res.status(501).json({
-    success: false,
-    message: 'Register is not implemented yet.'
-  });
+const authService = require('../services/auth.service');
+const { signToken } = require('../config/jwt');
+
+async function register(req, res, next) {
+  try {
+    const { email, password } = req.body;
+    const user = await authService.register(email, password);
+
+    return res.status(201).json({
+      success: true,
+      data: user
+    });
+  } catch (error) {
+    return next(error);
+  }
 }
 
-function login(req, res) {
-  res.status(501).json({
-    success: false,
-    message: 'Login is not implemented yet.'
-  });
+async function login(req, res, next) {
+  try {
+    const { email, password } = req.body;
+    const user = await authService.login(email, password);
+    const token = signToken({
+      userId: user.id,
+      email: user.email,
+      role: user.role
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        token,
+        user
+      }
+    });
+  } catch (error) {
+    return next(error);
+  }
 }
 
-function refreshToken(req, res) {
-  res.status(501).json({
-    success: false,
-    message: 'Refresh token is not implemented yet.'
-  });
-}
-
-function logout(req, res) {
-  res.status(501).json({
-    success: false,
-    message: 'Logout is not implemented yet.'
-  });
-}
-
-function getProfile(req, res) {
-  res.status(501).json({
-    success: false,
-    message: 'Profile endpoint is not implemented yet.'
+function me(req, res) {
+  return res.status(200).json({
+    success: true,
+    data: req.user
   });
 }
 
 module.exports = {
   register,
   login,
-  refreshToken,
-  logout,
-  getProfile
+  me
 };
