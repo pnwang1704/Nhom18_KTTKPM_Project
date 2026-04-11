@@ -9,10 +9,9 @@ const authRoutes = require('./src/routes/auth.routes');
 
 const app = express();
 
-app.use(express.json());
 app.use(loggerMiddleware);
 app.use(healthRoutes);
-app.use('/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
