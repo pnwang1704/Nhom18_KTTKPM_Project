@@ -9,8 +9,11 @@ services:
       PORT: 3000
       NODE_ENV: development
       AUTH_SERVICE_URL: http://auth-service:3001
+      PRODUCT_SERVICE_URL: http://product-service:3002
+      JWT_SECRET: change_me_in_dev
     depends_on:
       - auth-service
+      - product-service
 
   auth-service:
     build:
@@ -27,6 +30,19 @@ services:
       REFRESH_TOKEN_EXPIRES_IN: 7d
     depends_on:
       - postgres
+
+  product-service:
+    build:
+      context: ../services/product-service
+    container_name: product-service
+    ports:
+      - '3002:3002'
+    environment:
+      PORT: 3002
+      NODE_ENV: development
+      MONGO_URI: mongodb://mongodb:27017/product_service
+    depends_on:
+      - mongodb
 
   postgres:
     image: postgres:16-alpine
