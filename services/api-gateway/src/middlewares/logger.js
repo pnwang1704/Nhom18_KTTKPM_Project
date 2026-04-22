@@ -3,7 +3,18 @@ function loggerMiddleware(req, res, next) {
 
   res.on('finish', () => {
     const duration = Date.now() - startedAt;
-    console.log(`${req.method} ${req.originalUrl} ${res.statusCode} - ${duration}ms`);
+    const logData = {
+      timestamp: new Date().toISOString(),
+      correlationId: req.correlationId || 'N/A',
+      method: req.method,
+      url: req.originalUrl,
+      status: res.statusCode,
+      duration: `${duration}ms`,
+      ip: req.ip,
+      userAgent: req.get('User-Agent')
+    };
+    
+    console.log(JSON.stringify(logData));
   });
 
   next();

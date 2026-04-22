@@ -1,22 +1,71 @@
 require('dotenv').config();
 
 const express = require('express');
+const { rateLimit } = require('express-rate-limit');
 const { port } = require('./src/config/env');
 const loggerMiddleware = require('./src/middlewares/logger');
 const errorHandlerMiddleware = require('./src/middlewares/errorHandler');
+const correlationMiddleware = require('./src/middlewares/correlation.middleware');
 const healthRoutes = require('./src/routes/health.routes');
 const authRoutes = require('./src/routes/auth.routes');
+const productRoutes = require('./src/routes/product.routes');
 
 const app = express();
 
-app.use(loggerMiddleware);
-app.use(healthRoutes);
-app.use('/api/auth', authRoutes);
+// --- Rate Limiters ---
 
+// Strict limiter for authentication (login/register)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // 10 attempts per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many authentication attempts, please try again after 15 minutes',
+    data: null,
+    errorCode: 'TOO_MANY_AUTH_ATTEMPTS'
+  }
+});
+
+// Normal limiter for general API routes
+const defaultLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  keyGenerator: (req) => {
+    // Identity-based rate limiting (UserId + IP)
+    return req.user ? `${req.user.id}-${req.ip}` : req.ip;
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many requests, please slow down',
+    data: null,
+    errorCode: 'RATE_LIMIT_EXCEEDED'
+  }
+});
+
+// --- Middlewares & Routes ---
+
+app.use(correlationMiddleware);
+app.use(loggerMiddleware);
+
+// Apply strict limit ONLY to auth routes
+app.use('/api/auth', authLimiter, authRoutes);
+
+// Apply default limit to other routes
+app.use('/api/products', defaultLimiter, productRoutes);
+
+app.use(healthRoutes);
+
+// Standard 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: 'Route not found'
+    message: 'Route not found',
+    data: null,
+    errorCode: 'ROUTE_NOT_FOUND'
   });
 });
 
