@@ -5,7 +5,7 @@ function createAuthProxyMiddleware() {
   return createProxyMiddleware({
     target: authServiceUrl,
     changeOrigin: true,
-    logLevel: 'silent',
+    logLevel: 'debug',
     timeout: 5000,
     proxyTimeout: 5000,
     pathRewrite: (path) => `/auth${path}`,

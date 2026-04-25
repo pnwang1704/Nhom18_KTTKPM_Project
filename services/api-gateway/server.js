@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const cors = require('cors');
 const { rateLimit } = require('express-rate-limit');
 const { port } = require('./src/config/env');
 const loggerMiddleware = require('./src/middlewares/logger');
@@ -12,8 +13,16 @@ const productRoutes = require('./src/routes/product.routes');
 
 const app = express();
 
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Correlation-ID', 'X-Requested-With']
+}));
+
 // --- Rate Limiters ---
 
+/*
 // Strict limiter for authentication (login/register)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -45,19 +54,19 @@ const defaultLimiter = rateLimit({
     errorCode: 'RATE_LIMIT_EXCEEDED'
   }
 });
+*/
 
 // --- Middlewares & Routes ---
 
 app.use(correlationMiddleware);
 app.use(loggerMiddleware);
 
-// Apply strict limit ONLY to auth routes
-app.use('/api/auth', authLimiter, authRoutes);
+// app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/auth', authRoutes);
 
-// Apply default limit to other routes
-app.use('/api/products', defaultLimiter, productRoutes);
+app.use('/api/products', productRoutes);
 
-app.use(healthRoutes);
+app.get('/test', (req, res) => res.json({ message: 'Gateway is reachable' }));
 
 // Standard 404 handler
 app.use((req, res) => {

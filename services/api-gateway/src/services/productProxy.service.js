@@ -15,9 +15,6 @@ function createProductProxyMiddleware() {
         proxyReq.setHeader('X-Correlation-ID', req.correlationId);
       }
 
-      // Security: Strip sensitive headers from client and replace with verified data if needed
-      // proxyReq.removeHeader('X-User-Id'); 
-      
       if (req.user) {
         proxyReq.setHeader('X-User-Payload', JSON.stringify(req.user));
       }
