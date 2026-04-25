@@ -21,6 +21,7 @@ function Login() {
       const result = await response.json();
       if (result.success) {
         localStorage.setItem('token', result.data.token);
+        localStorage.setItem('user', JSON.stringify(result.data.user));
         navigate('/');
       } else {
         setError(result.message || 'Login failed');
