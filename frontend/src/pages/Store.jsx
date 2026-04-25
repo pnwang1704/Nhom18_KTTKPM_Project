@@ -16,7 +16,7 @@ const Store = () => {
         const response = await apiRequest('/api/products');
         const result = await response.json();
         if (result.success) {
-          setProducts(result.data);
+          setProducts(result.products || []);
         }
       } catch (error) {
         console.error('Failed to fetch products:', error);

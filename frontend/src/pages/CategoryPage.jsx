@@ -50,7 +50,8 @@ const CategoryPage = () => {
         const result = await response.json();
         if (result.success) {
           // Filter by brand
-          let filtered = result.data.filter(p => 
+          const productsList = result.products || [];
+          let filtered = productsList.filter(p => 
             p.name.toLowerCase().includes(brand.toLowerCase()) || 
             (p.category && p.name.toLowerCase().includes(brand.toLowerCase()))
           );
