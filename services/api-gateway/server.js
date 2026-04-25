@@ -1,23 +1,80 @@
 require('dotenv').config();
 
 const express = require('express');
+const cors = require('cors');
+const { rateLimit } = require('express-rate-limit');
 const { port } = require('./src/config/env');
 const loggerMiddleware = require('./src/middlewares/logger');
 const errorHandlerMiddleware = require('./src/middlewares/errorHandler');
+const correlationMiddleware = require('./src/middlewares/correlation.middleware');
 const healthRoutes = require('./src/routes/health.routes');
 const authRoutes = require('./src/routes/auth.routes');
+const productRoutes = require('./src/routes/product.routes');
 
 const app = express();
 
-app.use(express.json());
-app.use(loggerMiddleware);
-app.use(healthRoutes);
-app.use('/auth', authRoutes);
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Correlation-ID', 'X-Requested-With']
+}));
 
+// --- Rate Limiters ---
+
+/*
+// Strict limiter for authentication (login/register)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // 10 attempts per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many authentication attempts, please try again after 15 minutes',
+    data: null,
+    errorCode: 'TOO_MANY_AUTH_ATTEMPTS'
+  }
+});
+
+// Normal limiter for general API routes
+const defaultLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  keyGenerator: (req) => {
+    // Identity-based rate limiting (UserId + IP)
+    return req.user ? `${req.user.id}-${req.ip}` : req.ip;
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many requests, please slow down',
+    data: null,
+    errorCode: 'RATE_LIMIT_EXCEEDED'
+  }
+});
+*/
+
+// --- Middlewares & Routes ---
+
+app.use(correlationMiddleware);
+app.use(loggerMiddleware);
+
+// app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/auth', authRoutes);
+
+app.use('/api/products', productRoutes);
+
+app.get('/test', (req, res) => res.json({ message: 'Gateway is reachable' }));
+
+// Standard 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: 'Route not found'
+    message: 'Route not found',
+    data: null,
+    errorCode: 'ROUTE_NOT_FOUND'
   });
 });
 

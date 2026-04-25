@@ -1,9 +1,6 @@
-function proxyToAuthService(req, res) {
-  res.status(501).json({
-    success: false,
-    message: 'Auth proxy placeholder. Proxy implementation will be added later.'
-  });
-}
+const { createAuthProxyMiddleware } = require('../services/authProxy.service');
+
+const proxyToAuthService = createAuthProxyMiddleware();
 
 module.exports = {
   proxyToAuthService

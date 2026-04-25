@@ -158,3 +158,23 @@ Merge nhánh cá nhân vào main:
 ## Notes
 - Dự án đang theo hướng MVP: đơn giản, dễ chạy, dễ mở rộng.
 - Ưu tiên hoàn thiện luồng chính trước khi tối ưu sâu kiến trúc.
+
+Phân công công việc cho team 2 dev
+
+Quang phụ trách:
+
+auth-service
+api-gateway
+product-service
+Bảo phụ trách:
+
+cart-service
+order-service
+notification-service
+Nguyên tắc làm việc
+
+Mỗi người chỉ sửa service của mình.
+Không sửa chéo sang service của người còn lại nếu chưa trao đổi trước.
+Các file dùng chung như docker-compose, README, root package.json chỉ nên có một người chỉnh chính hoặc phải thống nhất trước khi sửa.
+Trước khi code luôn pull main mới nhất.
+Sau khi xong task thì commit rõ ràng và merge về main theo quy ước của team.

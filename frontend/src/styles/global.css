@@ -1,30 +1,47 @@
-:root {
-  font-family: Arial, sans-serif;
-  color: #1f2937;
-  background: #f8fafc;
+@import "tailwindcss";
+
+@theme {
+  --color-elppa-light: #FBFBFB;
+  --color-elppa-obsidian: #1D1D1F;
+  --color-elppa-gray: #86868B;
+  --color-elppa-gray-subtle: #F5F5F7;
+  --color-elppa-gray-border: #E5E7EB;
+  --color-elppa-blue: #0066CC;
+  
+  --font-sans: "Inter", "SF Pro Text", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  
+  --spacing-gutter: max(22px, env(safe-area-inset-left));
+  
+  --ease-elppa-ease: cubic-bezier(0.28, 0.11, 0.32, 1);
 }
 
-body {
-  margin: 0;
+@layer base {
+  body {
+    @apply bg-elppa-light text-elppa-obsidian antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* ELPPA-style smooth scroll */
+html {
+  scroll-behavior: smooth;
 }
 
-.app-shell {
-  min-height: 100vh;
+/* Glassmorphism utility */
+.glass {
+  @apply bg-white/70 backdrop-blur-md;
 }
 
-.topbar {
-  display: flex;
-  gap: 16px;
-  padding: 16px 24px;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+/* Full width showcase section */
+.showcase-section {
+  @apply min-h-screen w-full flex flex-col items-center justify-center py-20 px-gutter relative overflow-hidden;
 }
 
-.content {
-  padding: 24px;
+/* Subtext style */
+.subtext {
+  @apply text-elppa-gray text-lg md:text-xl font-normal max-w-2xl text-center;
 }
