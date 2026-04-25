@@ -3,8 +3,8 @@ const { signToken } = require('../config/jwt');
 
 async function register(req, res, next) {
   try {
-    const { email, password } = req.body;
-    const user = await authService.register(email, password);
+    const { email, password, birthday, phoneNumber, fullName } = req.body;
+    const user = await authService.register(email, password, birthday, phoneNumber, fullName);
 
     return res.status(201).json({
       success: true,

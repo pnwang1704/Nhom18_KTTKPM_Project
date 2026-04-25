@@ -12,12 +12,15 @@ async function findById(id) {
   });
 }
 
-async function createUser({ email, passwordHash, role = 'user' }) {
+async function createUser({ email, passwordHash, role = 'user', birthday, phoneNumber, fullName }) {
   return prisma.user.create({
     data: {
       email,
+      fullName,
       passwordHash,
-      role
+      role,
+      birthday: birthday ? new Date(birthday) : null,
+      phoneNumber
     }
   });
 }

@@ -14,12 +14,15 @@ function sanitizeUser(user) {
   return {
     id: user.id,
     email: user.email,
+    fullName: user.fullName,
     role: user.role,
+    birthday: user.birthday,
+    phoneNumber: user.phoneNumber,
     createdAt: user.createdAt
   };
 }
 
-async function register(email, password) {
+async function register(email, password, birthday, phoneNumber, fullName) {
   const existingUser = await userRepository.findByEmail(email);
   if (existingUser) {
     throw createServiceError('Email already exists', 409);
@@ -30,7 +33,10 @@ async function register(email, password) {
   const createdUser = await userRepository.createUser({
     email,
     passwordHash,
-    role: ROLES.USER
+    role: ROLES.USER,
+    birthday,
+    phoneNumber,
+    fullName
   });
 
   return sanitizeUser(createdUser);
