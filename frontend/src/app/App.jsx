@@ -5,6 +5,7 @@ import Register from '../pages/Register';
 import CategoryPage from '../pages/CategoryPage';
 import Support from '../pages/Support';
 import Store from '../pages/Store';
+import ProductDetail from '../pages/ProductDetail';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Route path="/category/:brand" element={<CategoryPage />} />
       <Route path="/support" element={<Support />} />
       <Route path="/store" element={<Store />} />
+      <Route path="/product/:id" element={<ProductDetail />} />
     </Routes>
   );
 }

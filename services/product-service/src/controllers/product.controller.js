@@ -1,4 +1,5 @@
 const productService = require('../services/product.service');
+const { uploadToS3 } = require('../services/upload.service');
 
 class ProductController {
   async getProducts(req, res, next) {
@@ -55,6 +56,22 @@ class ProductController {
       res.status(200).json({
         success: true,
         message: 'Product deleted successfully'
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async uploadImage(req, res, next) {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ success: false, message: 'No file uploaded' });
+      }
+
+      const imageUrl = await uploadToS3(req.file);
+      res.status(200).json({
+        success: true,
+        data: { imageUrl }
       });
     } catch (error) {
       next(error);

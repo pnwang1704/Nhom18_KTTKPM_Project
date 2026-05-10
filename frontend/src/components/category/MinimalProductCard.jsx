@@ -1,18 +1,23 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
+import { useNavigate } from 'react-router-dom';
+
 const MinimalProductCard = ({ product, index }) => {
+  const navigate = useNavigate();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8, delay: index * 0.1, ease: [0.28, 0.11, 0.32, 1] }}
+      onClick={() => navigate(`/product/${product._id}`)}
       className="bg-white rounded-[32px] p-8 md:p-12 border border-elppa-gray-border/30 flex flex-col items-center text-center group cursor-pointer hover:shadow-2xl hover:shadow-black/5 transition-all duration-500"
     >
       <div className="w-full h-[300px] md:h-[450px] mb-8 overflow-hidden">
         <img 
-          src={product.image} 
+          src={product.image || (product.images && product.images[0])} 
           alt={product.name} 
           className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700 ease-elppa-ease"
         />
