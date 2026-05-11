@@ -4,26 +4,30 @@ const productSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'Please add a product name'],
-      trim: true,
-      maxlength: [100, 'Name cannot be more than 100 characters']
+      required: true,
+      trim: true
     },
     description: {
       type: String,
-      required: [true, 'Please add a description'],
-      maxlength: [500, 'Description cannot be more than 500 characters']
+      required: true
     },
     price: {
       type: Number,
-      required: [true, 'Please add a price']
+      required: true,
+      min: 0
     },
     category: {
       type: String,
-      required: [true, 'Please add a category']
+      required: true
     },
     stock: {
       type: Number,
+      required: true,
+      min: 0,
       default: 0
+    },
+    image: {
+      type: String
     },
     images: {
       type: [String],
@@ -34,19 +38,33 @@ const productSchema = new mongoose.Schema(
         colorName: String,
         colorCode: String,
         images: [String],
-        stock: {
-          type: Number,
-          default: 0
-        }
+        options: [
+          {
+            storage: String,
+            price: Number,
+            stock: {
+              type: Number,
+              default: 0
+            }
+          }
+        ]
       }
-    ]
+    ],
+    highlights: [
+      {
+        title: String,
+        description: String,
+        image: String
+      }
+    ],
+    specifications: {
+      type: Map,
+      of: String
+    }
   },
   {
     timestamps: true
   }
 );
-
-// Search index
-productSchema.index({ name: 'text', description: 'text' });
 
 module.exports = mongoose.model('Product', productSchema);

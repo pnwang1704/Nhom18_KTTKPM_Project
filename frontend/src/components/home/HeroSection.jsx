@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
-const HeroSection = ({ image }) => {
+const HeroSection = ({ image, link = "/store" }) => {
   return (
     <section className="min-h-screen bg-elppa-light flex flex-col items-center justify-center pt-20 overflow-hidden">
       <div className="text-center px-gutter z-10">
@@ -30,12 +31,16 @@ const HeroSection = ({ image }) => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="mt-10 flex gap-4 justify-center"
         >
-          <button className="bg-elppa-blue text-white px-6 py-2.5 rounded-full text-base font-medium hover:bg-blue-700 transition-colors">
-            Mua ngay
-          </button>
-          <button className="text-elppa-blue hover:underline text-base font-medium transition-all group flex items-center gap-1">
-            Tìm hiểu thêm <span className="text-xs group-hover:translate-x-1 transition-transform">→</span>
-          </button>
+          <Link to={link}>
+            <button className="bg-elppa-blue text-white px-6 py-2.5 rounded-full text-base font-medium hover:bg-blue-700 transition-colors">
+              Mua ngay
+            </button>
+          </Link>
+          <Link to={link}>
+            <button className="text-elppa-blue hover:underline text-base font-medium transition-all group flex items-center gap-1">
+              Tìm hiểu thêm <span className="text-xs group-hover:translate-x-1 transition-transform">→</span>
+            </button>
+          </Link>
         </motion.div>
       </div>
 

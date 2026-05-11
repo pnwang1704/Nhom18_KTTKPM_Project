@@ -18,16 +18,28 @@ const Support = () => {
         
         <SupportQuickTools />
 
-        {/* Device Selection Mockup */}
-        <section className="bg-white py-12 border-t border-elppa-gray-border/30">
+        {/* Device Selection Section */}
+        <section className="bg-white py-16 border-t border-elppa-gray-border/30">
           <div className="max-w-[1200px] mx-auto px-gutter text-center">
-             <div className="flex flex-wrap justify-center gap-12 text-elppa-gray">
-                {['iPhone', 'Mac', 'iPad', 'Watch', 'Sản phẩm khác'].map((item) => (
-                  <button key={item} className="flex flex-col items-center gap-2 hover:text-elppa-obsidian transition-colors">
-                    <div className="w-12 h-12 bg-elppa-gray-subtle rounded-xl mb-2 flex items-center justify-center">
-                       <span className="text-[10px] font-bold">ICON</span>
+             <div className="flex flex-wrap justify-center gap-8 md:gap-16">
+                {[
+                  { id: 'iphone', label: 'iPhone', image: '/assets/images/shelves/iphone.png' },
+                  { id: 'ipad', label: 'iPad', image: '/assets/images/shelves/ipad.png' },
+                  { id: 'samsung', label: 'Samsung', image: '/assets/images/shelves/Samsung-S25-Ultra-All-Colors-PNG.png' },
+                  { id: 'xiaomi', label: 'Xiaomi', image: '/assets/images/shelves/Xiaomi-17-Pro-PNG.png' },
+                  { id: 'oppo', label: 'Oppo', image: '/assets/images/shelves/Reno15-F-5G-AI2-removebg-preview.png' }
+                ].map((item) => (
+                  <button key={item.id} className="flex flex-col items-center gap-4 group cursor-pointer">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-elppa-gray-subtle/50 rounded-2xl mb-2 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
+                       <img 
+                        src={item.image} 
+                        alt={item.label}
+                        className="w-full h-full object-contain p-2"
+                       />
                     </div>
-                    <span className="text-xs font-medium">{item}</span>
+                    <span className="text-xs md:text-sm font-semibold text-elppa-gray group-hover:text-elppa-obsidian transition-colors">
+                      {item.label}
+                    </span>
                   </button>
                 ))}
              </div>
@@ -40,7 +52,7 @@ const Support = () => {
           subtitle="ELPPACARE"
           description="Mọi gói ELPPACare đều cung cấp dịch vụ bảo dưỡng tập trung cho sản phẩm ELPPA, với dịch vụ sửa chữa nhanh chóng, dễ dàng cho các sự cố như đánh rơi và làm đổ chất lỏng."
           linkText="Tìm hiểu thêm"
-          image="https://images.unsplash.com/photo-1544725121-be3b5d02e9b1?auto=format&fit=crop&q=80&w=1200"
+          image="/assets/images/support/care.png"
         />
 
         <SupportPromoSection 
@@ -48,7 +60,7 @@ const Support = () => {
           subtitle="CHẤT LƯỢNG CHÍNH HÃNG"
           description="Chúng tôi có thể giúp bạn tìm trường hợp sửa chữa được ELPPA chứng nhận, do các chuyên gia tin cậy thực hiện bằng linh kiện chính hãng của ELPPA."
           linkText="Bắt đầu sửa chữa"
-          image="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=1200"
+          image="/assets/images/support/repair.png"
           reverse={true}
         />
 
@@ -57,7 +69,7 @@ const Support = () => {
           subtitle="ỨNG DỤNG"
           description="Yêu cầu trợ giúp cho tất cả các sản phẩm ELPPA của bạn ở một nơi hoặc kết nối với chuyên gia."
           linkText="Tải về"
-          image="https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&q=80&w=1200"
+          image="/assets/images/support/app.png"
         />
 
         {/* Warning Section */}

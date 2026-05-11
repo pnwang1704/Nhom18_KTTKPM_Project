@@ -1,0 +1,274 @@
+[{
+  "_id": {
+    "$oid": "69e870eff1e41acb154755c5"
+  },
+  "name": "iPhone 15 Pro Max",
+  "description": "Chip A17 Pro, Camera 48MP",
+  "price": 24000000,
+  "category": "Smartphone",
+  "stock": 0,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/9ccde1c9059db046cbc5878a1d2733db.webp"
+  ],
+  "createdAt": {
+    "$date": "2026-04-22T06:55:43.225Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-11T06:17:44.816Z"
+  },
+  "__v": 0,
+  "variants": [
+    {
+      "colorCode": "#f9d4d4",
+      "colorName": "Hồng",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/9ccde1c9059db046cbc5878a1d2733db.webp"
+      ]
+    },
+    {
+      "colorCode": "#d1e8f2",
+      "colorName": "Xanh Dương",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/f4e1a77afeda5a7efe6ede2e37d7c956.jpg"
+      ]
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Sức mạnh từ Titan.",
+      "description": "iPhone đầu tiên sở hữu thiết kế cấp hàng không vũ trụ, bền bỉ và nhẹ nhất từ trước đến nay.",
+      "_id": {
+        "$oid": "6a017356ebe722e273f09b53"
+      }
+    },
+    {
+      "title": "Chip A17 Pro.",
+      "description": "Quái vật hiệu năng mới, cho khả năng chơi game đồ họa đỉnh cao ngay trên điện thoại.",
+      "_id": {
+        "$oid": "6a017356ebe722e273f09b54"
+      }
+    }
+  ],
+  "specifications": {
+    "Màn hình": "6.7-inch OLED Super Retina XDR, ProMotion",
+    "Vi xử lý": "Chip Apple A17 Pro (3nm)",
+    "Camera sau": "Chính 48MP, Ultra Wide 12MP, Tele 5x 12MP",
+    "Pin": "Lên đến 29 giờ xem video",
+    "Kháng nước": "IP68"
+  },
+  "storageOptions": [
+    "256GB",
+    "512GB",
+    "1TB"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a002c82ea6a187e8dfe4fcc"
+  },
+  "name": "Samsung Galaxy S24 Ultra",
+  "description": "Chip Snapdragon 8 Gen 3 for Galaxy, Camera 200MP, Màn hình 2600 nits cực sáng.",
+  "price": 29990000,
+  "category": "samsung",
+  "stock": 50,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/1ee5ddba9491649cdcb12e6628e69c85.png"
+  ],
+  "variants": [
+    {
+      "colorName": "Xám Titan",
+      "colorCode": "#8d8981",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/676789510c3ff82426bd099d21dd1997.png"
+      ],
+      "stock": 20,
+      "_id": {
+        "$oid": "6a002c82ea6a187e8dfe4fcd"
+      }
+    },
+    {
+      "colorName": "Đen Titan",
+      "colorCode": "#3b3c3e",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/f5d93e1d2c2edd927b407a0ee01161ed.png"
+      ],
+      "stock": 15,
+      "_id": {
+        "$oid": "6a002c82ea6a187e8dfe4fce"
+      }
+    },
+    {
+      "colorName": "Tím Titan",
+      "colorCode": "#5e5e7a",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/1ee5ddba9491649cdcb12e6628e69c85.png"
+      ],
+      "stock": 15,
+      "_id": {
+        "$oid": "6a002c82ea6a187e8dfe4fcf"
+      }
+    }
+  ],
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-05-10T06:58:10.018Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-11T06:17:44.789Z"
+  },
+  "highlights": [
+    {
+      "title": "Quyền năng Galaxy AI.",
+      "description": "Khoanh vùng search đa năng, phiên dịch trực tiếp và trợ lý ghi chú thông minh.",
+      "_id": {
+        "$oid": "6a017356ebe722e273f09b4f"
+      }
+    },
+    {
+      "title": "Camera 200MP đỉnh cao.",
+      "description": "Bắt trọn mọi chi tiết với độ phân giải siêu khủng và khả năng zoom đêm ấn tượng.",
+      "_id": {
+        "$oid": "6a017356ebe722e273f09b50"
+      }
+    }
+  ],
+  "specifications": {
+    "Màn hình": "6.8-inch Dynamic AMOLED 2X, 120Hz",
+    "Vi xử lý": "Snapdragon 8 Gen 3 for Galaxy",
+    "Camera sau": "200MP + 50MP + 12MP + 10MP",
+    "Pin": "5000mAh, Sạc nhanh 45W",
+    "Kháng nước": "IP68"
+  },
+  "storageOptions": [
+    "256GB",
+    "512GB",
+    "1TB"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a002c82ea6a187e8dfe4fd0"
+  },
+  "name": "Xiaomi 14 Ultra",
+  "description": "Ống kính Leica thế hệ mới, Cảm biến 1 inch, Hiệu năng đỉnh cao.",
+  "price": 26990000,
+  "category": "xiaomi",
+  "stock": 30,
+  "images": [],
+  "variants": [
+    {
+      "colorName": "Đen Thẫm",
+      "colorCode": "#1a1a1a",
+      "images": [
+        "https://i01.appmifile.com/v1/MI_18455B3E4DA706226CF7535A58E875F0267/pms_1712826725.68885141.png"
+      ],
+      "stock": 15,
+      "_id": {
+        "$oid": "6a002c82ea6a187e8dfe4fd1"
+      }
+    },
+    {
+      "colorName": "Trắng Sứ",
+      "colorCode": "#f2f2f2",
+      "images": [
+        "https://i01.appmifile.com/v1/MI_18455B3E4DA706226CF7535A58E875F0267/pms_1712826720.67732296.png"
+      ],
+      "stock": 15,
+      "_id": {
+        "$oid": "6a002c82ea6a187e8dfe4fd2"
+      }
+    }
+  ],
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-05-10T06:58:10.020Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-10T06:58:10.020Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a002c82ea6a187e8dfe4fd3"
+  },
+  "name": "OPPO Find N3",
+  "description": "Điện thoại gập mỏng nhất, Hệ thống camera Hasselblad, Màn hình không nếp gấp.",
+  "price": 41990000,
+  "category": "oppo",
+  "stock": 20,
+  "images": [],
+  "variants": [
+    {
+      "colorName": "Vàng Cát",
+      "colorCode": "#e5d1b3",
+      "images": [
+        "https://shop.oppo.vn/media/catalog/product/cache/2f66432f7e0e7a79f0464f1d43eb5231/p/h/photo_2023-10-23_10-29-37_2_.jpg"
+      ],
+      "stock": 10,
+      "_id": {
+        "$oid": "6a002c82ea6a187e8dfe4fd4"
+      }
+    },
+    {
+      "colorName": "Đen Lịch Lãm",
+      "colorCode": "#262626",
+      "images": [
+        "https://shop.oppo.vn/media/catalog/product/cache/2f66432f7e0e7a79f0464f1d43eb5231/p/h/photo_2023-10-23_10-29-37_1_.jpg"
+      ],
+      "stock": 10,
+      "_id": {
+        "$oid": "6a002c82ea6a187e8dfe4fd5"
+      }
+    }
+  ],
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-05-10T06:58:10.020Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-10T06:58:10.020Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a002f63b399fccd4004fab0"
+  },
+  "name": "iPhone 17 Pro Max",
+  "description": "Chip A17 Pro, Camera 48MP",
+  "price": 24000000,
+  "category": "Smartphone",
+  "stock": 0,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/d4db9583d00a8db1573bdd65db7758d8.webp"
+  ],
+  "createdAt": {
+    "$date": "2026-04-22T06:55:43.225Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-22T07:04:57.965Z"
+  },
+  "__v": 0,
+  "variants": [
+    {
+      "colorCode": "#f88d4b",
+      "colorName": "Cam Vũ Trụ",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/d4db9583d00a8db1573bdd65db7758d8.webp"
+      ]
+    },
+    {
+      "colorCode": "#f1f1f1",
+      "colorName": "Bạc",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/2bf101609dfa7f6de9043619c1203eb1.webp"
+      ]
+    },
+    {
+      "colorCode": "#42485a",
+      "colorName": "Xanh đậm",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/656614771cc330db5687dac69c7de1c0.webp"
+      ]
+    }
+  ]
+}]

@@ -45,3 +45,12 @@ html {
 .subtext {
   @apply text-elppa-gray text-lg md:text-xl font-normal max-w-2xl text-center;
 }
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

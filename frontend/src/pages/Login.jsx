@@ -62,6 +62,10 @@ function Login() {
             />
             {error && <p className="text-red-500 text-sm">{error}</p>}
             
+            <div className="flex justify-end">
+              <Link to="/forgot-password" virtual-link="forgot-password" className="text-xs text-elppa-blue hover:underline">Quên mật khẩu?</Link>
+            </div>
+            
             <button 
               type="submit" 
               className="w-full bg-elppa-blue text-white py-3 rounded-xl font-medium hover:bg-blue-700 transition-colors mt-6"

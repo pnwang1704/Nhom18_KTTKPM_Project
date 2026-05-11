@@ -6,9 +6,12 @@ class ProductService {
 
     const filter = {};
 
-    // Search by name or description
+    // Search by name or description (Partial & Case-insensitive)
     if (search) {
-      filter.$text = { $search: search };
+      filter.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } }
+      ];
     }
 
     // Filter by category

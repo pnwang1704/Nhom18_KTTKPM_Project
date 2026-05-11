@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { jwtSecret } = require('./env');
 
-const JWT_EXPIRES_IN = '15m';
+const JWT_EXPIRES_IN = '1d';
 
 function signToken(payload) {
   const tokenPayload = {
