@@ -12,7 +12,7 @@ async function findById(id) {
   });
 }
 
-async function createUser({ email, passwordHash, role = 'user', birthday, phoneNumber, fullName }) {
+async function createUser({ email, passwordHash, role = 'user', birthday, phoneNumber, fullName, otpCode, otpExpires, isVerified = false }) {
   return prisma.user.create({
     data: {
       email,
@@ -20,13 +20,24 @@ async function createUser({ email, passwordHash, role = 'user', birthday, phoneN
       passwordHash,
       role,
       birthday: birthday ? new Date(birthday) : null,
-      phoneNumber
+      phoneNumber,
+      otpCode,
+      otpExpires,
+      isVerified
     }
+  });
+}
+
+async function updateUser(id, data) {
+  return prisma.user.update({
+    where: { id },
+    data
   });
 }
 
 module.exports = {
   findByEmail,
   findById,
-  createUser
+  createUser,
+  updateUser
 };

@@ -44,9 +44,11 @@ const ProductShelf = ({ brand, slogan, image, link = "/", dark = false, fullWidt
                 Tìm hiểu thêm
               </button>
             </Link>
-            <button className="px-8 py-3 rounded-full text-base font-bold border border-white text-white hover:bg-white hover:text-black transition-all">
-              Mua ngay
-            </button>
+            <Link to={link}>
+              <button className="px-8 py-3 rounded-full text-base font-bold border border-white text-white hover:bg-white hover:text-black transition-all">
+                Mua ngay
+              </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -75,16 +77,18 @@ const ProductShelf = ({ brand, slogan, image, link = "/", dark = false, fullWidt
         >
           {slogan}
         </motion.p>
-
+ 
         <div className="mt-8 flex gap-4 justify-center">
           <Link to={link}>
             <button className="bg-elppa-blue text-white px-6 py-2 rounded-full text-base font-medium hover:bg-blue-700 transition-colors">
               Tìm hiểu thêm
             </button>
           </Link>
-          <button className={`px-6 py-2 rounded-full text-base font-medium border transition-all ${dark ? 'border-white text-white hover:bg-white hover:text-black' : 'border-elppa-blue text-elppa-blue hover:bg-elppa-blue hover:text-white'}`}>
-            Mua ngay
-          </button>
+          <Link to={link}>
+            <button className={`px-6 py-2 rounded-full text-base font-medium border transition-all ${dark ? 'border-white text-white hover:bg-white hover:text-black' : 'border-elppa-blue text-elppa-blue hover:bg-elppa-blue hover:text-white'}`}>
+              Mua ngay
+            </button>
+          </Link>
         </div>
       </div>
 

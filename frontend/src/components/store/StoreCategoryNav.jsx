@@ -1,5 +1,5 @@
 import React from 'react';
-import { Smartphone, Tablet, Watch, Laptop, Headphones, Speaker, Package } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const categories = [
   { id: 'iphone', label: 'iPhone', image: '/assets/images/shelves/iphone.png' },
@@ -10,6 +10,8 @@ const categories = [
 ];
 
 const StoreCategoryNav = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="bg-elppa-light py-8 mb-12">
       <div className="max-w-[1200px] mx-auto px-gutter overflow-x-auto no-scrollbar">
@@ -17,6 +19,7 @@ const StoreCategoryNav = () => {
           {categories.map((cat) => (
             <button
               key={cat.id}
+              onClick={() => navigate(`/category/${cat.id}`)}
               className="flex flex-col items-center gap-4 group transition-all"
             >
               <div className="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">

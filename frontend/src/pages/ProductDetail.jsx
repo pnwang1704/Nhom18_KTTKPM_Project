@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, ChevronRight, Shield, Truck, RotateCcw } from 'lucide-react';
 import Navbar from '../components/common/Navbar';
+import axios from 'axios';
+import MinimalProductCard from '../components/category/MinimalProductCard';
 import { apiRequest } from '../services/api/client';
 
 const ProductDetail = () => {
@@ -14,22 +16,44 @@ const ProductDetail = () => {
   const [selectedStorage, setSelectedStorage] = useState(0);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
+  const [relatedProducts, setRelatedProducts] = useState([]);
+
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchData = async () => {
       try {
+        setLoading(true);
         const response = await apiRequest(`/api/products/${id}`);
         const result = await response.json();
-        if (result.success) {
-          setProduct(result.data);
+        
+        // Lấy dữ liệu sản phẩm (linh hoạt với cả result.data hoặc result)
+        const productData = result.data || result;
+        if (productData && productData._id) {
+          setProduct(productData);
         }
-      } catch (error) {
-        console.error('Failed to fetch product:', error);
-      } finally {
+
+        // Lấy danh sách sản phẩm gợi ý
+        const relatedResponse = await apiRequest(`/api/products`);
+        const relatedResult = await relatedResponse.json();
+        
+        // Theo Store.jsx, dữ liệu nằm trong trường .products
+        const productsArray = relatedResult.products || relatedResult.data || (Array.isArray(relatedResult) ? relatedResult : []);
+        
+        console.log('Total products from API:', productsArray.length);
+
+        if (productsArray && productsArray.length > 0) {
+          // So sánh ID bằng cách ép kiểu String để đảm bảo chính xác
+          const filtered = productsArray.filter(p => String(p._id) !== String(id)).slice(0, 4);
+          console.log('Related products after filtering:', filtered.length);
+          setRelatedProducts(filtered);
+        }
+
+        setLoading(false);
+      } catch (err) {
+        console.error('Fetch error details:', err);
         setLoading(false);
       }
     };
-
-    fetchProduct();
+    fetchData();
     window.scrollTo(0, 0);
   }, [id]);
 
@@ -104,7 +128,16 @@ const ProductDetail = () => {
 
   const hasVariants = product?.variants && product.variants.length > 0;
   const currentVariant = hasVariants ? product.variants[selectedColor] : null;
-  const storageOptions = ['128GB', '256GB', '512GB', '1TB'];
+
+  // Lấy các bản dung lượng của màu đang chọn
+  const storageOptions = (currentVariant && currentVariant.options && currentVariant.options.length > 0)
+    ? currentVariant.options
+    : [];
+
+  // Lấy thông tin bản đang chọn (Màu + Dung lượng)
+  const selectedOption = storageOptions[selectedStorage] || storageOptions[0];
+  const displayPrice = selectedOption ? selectedOption.price : product.price;
+  const currentStock = selectedOption ? selectedOption.stock : product.stock;
 
   return (
     <div className="bg-[#f5f5f7] min-h-screen pb-24">
@@ -114,7 +147,7 @@ const ProductDetail = () => {
         <div className="max-w-[1000px] mx-auto px-gutter flex items-center justify-between">
           <h2 className="text-lg font-bold text-elppa-obsidian">{product.name}</h2>
           <div className="flex items-center gap-6">
-             <p className="text-sm font-medium hidden md:block">Từ {product.price?.toLocaleString()}đ</p>
+             <p className="text-sm font-medium hidden md:block">Từ {displayPrice?.toLocaleString()}đ</p>
              <button className="bg-elppa-blue text-white px-4 py-1.5 rounded-full text-xs font-bold hover:bg-opacity-90 transition-all">
                 Mua ngay
              </button>
@@ -160,12 +193,12 @@ const ProductDetail = () => {
             <div>
               <p className="text-elppa-blue text-sm font-bold uppercase tracking-widest mb-2">Mới</p>
               <h1 className="text-4xl md:text-5xl font-bold text-elppa-obsidian mb-4">Mua {product.name}</h1>
-              <p className="text-elppa-gray font-medium">Nhận từ {product.price?.toLocaleString()}đ hoặc trả góp chỉ từ {(product.price / 12)?.toLocaleString()}đ/tháng trong 12 tháng.</p>
+              <p className="text-elppa-gray font-medium">Nhận từ {displayPrice?.toLocaleString()}đ hoặc trả góp chỉ từ {(displayPrice / 12)?.toLocaleString()}đ/tháng trong 12 tháng.</p>
             </div>
 
             {hasVariants && (
               <div>
-                <h3 className="text-lg font-bold mb-4">Chọn màu sắc. <span className="text-elppa-gray font-normal">{currentVariant.colorName}</span></h3>
+                <h3 className="text-lg font-bold mb-4">Chọn màu sắc. <span className="text-elppa-gray font-normal">{currentVariant?.colorName}</span></h3>
                 <div className="flex gap-4">
                   {product.variants.map((variant, idx) => (
                     <button 
@@ -189,8 +222,13 @@ const ProductDetail = () => {
                     onClick={() => setSelectedStorage(idx)}
                     className={`p-6 rounded-2xl border-2 text-left transition-all ${selectedStorage === idx ? 'border-elppa-blue bg-white' : 'border-elppa-gray-border/50 bg-white hover:border-elppa-gray'}`}
                   >
-                    <p className="font-bold text-lg">{option}</p>
-                    <p className="text-xs text-elppa-gray mt-1">Từ {(product.price + idx * 2000000).toLocaleString()}đ</p>
+                    <p className="font-bold text-lg">{option.storage}</p>
+                    <div className="flex justify-between items-center mt-1">
+                      <p className="text-xs text-elppa-gray">{option.price?.toLocaleString()}đ</p>
+                      <p className={`text-[10px] font-bold ${option.stock > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                        {option.stock > 0 ? `Còn ${option.stock}` : 'Hết hàng'}
+                      </p>
+                    </div>
                   </button>
                 ))}
               </div>
@@ -235,52 +273,55 @@ const ProductDetail = () => {
            </h2>
            
            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-white rounded-[40px] p-12 overflow-hidden relative h-[500px] flex flex-col justify-end">
-                  <div className="z-10">
-                    <h4 className="text-2xl font-bold mb-4">Hiệu năng vô đối.</h4>
-                    <p className="text-elppa-gray font-medium">Sức mạnh từ chip mới nhất giúp bạn xử lý mọi tác vụ nặng nhất một cách mượt mà.</p>
-                  </div>
-                  <div className="absolute top-12 left-0 right-0 flex justify-center opacity-20">
-                     <img src={mainImage} alt="" className="w-2/3 object-contain" />
-                  </div>
-              </div>
-              <div className="bg-white rounded-[40px] p-12 overflow-hidden relative h-[500px] flex flex-col justify-end">
-                  <div className="z-10">
-                    <h4 className="text-2xl font-bold mb-4">Camera chuyên nghiệp.</h4>
-                    <p className="text-elppa-gray font-medium">Ghi lại mọi khoảnh khắc với độ chi tiết kinh ngạc và màu sắc sống động nhất.</p>
-                  </div>
-                  <div className="absolute top-12 left-0 right-0 flex justify-center opacity-20 scale-150">
-                     <img src={mainImage} alt="" className="w-2/3 object-contain" />
-                  </div>
-              </div>
+              {(product.highlights && product.highlights.length > 0 ? product.highlights : [
+                { title: "Hiệu năng vô đối.", description: "Sức mạnh từ chip mới nhất giúp bạn xử lý mọi tác vụ nặng nhất một cách mượt mà." },
+                { title: "Camera chuyên nghiệp.", description: "Ghi lại mọi khoảnh khắc với độ chi tiết kinh ngạc và màu sắc sống động nhất." }
+              ]).map((highlight, idx) => (
+                <div key={idx} className="bg-white rounded-[40px] p-12 relative h-[320px] flex flex-col justify-center border border-elppa-gray-border/10 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 group">
+                    <div className="z-10 text-center md:text-left">
+                      <h4 className="text-2xl md:text-3xl font-bold mb-4 text-elppa-obsidian group-hover:text-elppa-blue transition-colors">{highlight.title}</h4>
+                      <p className="text-elppa-gray font-medium text-lg leading-relaxed">{highlight.description}</p>
+                    </div>
+                </div>
+              ))}
            </div>
         </section>
 
-        <section className="mt-32 bg-white rounded-[40px] p-12 md:p-20 shadow-sm">
+        <section className="mt-32 bg-white rounded-[40px] p-12 md:p-20 shadow-sm border border-elppa-gray-border/20">
            <h2 className="text-3xl font-bold mb-12">Thông số kỹ thuật.</h2>
            <div className="divide-y divide-elppa-gray-border/30">
-              <div className="py-6 grid grid-cols-3">
-                 <span className="text-elppa-gray font-medium">Màn hình</span>
-                 <span className="col-span-2 font-bold">6.7-inch OLED Super Retina XDR</span>
-              </div>
-              <div className="py-6 grid grid-cols-3">
-                 <span className="text-elppa-gray font-medium">Vi xử lý</span>
-                 <span className="col-span-2 font-bold">Chip Apple A17 Pro (3nm)</span>
-              </div>
-              <div className="py-6 grid grid-cols-3">
-                 <span className="text-elppa-gray font-medium">Camera sau</span>
-                 <span className="col-span-2 font-bold">Chính 48MP, Ultra Wide 12MP, Telephoto 5x 12MP</span>
-              </div>
-              <div className="py-6 grid grid-cols-3">
-                 <span className="text-elppa-gray font-medium">Pin</span>
-                 <span className="col-span-2 font-bold">Sử dụng liên tục lên đến 29 giờ xem video</span>
-              </div>
-              <div className="py-6 grid grid-cols-3">
-                 <span className="text-elppa-gray font-medium">Kháng nước</span>
-                 <span className="col-span-2 font-bold">IP68 (độ sâu tối đa 6 mét trong tối đa 30 phút)</span>
-              </div>
+              {product.specifications ? (
+                Object.entries(product.specifications).map(([key, value], idx) => (
+                  <div key={idx} className="py-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <span className="text-elppa-gray font-medium">{key}</span>
+                    <span className="md:col-span-2 font-bold text-elppa-obsidian">{value}</span>
+                  </div>
+                ))
+              ) : (
+                <>
+                  <div className="py-6 grid grid-cols-3">
+                     <span className="text-elppa-gray font-medium">Màn hình</span>
+                     <span className="col-span-2 font-bold">Thông số đang cập nhật</span>
+                  </div>
+                  <div className="py-6 grid grid-cols-3">
+                     <span className="text-elppa-gray font-medium">Vi xử lý</span>
+                     <span className="col-span-2 font-bold">Thông số đang cập nhật</span>
+                  </div>
+                </>
+              )}
            </div>
         </section>
+
+        {relatedProducts.length > 0 && (
+          <section className="mt-32">
+            <h2 className="text-3xl font-bold mb-12">Có thể bạn cũng thích.</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+               {relatedProducts.map(item => (
+                 <MinimalProductCard key={item._id} product={item} />
+               ))}
+            </div>
+          </section>
+        )}
       </main>
     </div>
   );
