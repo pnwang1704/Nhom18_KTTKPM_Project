@@ -12,7 +12,6 @@ import {
   Search, 
   Plus, 
   Filter, 
-  MoreHorizontal, 
   Edit2, 
   Trash2, 
   Eye,
@@ -196,9 +195,6 @@ const ProductManagement = () => {
             className="p-2 rounded-lg hover:bg-rose-50 text-muted-foreground hover:text-rose-600 transition-all"
           >
             <Trash2 className="w-4 h-4" />
-          </button>
-          <button className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-primary transition-all">
-            <MoreHorizontal className="w-4 h-4" />
           </button>
         </div>
       ),

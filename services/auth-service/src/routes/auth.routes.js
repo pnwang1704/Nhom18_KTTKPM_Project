@@ -8,7 +8,8 @@ const {
   resetPassword, 
   verifyOTP, 
   verifyRegistration,
-  updateMe
+  updateMe,
+  getUsers
 } = require('../controllers/auth.controller');
 
 router.post('/register', register);
@@ -19,5 +20,6 @@ router.post('/reset-password', resetPassword);
 router.post('/verify-registration', verifyRegistration);
 router.get('/me', authRequired, me);
 router.patch('/me', authRequired, updateMe);
+router.get('/users', getUsers);
 
 module.exports = router;
