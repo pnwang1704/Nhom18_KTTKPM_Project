@@ -46,7 +46,7 @@ const CategoryPage = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await apiRequest('/api/products');
+        const response = await apiRequest('/api/products?limit=100');
         const result = await response.json();
         if (result.success) {
           // Filter by brand

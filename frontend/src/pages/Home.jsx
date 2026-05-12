@@ -24,7 +24,7 @@ function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await apiRequest('/api/products');
+        const response = await apiRequest('/api/products?limit=100');
         const result = await response.json();
         if (result.success) {
           setProducts(result.data);

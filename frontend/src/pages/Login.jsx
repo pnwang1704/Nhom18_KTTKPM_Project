@@ -22,7 +22,13 @@ function Login() {
       if (result.success) {
         localStorage.setItem('token', result.data.token);
         localStorage.setItem('user', JSON.stringify(result.data.user));
-        navigate('/');
+        
+        // Redirect based on role
+        if (result.data.user.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
       } else {
         setError(result.message || 'Login failed');
       }

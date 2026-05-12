@@ -11,6 +11,11 @@ async function apiRequest(path, options = {}) {
       },
       ...options
     });
+
+    if (response.status === 401) {
+      handleUnauthorized();
+    }
+
     return response;
   } catch (error) {
     console.error('API Request Error:', error);
@@ -18,4 +23,34 @@ async function apiRequest(path, options = {}) {
   }
 }
 
-export { apiBaseUrl, apiRequest };
+async function apiUpload(path, formData) {
+  const token = localStorage.getItem('token');
+  try {
+    const response = await fetch(`${apiBaseUrl}${path}`, {
+      method: 'POST',
+      headers: {
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+      },
+      body: formData
+    });
+
+    if (response.status === 401) {
+      handleUnauthorized();
+    }
+
+    return response;
+  } catch (error) {
+    console.error('API Upload Error:', error);
+    throw error;
+  }
+}
+
+function handleUnauthorized() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  if (!window.location.pathname.includes('/login')) {
+    window.location.href = '/login';
+  }
+}
+
+export { apiBaseUrl, apiRequest, apiUpload };
