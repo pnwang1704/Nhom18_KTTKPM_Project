@@ -35,9 +35,17 @@ async function updateUser(id, data) {
   });
 }
 
+async function findAll(where = {}) {
+  return prisma.user.findMany({
+    where,
+    orderBy: { createdAt: 'desc' }
+  });
+}
+
 module.exports = {
   findByEmail,
   findById,
+  findAll,
   createUser,
   updateUser
 };

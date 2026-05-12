@@ -183,6 +183,12 @@ async function updateProfile(userId, { fullName, birthday, password, oldPassword
   return sanitizeUser(updatedUser);
 }
 
+async function getUsers(role) {
+  const where = role ? { role } : {};
+  const users = await userRepository.findAll(where);
+  return users.map(sanitizeUser);
+}
+
 module.exports = {
   register,
   login,
@@ -190,5 +196,6 @@ module.exports = {
   resetPassword,
   verifyOTP,
   verifyRegistration,
-  updateProfile
+  updateProfile,
+  getUsers
 };

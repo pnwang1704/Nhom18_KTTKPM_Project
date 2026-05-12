@@ -113,6 +113,19 @@ async function updateMe(req, res, next) {
   }
 }
 
+async function getUsers(req, res, next) {
+  try {
+    const { role } = req.query;
+    const users = await authService.getUsers(role);
+    return res.status(200).json({
+      success: true,
+      data: users
+    });
+  } catch (error) {
+    return next(error);
+  }
+}
+
 module.exports = {
   register,
   login,
@@ -121,5 +134,6 @@ module.exports = {
   resetPassword,
   verifyOTP,
   verifyRegistration,
-  updateMe
+  updateMe,
+  getUsers
 };
