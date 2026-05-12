@@ -1,36 +1,87 @@
 [{
   "_id": {
-    "$oid": "69e870eff1e41acb154755c5"
+    "$oid": "6a017ce18f7b432ddc12af2a"
   },
-  "name": "iPhone 15 Pro Max",
+  "name": "iPhone 15",
   "description": "Chip A17 Pro, Camera 48MP",
   "price": 24000000,
   "category": "Smartphone",
-  "stock": 0,
+  "stock": 60,
   "images": [
-    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/9ccde1c9059db046cbc5878a1d2733db.webp"
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/f4e1a77afeda5a7efe6ede2e37d7c956.jpg"
   ],
-  "createdAt": {
-    "$date": "2026-04-22T06:55:43.225Z"
-  },
-  "updatedAt": {
-    "$date": "2026-05-11T06:17:44.816Z"
-  },
-  "__v": 0,
   "variants": [
     {
-      "colorCode": "#f9d4d4",
       "colorName": "Hồng",
+      "colorCode": "#f9d4d4",
       "images": [
         "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/9ccde1c9059db046cbc5878a1d2733db.webp"
-      ]
+      ],
+      "options": [
+        {
+          "storage": "256GB",
+          "price": 24000000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af2c"
+          }
+        },
+        {
+          "storage": "512GB",
+          "price": 26000000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af2d"
+          }
+        },
+        {
+          "storage": "1TB",
+          "price": 28000000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af2e"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017ce18f7b432ddc12af2b"
+      }
     },
     {
-      "colorCode": "#d1e8f2",
       "colorName": "Xanh Dương",
+      "colorCode": "#d1e8f2",
       "images": [
         "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/f4e1a77afeda5a7efe6ede2e37d7c956.jpg"
-      ]
+      ],
+      "options": [
+        {
+          "storage": "256GB",
+          "price": 24000000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af30"
+          }
+        },
+        {
+          "storage": "512GB",
+          "price": 26000000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af31"
+          }
+        },
+        {
+          "storage": "1TB",
+          "price": 28000000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af32"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017ce18f7b432ddc12af2f"
+      }
     }
   ],
   "highlights": [
@@ -38,14 +89,14 @@
       "title": "Sức mạnh từ Titan.",
       "description": "iPhone đầu tiên sở hữu thiết kế cấp hàng không vũ trụ, bền bỉ và nhẹ nhất từ trước đến nay.",
       "_id": {
-        "$oid": "6a017356ebe722e273f09b53"
+        "$oid": "6a017ce18f7b432ddc12af33"
       }
     },
     {
       "title": "Chip A17 Pro.",
       "description": "Quái vật hiệu năng mới, cho khả năng chơi game đồ họa đỉnh cao ngay trên điện thoại.",
       "_id": {
-        "$oid": "6a017356ebe722e273f09b54"
+        "$oid": "6a017ce18f7b432ddc12af34"
       }
     }
   ],
@@ -53,18 +104,20 @@
     "Màn hình": "6.7-inch OLED Super Retina XDR, ProMotion",
     "Vi xử lý": "Chip Apple A17 Pro (3nm)",
     "Camera sau": "Chính 48MP, Ultra Wide 12MP, Tele 5x 12MP",
-    "Pin": "Lên đến 29 giờ xem video",
+    "Pin": "3349 mAh",
     "Kháng nước": "IP68"
   },
-  "storageOptions": [
-    "256GB",
-    "512GB",
-    "1TB"
-  ]
+  "createdAt": {
+    "$date": "2026-04-22T06:55:43.225Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-11T07:06:42.737Z"
+  },
+  "__v": 0
 },
 {
   "_id": {
-    "$oid": "6a002c82ea6a187e8dfe4fcc"
+    "$oid": "6a017ce18f7b432ddc12af35"
   },
   "name": "Samsung Galaxy S24 Ultra",
   "description": "Chip Snapdragon 8 Gen 3 for Galaxy, Camera 200MP, Màn hình 2600 nits cực sáng.",
@@ -81,9 +134,34 @@
       "images": [
         "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/676789510c3ff82426bd099d21dd1997.png"
       ],
-      "stock": 20,
+      "options": [
+        {
+          "storage": "256GB",
+          "price": 29990000,
+          "stock": 20,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af37"
+          }
+        },
+        {
+          "storage": "512GB",
+          "price": 31990000,
+          "stock": 20,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af38"
+          }
+        },
+        {
+          "storage": "1TB",
+          "price": 33990000,
+          "stock": 20,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af39"
+          }
+        }
+      ],
       "_id": {
-        "$oid": "6a002c82ea6a187e8dfe4fcd"
+        "$oid": "6a017ce18f7b432ddc12af36"
       }
     },
     {
@@ -92,9 +170,34 @@
       "images": [
         "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/f5d93e1d2c2edd927b407a0ee01161ed.png"
       ],
-      "stock": 15,
+      "options": [
+        {
+          "storage": "256GB",
+          "price": 29990000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af3b"
+          }
+        },
+        {
+          "storage": "512GB",
+          "price": 31990000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af3c"
+          }
+        },
+        {
+          "storage": "1TB",
+          "price": 33990000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af3d"
+          }
+        }
+      ],
       "_id": {
-        "$oid": "6a002c82ea6a187e8dfe4fce"
+        "$oid": "6a017ce18f7b432ddc12af3a"
       }
     },
     {
@@ -103,32 +206,50 @@
       "images": [
         "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/1ee5ddba9491649cdcb12e6628e69c85.png"
       ],
-      "stock": 15,
+      "options": [
+        {
+          "storage": "256GB",
+          "price": 29990000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af3f"
+          }
+        },
+        {
+          "storage": "512GB",
+          "price": 31990000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af40"
+          }
+        },
+        {
+          "storage": "1TB",
+          "price": 33990000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af41"
+          }
+        }
+      ],
       "_id": {
-        "$oid": "6a002c82ea6a187e8dfe4fcf"
+        "$oid": "6a017ce18f7b432ddc12af3e"
       }
     }
   ],
-  "__v": 0,
-  "createdAt": {
-    "$date": "2026-05-10T06:58:10.018Z"
-  },
-  "updatedAt": {
-    "$date": "2026-05-11T06:17:44.789Z"
-  },
   "highlights": [
     {
       "title": "Quyền năng Galaxy AI.",
       "description": "Khoanh vùng search đa năng, phiên dịch trực tiếp và trợ lý ghi chú thông minh.",
       "_id": {
-        "$oid": "6a017356ebe722e273f09b4f"
+        "$oid": "6a017ce18f7b432ddc12af42"
       }
     },
     {
       "title": "Camera 200MP đỉnh cao.",
       "description": "Bắt trọn mọi chi tiết với độ phân giải siêu khủng và khả năng zoom đêm ấn tượng.",
       "_id": {
-        "$oid": "6a017356ebe722e273f09b50"
+        "$oid": "6a017ce18f7b432ddc12af43"
       }
     }
   ],
@@ -136,102 +257,240 @@
     "Màn hình": "6.8-inch Dynamic AMOLED 2X, 120Hz",
     "Vi xử lý": "Snapdragon 8 Gen 3 for Galaxy",
     "Camera sau": "200MP + 50MP + 12MP + 10MP",
-    "Pin": "5000mAh, Sạc nhanh 45W",
+    "Pin": "5000 mAh",
     "Kháng nước": "IP68"
   },
-  "storageOptions": [
-    "256GB",
-    "512GB",
-    "1TB"
-  ]
+  "createdAt": {
+    "$date": "2026-05-10T06:58:10.018Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-11T07:06:42.743Z"
+  },
+  "__v": 0
 },
 {
   "_id": {
-    "$oid": "6a002c82ea6a187e8dfe4fd0"
+    "$oid": "6a017ce18f7b432ddc12af44"
   },
   "name": "Xiaomi 14 Ultra",
   "description": "Ống kính Leica thế hệ mới, Cảm biến 1 inch, Hiệu năng đỉnh cao.",
   "price": 26990000,
   "category": "xiaomi",
-  "stock": 30,
-  "images": [],
+  "stock": 60,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/0bfe9db446b86d7d5db037efdda092a1.webp"
+  ],
   "variants": [
     {
       "colorName": "Đen Thẫm",
       "colorCode": "#1a1a1a",
       "images": [
-        "https://i01.appmifile.com/v1/MI_18455B3E4DA706226CF7535A58E875F0267/pms_1712826725.68885141.png"
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/3aafdbec7a88b3430bea0d09486d38fc.webp"
       ],
-      "stock": 15,
+      "options": [
+        {
+          "storage": "128GB",
+          "price": 26990000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af46"
+          }
+        },
+        {
+          "storage": "256GB",
+          "price": 28990000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af47"
+          }
+        }
+      ],
       "_id": {
-        "$oid": "6a002c82ea6a187e8dfe4fd1"
+        "$oid": "6a017ce18f7b432ddc12af45"
       }
     },
     {
       "colorName": "Trắng Sứ",
       "colorCode": "#f2f2f2",
       "images": [
-        "https://i01.appmifile.com/v1/MI_18455B3E4DA706226CF7535A58E875F0267/pms_1712826720.67732296.png"
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/0bfe9db446b86d7d5db037efdda092a1.webp"
       ],
-      "stock": 15,
+      "options": [
+        {
+          "storage": "128GB",
+          "price": 26990000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af49"
+          }
+        },
+        {
+          "storage": "256GB",
+          "price": 28990000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af4a"
+          }
+        }
+      ],
       "_id": {
-        "$oid": "6a002c82ea6a187e8dfe4fd2"
+        "$oid": "6a017ce18f7b432ddc12af48"
       }
     }
   ],
-  "__v": 0,
   "createdAt": {
     "$date": "2026-05-10T06:58:10.020Z"
   },
   "updatedAt": {
-    "$date": "2026-05-10T06:58:10.020Z"
+    "$date": "2026-05-11T07:17:51.468Z"
+  },
+  "highlights": [
+    {
+      "title": "Ống kính quang học Leica Summilux.",
+      "description": "Cảm biến 1 inch thế hệ mới với dải động siêu cao, bắt trọn mọi chi tiết trong điều kiện ánh sáng yếu.",
+      "_id": {
+        "$oid": "6a01829fc2a08bee9792d465"
+      }
+    },
+    {
+      "title": "Màn hình Liquid Display đột phá.",
+      "description": "Thiết kế cong nhẹ bốn cạnh mang lại cảm giác cầm nắm hoàn hảo cùng độ sáng tối đa 3000 nits.",
+      "_id": {
+        "$oid": "6a01829fc2a08bee9792d466"
+      }
+    },
+    {
+      "title": "Khung nhôm cường độ cao.",
+      "description": "Cấu trúc unibody siêu bền bỉ, chống trầy xước và va đập vượt trội gấp 2 lần thế hệ trước.",
+      "_id": {
+        "$oid": "6a01829fc2a08bee9792d467"
+      }
+    }
+  ],
+  "__v": 0,
+  "specifications": {
+    "Màn hình": "6.73-inch LTPO AMOLED, 120Hz, 68 tỷ màu",
+    "Vi xử lý": "Snapdragon 8 Gen 3 (4nm)",
+    "Camera sau": "4 camera Leica 50MP | Cảm biến chính 1 inch",
+    "Camera trước": "32MP hỗ trợ quay video 4K",
+    "Pin": "5000 mAh",
+    "Sạc": "Sạc nhanh dây 90W | Sạc không dây 80W",
+    "Kháng nước": "IP68"
   }
 },
 {
   "_id": {
-    "$oid": "6a002c82ea6a187e8dfe4fd3"
+    "$oid": "6a017ce18f7b432ddc12af4b"
   },
   "name": "OPPO Find N3",
   "description": "Điện thoại gập mỏng nhất, Hệ thống camera Hasselblad, Màn hình không nếp gấp.",
   "price": 41990000,
   "category": "oppo",
-  "stock": 20,
-  "images": [],
+  "stock": 40,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/7b04510daab6e6993fea42c92c9f81c8.webp"
+  ],
   "variants": [
     {
       "colorName": "Vàng Cát",
       "colorCode": "#e5d1b3",
       "images": [
-        "https://shop.oppo.vn/media/catalog/product/cache/2f66432f7e0e7a79f0464f1d43eb5231/p/h/photo_2023-10-23_10-29-37_2_.jpg"
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/8aeca0f2034d36c2c39643dc300298b0.webp"
       ],
-      "stock": 10,
+      "options": [
+        {
+          "storage": "128GB",
+          "price": 41990000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af4d"
+          }
+        },
+        {
+          "storage": "256GB",
+          "price": 43990000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af4e"
+          }
+        }
+      ],
       "_id": {
-        "$oid": "6a002c82ea6a187e8dfe4fd4"
+        "$oid": "6a017ce18f7b432ddc12af4c"
       }
     },
     {
       "colorName": "Đen Lịch Lãm",
       "colorCode": "#262626",
       "images": [
-        "https://shop.oppo.vn/media/catalog/product/cache/2f66432f7e0e7a79f0464f1d43eb5231/p/h/photo_2023-10-23_10-29-37_1_.jpg"
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/7b04510daab6e6993fea42c92c9f81c8.webp"
       ],
-      "stock": 10,
+      "options": [
+        {
+          "storage": "128GB",
+          "price": 41990000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af50"
+          }
+        },
+        {
+          "storage": "256GB",
+          "price": 43990000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af51"
+          }
+        }
+      ],
       "_id": {
-        "$oid": "6a002c82ea6a187e8dfe4fd5"
+        "$oid": "6a017ce18f7b432ddc12af4f"
       }
     }
   ],
-  "__v": 0,
   "createdAt": {
     "$date": "2026-05-10T06:58:10.020Z"
   },
   "updatedAt": {
-    "$date": "2026-05-10T06:58:10.020Z"
+    "$date": "2026-05-11T07:25:23.490Z"
+  },
+  "highlights": [
+    {
+      "title": "Hệ thống camera Hasselblad.",
+      "description": "Sự kết hợp hoàn hảo giữa OPPO và Hasselblad mang lại màu sắc ảnh chân thực và đậm chất nghệ thuật.",
+      "_id": {
+        "$oid": "6a0184637c9e4ebcc103ebdf"
+      }
+    },
+    {
+      "title": "Màn hình gập không nếp gấp.",
+      "description": "Công nghệ bản lề uốn cong hình giọt nước giúp màn hình phẳng tuyệt đối khi mở ra.",
+      "_id": {
+        "$oid": "6a0184637c9e4ebcc103ebe0"
+      }
+    },
+    {
+      "title": "Thiết kế siêu mỏng nhẹ.",
+      "description": "Điện thoại gập mỏng nhất và nhẹ nhất phân khúc, mang lại cảm giác cầm nắm như điện thoại truyền thống.",
+      "_id": {
+        "$oid": "6a0184637c9e4ebcc103ebe1"
+      }
+    }
+  ],
+  "__v": 0,
+  "specifications": {
+    "Màn hình chính": "7.82-inch OLED gập, 120Hz LTPO",
+    "Màn hình phụ": "6.31-inch AMOLED, 120Hz",
+    "Vi xử lý": "Snapdragon 8 Gen 2 (4nm)",
+    "Camera sau": "48MP + 48MP + 64MP (Hasselblad)",
+    "Pin": "4805 mAh",
+    "Sạc": "SuperVOOC 67W",
+    "Độ dày": "5.8 mm (khi mở)"
   }
 },
 {
   "_id": {
-    "$oid": "6a002f63b399fccd4004fab0"
+    "$oid": "6a017ce18f7b432ddc12af52"
   },
   "name": "iPhone 17 Pro Max",
   "description": "Chip A17 Pro, Camera 48MP",
@@ -241,34 +500,708 @@
   "images": [
     "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/d4db9583d00a8db1573bdd65db7758d8.webp"
   ],
+  "variants": [
+    {
+      "colorName": "Cam Vũ Trụ",
+      "colorCode": "#f88d4b",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/d4db9583d00a8db1573bdd65db7758d8.webp"
+      ],
+      "options": [
+        {
+          "storage": "128GB",
+          "price": 24000000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af54"
+          }
+        },
+        {
+          "storage": "256GB",
+          "price": 26000000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af55"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017ce18f7b432ddc12af53"
+      }
+    },
+    {
+      "colorName": "Bạc",
+      "colorCode": "#f1f1f1",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/2bf101609dfa7f6de9043619c1203eb1.webp"
+      ],
+      "options": [
+        {
+          "storage": "128GB",
+          "price": 24000000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af57"
+          }
+        },
+        {
+          "storage": "256GB",
+          "price": 26000000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af58"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017ce18f7b432ddc12af56"
+      }
+    },
+    {
+      "colorName": "Xanh đậm",
+      "colorCode": "#42485a",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/656614771cc330db5687dac69c7de1c0.webp"
+      ],
+      "options": [
+        {
+          "storage": "128GB",
+          "price": 24000000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af5a"
+          }
+        },
+        {
+          "storage": "256GB",
+          "price": 26000000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017ce18f7b432ddc12af5b"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017ce18f7b432ddc12af59"
+      }
+    }
+  ],
   "createdAt": {
     "$date": "2026-04-22T06:55:43.225Z"
   },
   "updatedAt": {
-    "$date": "2026-04-22T07:04:57.965Z"
+    "$date": "2026-05-11T07:25:23.469Z"
   },
+  "highlights": [
+    {
+      "title": "FaceID dưới màn hình.",
+      "description": "Trải nghiệm màn hình tràn viền thực thụ với công nghệ nhận diện khuôn mặt ẩn mình tinh tế.",
+      "_id": {
+        "$oid": "6a0184637c9e4ebcc103ebdb"
+      }
+    },
+    {
+      "title": "Chip A19 Pro (2nm).",
+      "description": "Bộ vi xử lý 2nm đầu tiên trên thế giới, mang lại hiệu suất vượt giới hạn và tiết kiệm pin tối đa.",
+      "_id": {
+        "$oid": "6a0184637c9e4ebcc103ebdc"
+      }
+    },
+    {
+      "title": "Siêu camera Zoom 10x.",
+      "description": "Hệ thống ống kính tiềm vọng mới cho khả năng thu phóng quang học lên đến 10x với độ nét kinh ngạc.",
+      "_id": {
+        "$oid": "6a0184637c9e4ebcc103ebdd"
+      }
+    }
+  ],
   "__v": 0,
+  "specifications": {
+    "Màn hình": "6.9-inch LTPO Super Retina XDR, ProMotion 144Hz",
+    "Vi xử lý": "Apple A19 Pro (2nm)",
+    "Camera sau": "Hệ thống 3 camera 48MP | Zoom quang 10x",
+    "Camera trước": "24MP tích hợp FaceID dưới màn hình",
+    "Pin": "4600 mAh",
+    "Kết nối": "USB-C (USB 4.0 tốc độ cực cao)",
+    "Kháng nước": "IP68 (độ sâu 10m)"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a017d6669c9808c4649aea9"
+  },
+  "name": "iPhone 15 Pro Max",
+  "description": "Thiết kế bền bỉ với mặt lưng kính pha màu, Dynamic Island và Camera chính 48MP.",
+  "price": 19990000,
+  "category": "iphone",
+  "stock": 50,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/ec6cbaa76529ce0cf0a82a0337f545a7.webp"
+  ],
   "variants": [
     {
-      "colorCode": "#f88d4b",
-      "colorName": "Cam Vũ Trụ",
+      "colorName": "Titan Đen",
+      "colorCode": "#504e4c",
       "images": [
-        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/d4db9583d00a8db1573bdd65db7758d8.webp"
-      ]
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/ec6cbaa76529ce0cf0a82a0337f545a7.webp"
+      ],
+      "options": [
+        {
+          "storage": "128GB",
+          "price": 19990000,
+          "stock": 20,
+          "_id": {
+            "$oid": "6a017d6669c9808c4649aeab"
+          }
+        },
+        {
+          "storage": "256GB",
+          "price": 22990000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a017d6669c9808c4649aeac"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6669c9808c4649aeaa"
+      }
     },
     {
-      "colorCode": "#f1f1f1",
-      "colorName": "Bạc",
+      "colorName": "Titan Trắng",
+      "colorCode": "#f4f1e9",
       "images": [
-        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/2bf101609dfa7f6de9043619c1203eb1.webp"
-      ]
-    },
-    {
-      "colorCode": "#42485a",
-      "colorName": "Xanh đậm",
-      "images": [
-        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/656614771cc330db5687dac69c7de1c0.webp"
-      ]
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/108a1b3ba9ab8263b911cff26a0a06e8.webp"
+      ],
+      "options": [
+        {
+          "storage": "128GB",
+          "price": 19990000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017d6669c9808c4649aeae"
+          }
+        },
+        {
+          "storage": "256GB",
+          "price": 22990000,
+          "stock": 5,
+          "_id": {
+            "$oid": "6a017d6669c9808c4649aeaf"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6669c9808c4649aead"
+      }
     }
-  ]
+  ],
+  "highlights": [
+    {
+      "title": "Dynamic Island.",
+      "description": "Hiển thị các thông báo và hoạt động trực tiếp để bạn không bỏ lỡ thông tin.",
+      "_id": {
+        "$oid": "6a017d6669c9808c4649aeb0"
+      }
+    },
+    {
+      "title": "Màu sắc xuyên thấu.",
+      "description": "Mặt lưng kính pha màu cực đẹp với khung nhôm chuẩn hàng không vũ trụ.",
+      "_id": {
+        "$oid": "6a017d6669c9808c4649aeb1"
+      }
+    }
+  ],
+  "specifications": {
+    "Màn hình": "6.1-inch Super Retina XDR",
+    "Vi xử lý": "Apple A17 Pro 6 nhân",
+    "Camera": "Camera chính: 48MP, 24 mm, ƒ/1.78\nCamera góc siêu rộng: 12 MP, 13 mm, ƒ/2.2\nCamera Tele: 12 MP",
+    "Cổng kết nối": "USB-C",
+    "Pin": "4422 mAh"
+  },
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-05-11T06:55:35.008Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-11T07:06:42.728Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a017d6669c9808c4649aeb2"
+  },
+  "name": "iPad Pro M4 (2024)",
+  "description": "Mỏng không tưởng. Chip M4 cực mạnh. Màn hình Ultra Retina XDR đột phá.",
+  "price": 28990000,
+  "category": "ipad",
+  "stock": 35,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/1db6d2607a725265b5e1f08e874af58b.webp"
+  ],
+  "variants": [
+    {
+      "colorName": "Bạc",
+      "colorCode": "#e3e4e5",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/cb06b00f3bcfde7c3eea712aed6de39a.webp"
+      ],
+      "options": [
+        {
+          "storage": "256GB",
+          "price": 28990000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017d6669c9808c4649aeb4"
+          }
+        },
+        {
+          "storage": "512GB",
+          "price": 34490000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017d6669c9808c4649aeb5"
+          }
+        },
+        {
+          "storage": "1TB",
+          "price": 45490000,
+          "stock": 5,
+          "_id": {
+            "$oid": "6a017d6669c9808c4649aeb6"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6669c9808c4649aeb3"
+      }
+    },
+    {
+      "colorName": "Đen Không Gian",
+      "colorCode": "#2e2f30",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/1db6d2607a725265b5e1f08e874af58b.webp"
+      ],
+      "options": [
+        {
+          "storage": "256GB",
+          "price": 28990000,
+          "stock": 5,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649aeb8"
+          }
+        },
+        {
+          "storage": "512GB",
+          "price": 34490000,
+          "stock": 5,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649aeb9"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6669c9808c4649aeb7"
+      }
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Chip M4 thế hệ mới.",
+      "description": "Hiệu năng CPU nhanh hơn 1.5 lần so với M2, sẵn sàng cho các tác vụ AI nặng nhất.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649aeba"
+      }
+    },
+    {
+      "title": "Màn hình OLED 2 lớp.",
+      "description": "Độ sáng cực cao và độ tương phản tuyệt đối cho trải nghiệm hình ảnh hoàn hảo.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649aebb"
+      }
+    }
+  ],
+  "specifications": {
+    "Màn hình": "11-inch Ultra Retina XDR (OLED)",
+    "Vi xử lý": "Apple M4 (9 nhân hoặc 10 nhân)",
+    "Camera": "12MP Wide | LiDAR Scanner",
+    "Độ mỏng": "5.3 mm",
+    "Kết nối": "Thunderbolt / USB 4, hỗ trợ Wi-Fi 6E",
+    "Pin": "8122 mAh"
+  },
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-05-11T06:55:35.009Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-11T07:06:42.760Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a017d6769c9808c4649aebc"
+  },
+  "name": "Samsung Galaxy Z Fold 5",
+  "description": "Mở ra thế giới giải trí khổng lồ. Điện thoại gập mạnh mẽ và bền bỉ nhất của Samsung.",
+  "price": 31990000,
+  "category": "samsung",
+  "stock": 40,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/bafd56fa72f8c4ae9fcaec7f81ed6d86.webp"
+  ],
+  "variants": [
+    {
+      "colorName": "Xanh Icy",
+      "colorCode": "#d1e0e9",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/bafd56fa72f8c4ae9fcaec7f81ed6d86.webp"
+      ],
+      "options": [
+        {
+          "storage": "256GB",
+          "price": 31990000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649aebe"
+          }
+        },
+        {
+          "storage": "512GB",
+          "price": 34990000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649aebf"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649aebd"
+      }
+    },
+    {
+      "colorName": "Đen Phantom",
+      "colorCode": "#2b2c2d",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/e042be04c21bd2466d5176ceabdbcbe2.webp"
+      ],
+      "options": [
+        {
+          "storage": "512GB",
+          "price": 34990000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649aec1"
+          }
+        },
+        {
+          "storage": "1TB",
+          "price": 40990000,
+          "stock": 5,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649aec2"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649aec0"
+      }
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Màn hình cực đại 7.6\".",
+      "description": "Trải nghiệm xem phim và làm việc đa nhiệm như một chiếc tablet thực thụ.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649aec3"
+      }
+    },
+    {
+      "title": "Bản lề Flex mới.",
+      "description": "Gập phẳng hoàn toàn, mỏng hơn và bền bỉ hơn các thế hệ trước.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649aec4"
+      }
+    }
+  ],
+  "specifications": {
+    "Màn hình chính": "7.6-inch Dynamic AMOLED 2X, 120Hz",
+    "Màn hình phụ": "6.2-inch Dynamic AMOLED 2X",
+    "Vi xử lý": "Snapdragon 8 Gen 2 for Galaxy",
+    "Camera": "50MP Wide | 10MP Tele | 12MP Ultra Wide",
+    "Pin": "4400 mAh"
+  },
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-05-11T06:55:35.009Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-11T07:06:42.749Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a01896c29476795827b463b"
+  },
+  "name": "iPhone 17",
+  "description": "Tương lai trong tầm tay. iPhone đầu tiên mang tần số quét 120Hz lên dòng tiêu chuẩn.",
+  "price": 22990000,
+  "category": "iphone",
+  "stock": 60,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/d84e5efbd8c8a307b467bff8f1db1ee3.webp"
+  ],
+  "variants": [
+    {
+      "colorName": "Bạc Ánh Sao",
+      "colorCode": "#faf9f6",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/d84e5efbd8c8a307b467bff8f1db1ee3.webp"
+      ],
+      "options": [
+        {
+          "storage": "128GB",
+          "price": 22990000,
+          "stock": 20,
+          "_id": {
+            "$oid": "6a01896c29476795827b463d"
+          }
+        },
+        {
+          "storage": "256GB",
+          "price": 25990000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a01896c29476795827b463e"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a01896c29476795827b463c"
+      }
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Màn hình 120Hz ProMotion.",
+      "description": "Lần đầu tiên dòng tiêu chuẩn sở hữu trải nghiệm mượt mà vượt trội.",
+      "_id": {
+        "$oid": "6a01896c29476795827b463f"
+      }
+    },
+    {
+      "title": "Chip A19 mạnh mẽ.",
+      "description": "Hiệu năng CPU và GPU tăng 30%, cân mọi ứng dụng AI nặng nhất.",
+      "_id": {
+        "$oid": "6a01896c29476795827b4640"
+      }
+    }
+  ],
+  "specifications": {
+    "Màn hình": "6.3-inch Super Retina XDR, 120Hz",
+    "Vi xử lý": "Apple A19 (2nm)",
+    "Camera": "Chính 48MP | Ultra Wide 48MP",
+    "Pin": "3800 mAh",
+    "Cổng kết nối": "USB-C (USB 3.0)"
+  },
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-05-11T07:46:52.752Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-11T07:46:52.752Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a01896c29476795827b4641"
+  },
+  "name": "iPhone 16 Pro Max",
+  "description": "Sức mạnh Pro đỉnh cao. Màn hình lớn nhất từng có trên iPhone cùng nút Điều Khiển Camera mới.",
+  "price": 34990000,
+  "category": "iphone",
+  "stock": 40,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/98c69524e3eac8ea86652ca637c5d593.webp"
+  ],
+  "variants": [
+    {
+      "colorName": "Titan Sa Mạc",
+      "colorCode": "#c6b5a2",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/98c69524e3eac8ea86652ca637c5d593.webp"
+      ],
+      "options": [
+        {
+          "storage": "256GB",
+          "price": 34990000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a01896c29476795827b4643"
+          }
+        },
+        {
+          "storage": "512GB",
+          "price": 39990000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a01896c29476795827b4644"
+          }
+        },
+        {
+          "storage": "1TB",
+          "price": 44990000,
+          "stock": 5,
+          "_id": {
+            "$oid": "6a01896c29476795827b4645"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a01896c29476795827b4642"
+      }
+    },
+    {
+      "colorName": "Titan Đen",
+      "colorCode": "#3c3c3d",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/4f41497edf0a6c958826f5d45df3fc13.webp"
+      ],
+      "options": [
+        {
+          "storage": "256GB",
+          "price": 34990000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a01896c29476795827b4647"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a01896c29476795827b4646"
+      }
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Nút Điều Khiển Camera.",
+      "description": "Cách mới để tương tác với hệ thống camera chuyên nghiệp một cách tức thời.",
+      "_id": {
+        "$oid": "6a01896c29476795827b4648"
+      }
+    },
+    {
+      "title": "Chip A18 Pro.",
+      "description": "Khả năng xử lý video 4K 120fps chuẩn điện ảnh ngay trên điện thoại.",
+      "_id": {
+        "$oid": "6a01896c29476795827b4649"
+      }
+    }
+  ],
+  "specifications": {
+    "Màn hình": "6.9-inch Super Retina XDR, ProMotion",
+    "Vi xử lý": "Apple A18 Pro (3nm)",
+    "Camera": "Chính 48MP | Ultra Wide 48MP | Tele 5x 12MP",
+    "Pin": "4676 mAh",
+    "Vật liệu": "Titan cấp độ 5"
+  },
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-05-11T07:46:52.753Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-11T07:46:52.753Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a01896c29476795827b464a"
+  },
+  "name": "iPhone 16",
+  "description": "Đầy màu sắc. Đầy quyền năng. Sở hữu nút Tác Vụ và nút Điều Khiển Camera hoàn toàn mới.",
+  "price": 22990000,
+  "category": "iphone",
+  "stock": 50,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/ffdaccb83d6c2699717411eda954af7b.webp"
+  ],
+  "variants": [
+    {
+      "colorName": "Xanh Lưu Ly (Ultramarine)",
+      "colorCode": "#7386f6",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/ffdaccb83d6c2699717411eda954af7b.webp"
+      ],
+      "options": [
+        {
+          "storage": "128GB",
+          "price": 22990000,
+          "stock": 20,
+          "_id": {
+            "$oid": "6a01896c29476795827b464c"
+          }
+        },
+        {
+          "storage": "256GB",
+          "price": 25990000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a01896c29476795827b464d"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a01896c29476795827b464b"
+      }
+    },
+    {
+      "colorName": "Xanh Teal",
+      "colorCode": "#afd3d2",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/8f9eabc873d5ef416882f949120e523d.webp"
+      ],
+      "options": [
+        {
+          "storage": "128GB",
+          "price": 22990000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a01896c29476795827b464f"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a01896c29476795827b464e"
+      }
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Nút Tác Vụ (Action Button).",
+      "description": "Tùy chỉnh các phím tắt yêu thích chỉ với một lần nhấn.",
+      "_id": {
+        "$oid": "6a01896c29476795827b4650"
+      }
+    },
+    {
+      "title": "Hệ thống Camera Fusion 48MP.",
+      "description": "Chất lượng ảnh 2 trong 1 cực đỉnh với khả năng zoom quang học 2x.",
+      "_id": {
+        "$oid": "6a01896c29476795827b4651"
+      }
+    }
+  ],
+  "specifications": {
+    "Màn hình": "6.1-inch Super Retina XDR",
+    "Vi xử lý": "Apple A18 (3nm)",
+    "Camera": "Chính 48MP Fusion | Ultra Wide 12MP",
+    "Pin": "3561 mAh",
+    "Kết nối": "USB-C (USB 2.0)"
+  },
+  "__v": 0,
+  "createdAt": {
+    "$date": "2026-05-11T07:46:52.753Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-11T07:46:52.753Z"
+  }
 }]

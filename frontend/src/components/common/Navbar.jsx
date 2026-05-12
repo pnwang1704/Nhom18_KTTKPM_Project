@@ -86,6 +86,14 @@ const Navbar = () => {
                 <Link to="/account" className="text-[11px] font-semibold text-elppa-obsidian hover:text-elppa-blue transition-colors">
                   Hi, {user.fullName}
                 </Link>
+                {user.role === 'admin' && (
+                  <Link 
+                    to="/admin" 
+                    className="text-[11px] font-bold text-elppa-blue border border-elppa-blue px-2 py-0.5 rounded-full hover:bg-elppa-blue hover:text-white transition-all"
+                  >
+                    Admin
+                  </Link>
+                )}
                 <button 
                   onClick={handleLogout}
                   className="text-[10px] uppercase tracking-wider font-bold text-red-500 hover:text-red-600 transition-colors"
