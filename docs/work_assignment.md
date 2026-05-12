@@ -11,18 +11,18 @@ Tài liệu này chi tiết hóa lộ trình phát triển hệ thống Thương
 
 ## 2. Lộ trình chi tiết
 
-| Tuần | Giai đoạn | Công việc của Quang (Quang) | Công việc của Bảo (Bảo) |
+| Tuần (Thời gian) | Giai đoạn | Công việc của Quang (Quang) | Công việc của Bảo (Bảo) |
 | :--- | :--- | :--- | :--- |
-| **1** | **Setup & Auth** | - Hoàn thiện `auth-service`: Đăng ký, Đăng nhập (JWT).<br>- Cấu hình `api-gateway`: Proxy requests, Auth middleware. | - Khởi tạo 3 service: `cart`, `order`, `notification`.<br>- Thiết lập DB PostgreSQL cho Order và Redis cho Cart. |
-| **2** | **Core Identity** | - Xử lý Refresh Token và Logout.<br>- Phân quyền (Role-based: User/Admin).<br>- Làm trang Login/Register ở Frontend. | - Xây dựng logic giỏ hàng cơ bản trên Redis.<br>- API thêm sản phẩm vào giỏ hàng. |
-| **3** | **Product Schema** | - Thiết kế MongoDB Schema cho Product (nhiều variant, cấu hình).<br>- API lấy danh sách và chi tiết sản phẩm. | - Hoàn thiện API Cart (cập nhật số lượng, xóa item).<br>- Làm giao diện Giỏ hàng ở Frontend. |
-| **4** | **Admin Product** | - Xây dựng trang Admin: Thêm/Sửa/Xóa sản phẩm.<br>- Tích hợp dịch vụ lưu trữ hình ảnh (S3/Cloudinary). | - Thiết kế logic đặt hàng (Checkout).<br>- Kiểm tra tồn kho từ Product Service (gọi qua Gateway). |
-| **5** | **User Experience** | - Xây dựng trang chủ (Home), danh mục (Category).<br>- Tính năng Tìm kiếm & Lọc (Search & Filter). | - Xây dựng `order-service`: Tạo đơn hàng, lưu DB PostgreSQL.<br>- Quản lý trạng thái đơn hàng (Pending, Paid). |
-| **6** | **Notification** | - Xây dựng trang thông tin cá nhân (User Profile).<br>- Tối ưu hóa hiệu năng Frontend (Lazy loading). | - Xây dựng `notification-service`.<br>- Tích hợp Nodemailer gửi mail xác nhận khi đặt hàng thành công. |
-| **7** | **Order Flow** | - Tích hợp Lịch sử mua hàng vào Profile.<br>- Hỗ trợ Bảo tích hợp luồng thanh toán từ Gateway. | - Xử lý logic hủy đơn hàng, hoàn trả kho.<br>- Cập nhật trạng thái đơn hàng thời gian thực (Socket.io). |
-| **8** | **Payment Integration** | - Bảo mật API Gateway (Rate limiting, CORS).<br>- Kiểm thử luồng end-to-end từ chọn máy đến thanh toán. | - Tích hợp Mock Payment hoặc VNPay Sandbox.<br>- Xử lý Webhook từ cổng thanh toán để cập nhật Order. |
-| **9** | **Optimization** | - Thêm Logging & Monitoring (Winston/ELK).<br>- Viết tài liệu API chi tiết (Swagger). | - Unit Test cho các logic nghiệp vụ quan trọng.<br>- Tối ưu hóa Database queries & Indexing. |
-| **10** | **MVP Final** | - Dọn dẹp code, fix bug cuối cùng.<br>- Dockerize hoàn chỉnh hệ thống để deploy. | - Viết tài liệu hướng dẫn vận hành.<br>- Kiểm tra tính nhất quán dữ liệu & Demo. |
+| **Tuần 1**<br>(26/01 - 01/02) | **Setup & Auth** | - Hoàn thiện `auth-service`: Đăng ký, Đăng nhập (JWT).<br>- Cấu hình `api-gateway`: Proxy requests, Auth middleware. | - Khởi tạo 3 service: `cart`, `order`, `notification`.<br>- Thiết lập DB PostgreSQL cho Order và Redis cho Cart. |
+| **Tuần 2**<br>(02/02 - 08/02) | **Core Identity** | - Xử lý Refresh Token và Logout.<br>- Phân quyền (Role-based: User/Admin).<br>- Làm trang Login/Register ở Frontend. | - Xây dựng logic giỏ hàng cơ bản trên Redis.<br>- API thêm sản phẩm vào giỏ hàng. |
+| **Tuần 3**<br>(09/03 - 15/03) | **Product Schema** | - Thiết kế MongoDB Schema cho Product (nhiều variant, cấu hình).<br>- API lấy danh sách và chi tiết sản phẩm. | - Hoàn thiện API Cart (cập nhật số lượng, xóa item).<br>- Làm giao diện Giỏ hàng ở Frontend. |
+| **Tuần 4**<br>(16/03 - 22/03) | **Admin Product** | - Xây dựng trang Admin: Thêm/Sửa/Xóa sản phẩm.<br>- Tích hợp dịch vụ lưu trữ hình ảnh (S3/Cloudinary). | - Thiết kế logic đặt hàng (Checkout).<br>- Kiểm tra tồn kho từ Product Service (gọi qua Gateway). |
+| **Tuần 5**<br>(23/03 - 29/03) | **User Experience** | - Xây dựng trang chủ (Home), danh mục (Category).<br>- Tính năng Tìm kiếm & Lọc (Search & Filter). | - Xây dựng `order-service`: Tạo đơn hàng, lưu DB PostgreSQL.<br>- Quản lý trạng thái đơn hàng (Pending, Paid). |
+| **Tuần 6**<br>(30/03 - 05/04) | **Notification** | - Xây dựng trang thông tin cá nhân (User Profile).<br>- Tối ưu hóa hiệu năng Frontend (Lazy loading). | - Xây dựng `notification-service`.<br>- Tích hợp Nodemailer gửi mail xác nhận khi đặt hàng thành công. |
+| **Tuần 7**<br>(06/04 - 12/04) | **Order Flow** | - Tích hợp Lịch sử mua hàng vào Profile.<br>- Hỗ trợ Bảo tích hợp luồng thanh toán từ Gateway. | - Xử lý logic hủy đơn hàng, hoàn trả kho.<br>- Cập nhật trạng thái đơn hàng thời gian thực (Socket.io). |
+| **Tuần 8**<br>(13/04 - 19/04) | **Payment Integration** | - Bảo mật API Gateway (Rate limiting, CORS).<br>- Kiểm thử luồng end-to-end từ chọn máy đến thanh toán. | - Tích hợp Mock Payment hoặc VNPay Sandbox.<br>- Xử lý Webhook từ cổng thanh toán để cập nhật Order. |
+| **Tuần 9**<br>(20/04 - 26/04) | **Optimization** | - Thêm Logging & Monitoring (Winston/ELK).<br>- Viết tài liệu API chi tiết (Swagger). | - Unit Test cho các logic nghiệp vụ quan trọng.<br>- Tối ưu hóa Database queries & Indexing. |
+| **Tuần 10**<br>(27/04 - 03/05) | **MVP Final** | - Dọn dẹp code, fix bug cuối cùng.<br>- Dockerize hoàn chỉnh hệ thống để deploy. | - Viết tài liệu hướng dẫn vận hành.<br>- Kiểm tra tính nhất quán dữ liệu & Demo. |
 
 ## 3. Nguyên tắc phối hợp (Rules)
 1. **Độc lập Service**: Mỗi người chỉ sửa code trong các service mình phụ trách.
