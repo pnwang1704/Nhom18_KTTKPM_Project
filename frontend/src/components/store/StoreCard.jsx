@@ -8,6 +8,9 @@ const StoreCard = ({ product }) => {
   // Lấy ảnh hiển thị: Ưu tiên ảnh của variant đầu tiên nếu có
   const mainImage = product.variants?.[0]?.images?.[0] || product.image || (product.images && product.images[0]);
 
+  // Lấy giá hiển thị: Nếu không có giá gốc, lấy từ variant đầu tiên
+  const displayPrice = product.price || product.variants?.[0]?.options?.[0]?.price || 0;
+
   return (
     <motion.div
       whileHover={{ y: -10 }}
@@ -28,11 +31,11 @@ const StoreCard = ({ product }) => {
       </div>
 
       {/* Product Image - Centered and constrained */}
-      <div className="flex-1 flex items-center justify-center py-4">
+      <div className="flex-1 flex items-center justify-center py-4 overflow-hidden max-h-[220px] md:max-h-[280px]">
         <img 
           src={mainImage} 
           alt={product.name} 
-          className="h-full w-full object-contain group-hover:scale-105 transition-transform duration-700 ease-out"
+          className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-700 ease-out"
         />
       </div>
 
@@ -41,7 +44,7 @@ const StoreCard = ({ product }) => {
         <div className="flex flex-col">
            <p className="text-[10px] text-elppa-gray font-bold uppercase tracking-wider mb-1">Giá từ</p>
            <p className="text-lg md:text-xl font-bold">
-             {product.price?.toLocaleString()}đ
+             {displayPrice ? `${displayPrice.toLocaleString()}đ` : 'Liên hệ'}
            </p>
         </div>
 

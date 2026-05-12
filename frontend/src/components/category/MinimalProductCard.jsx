@@ -15,11 +15,11 @@ const MinimalProductCard = ({ product, index }) => {
       onClick={() => navigate(`/product/${product._id}`)}
       className="bg-white rounded-[32px] p-6 md:p-8 border border-elppa-gray-border/30 flex flex-col items-center text-center group cursor-pointer hover:shadow-2xl hover:shadow-black/5 transition-all duration-500 h-full"
     >
-      <div className="w-full h-[180px] md:h-[240px] mb-6 overflow-hidden">
+      <div className="w-full h-[180px] md:h-[240px] mb-6 overflow-hidden flex items-center justify-center">
         <img 
           src={product.image || (product.images && product.images[0]) || (product.variants && product.variants[0]?.images[0])} 
           alt={product.name} 
-          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700 ease-elppa-ease"
+          className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-700 ease-elppa-ease"
         />
       </div>
 
@@ -32,7 +32,7 @@ const MinimalProductCard = ({ product, index }) => {
         </p>
         <div className="mt-auto pt-4">
           <p className="text-elppa-obsidian font-bold text-base">
-            Từ {product.price?.toLocaleString()}đ
+            Từ {(product.price || product.variants?.[0]?.options?.[0]?.price || 0).toLocaleString()}đ
           </p>
           <button className="mt-4 bg-elppa-blue text-white px-5 py-1.5 rounded-full text-xs font-bold opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
             Mua ngay

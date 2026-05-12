@@ -5,7 +5,7 @@
   "name": "iPhone 15",
   "description": "Chip A17 Pro, Camera 48MP",
   "price": 24000000,
-  "category": "Smartphone",
+  "category": "iphone",
   "stock": 60,
   "images": [
     "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/f4e1a77afeda5a7efe6ede2e37d7c956.jpg"
@@ -111,7 +111,7 @@
     "$date": "2026-04-22T06:55:43.225Z"
   },
   "updatedAt": {
-    "$date": "2026-05-11T07:06:42.737Z"
+    "$date": "2026-05-12T09:37:54.049Z"
   },
   "__v": 0
 },
@@ -264,7 +264,7 @@
     "$date": "2026-05-10T06:58:10.018Z"
   },
   "updatedAt": {
-    "$date": "2026-05-11T07:06:42.743Z"
+    "$date": "2026-05-12T09:37:54.067Z"
   },
   "__v": 0
 },
@@ -338,12 +338,6 @@
       }
     }
   ],
-  "createdAt": {
-    "$date": "2026-05-10T06:58:10.020Z"
-  },
-  "updatedAt": {
-    "$date": "2026-05-11T07:17:51.468Z"
-  },
   "highlights": [
     {
       "title": "Ống kính quang học Leica Summilux.",
@@ -367,7 +361,6 @@
       }
     }
   ],
-  "__v": 0,
   "specifications": {
     "Màn hình": "6.73-inch LTPO AMOLED, 120Hz, 68 tỷ màu",
     "Vi xử lý": "Snapdragon 8 Gen 3 (4nm)",
@@ -376,7 +369,14 @@
     "Pin": "5000 mAh",
     "Sạc": "Sạc nhanh dây 90W | Sạc không dây 80W",
     "Kháng nước": "IP68"
-  }
+  },
+  "createdAt": {
+    "$date": "2026-05-10T06:58:10.020Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-12T09:37:54.070Z"
+  },
+  "__v": 0
 },
 {
   "_id": {
@@ -448,12 +448,6 @@
       }
     }
   ],
-  "createdAt": {
-    "$date": "2026-05-10T06:58:10.020Z"
-  },
-  "updatedAt": {
-    "$date": "2026-05-11T07:25:23.490Z"
-  },
   "highlights": [
     {
       "title": "Hệ thống camera Hasselblad.",
@@ -477,7 +471,6 @@
       }
     }
   ],
-  "__v": 0,
   "specifications": {
     "Màn hình chính": "7.82-inch OLED gập, 120Hz LTPO",
     "Màn hình phụ": "6.31-inch AMOLED, 120Hz",
@@ -486,7 +479,14 @@
     "Pin": "4805 mAh",
     "Sạc": "SuperVOOC 67W",
     "Độ dày": "5.8 mm (khi mở)"
-  }
+  },
+  "createdAt": {
+    "$date": "2026-05-10T06:58:10.020Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-12T09:37:54.073Z"
+  },
+  "__v": 0
 },
 {
   "_id": {
@@ -495,8 +495,8 @@
   "name": "iPhone 17 Pro Max",
   "description": "Chip A17 Pro, Camera 48MP",
   "price": 24000000,
-  "category": "Smartphone",
-  "stock": 0,
+  "category": "iphone",
+  "stock": 60,
   "images": [
     "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/d4db9583d00a8db1573bdd65db7758d8.webp"
   ],
@@ -586,12 +586,6 @@
       }
     }
   ],
-  "createdAt": {
-    "$date": "2026-04-22T06:55:43.225Z"
-  },
-  "updatedAt": {
-    "$date": "2026-05-11T07:25:23.469Z"
-  },
   "highlights": [
     {
       "title": "FaceID dưới màn hình.",
@@ -615,7 +609,6 @@
       }
     }
   ],
-  "__v": 0,
   "specifications": {
     "Màn hình": "6.9-inch LTPO Super Retina XDR, ProMotion 144Hz",
     "Vi xử lý": "Apple A19 Pro (2nm)",
@@ -624,7 +617,15 @@
     "Pin": "4600 mAh",
     "Kết nối": "USB-C (USB 4.0 tốc độ cực cao)",
     "Kháng nước": "IP68 (độ sâu 10m)"
-  }
+  },
+  "createdAt": {
+    "$date": "2026-04-22T06:55:43.225Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-12T09:41:50.451Z"
+  },
+  "__v": 0,
+  "image": "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/d4db9583d00a8db1573bdd65db7758d8.webp"
 },
 {
   "_id": {
@@ -719,13 +720,13 @@
     "Cổng kết nối": "USB-C",
     "Pin": "4422 mAh"
   },
-  "__v": 0,
   "createdAt": {
     "$date": "2026-05-11T06:55:35.008Z"
   },
   "updatedAt": {
-    "$date": "2026-05-11T07:06:42.728Z"
-  }
+    "$date": "2026-05-12T09:37:54.049Z"
+  },
+  "__v": 0
 },
 {
   "_id": {
@@ -829,13 +830,13 @@
     "Kết nối": "Thunderbolt / USB 4, hỗ trợ Wi-Fi 6E",
     "Pin": "8122 mAh"
   },
-  "__v": 0,
   "createdAt": {
     "$date": "2026-05-11T06:55:35.009Z"
   },
   "updatedAt": {
-    "$date": "2026-05-11T07:06:42.760Z"
-  }
+    "$date": "2026-05-12T09:37:54.064Z"
+  },
+  "__v": 0
 },
 {
   "_id": {
@@ -930,13 +931,13 @@
     "Camera": "50MP Wide | 10MP Tele | 12MP Ultra Wide",
     "Pin": "4400 mAh"
   },
-  "__v": 0,
   "createdAt": {
     "$date": "2026-05-11T06:55:35.009Z"
   },
   "updatedAt": {
-    "$date": "2026-05-11T07:06:42.749Z"
-  }
+    "$date": "2026-05-12T09:37:54.067Z"
+  },
+  "__v": 0
 },
 {
   "_id": {
@@ -946,7 +947,7 @@
   "description": "Tương lai trong tầm tay. iPhone đầu tiên mang tần số quét 120Hz lên dòng tiêu chuẩn.",
   "price": 22990000,
   "category": "iphone",
-  "stock": 60,
+  "stock": 35,
   "images": [
     "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/d84e5efbd8c8a307b467bff8f1db1ee3.webp"
   ],
@@ -1003,13 +1004,14 @@
     "Pin": "3800 mAh",
     "Cổng kết nối": "USB-C (USB 3.0)"
   },
-  "__v": 0,
   "createdAt": {
     "$date": "2026-05-11T07:46:52.752Z"
   },
   "updatedAt": {
-    "$date": "2026-05-11T07:46:52.752Z"
-  }
+    "$date": "2026-05-12T09:41:53.942Z"
+  },
+  "__v": 0,
+  "image": "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/d84e5efbd8c8a307b467bff8f1db1ee3.webp"
 },
 {
   "_id": {
@@ -1104,13 +1106,13 @@
     "Pin": "4676 mAh",
     "Vật liệu": "Titan cấp độ 5"
   },
-  "__v": 0,
   "createdAt": {
     "$date": "2026-05-11T07:46:52.753Z"
   },
   "updatedAt": {
-    "$date": "2026-05-11T07:46:52.753Z"
-  }
+    "$date": "2026-05-12T09:37:54.049Z"
+  },
+  "__v": 0
 },
 {
   "_id": {
@@ -1197,11 +1199,739 @@
     "Pin": "3561 mAh",
     "Kết nối": "USB-C (USB 2.0)"
   },
-  "__v": 0,
   "createdAt": {
     "$date": "2026-05-11T07:46:52.753Z"
   },
   "updatedAt": {
-    "$date": "2026-05-11T07:46:52.753Z"
-  }
+    "$date": "2026-05-12T09:37:54.049Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a017d6769c9808c4649ae20"
+  },
+  "name": "Xiaomi 13T",
+  "description": "Tuyệt tác trong tầm tay với hệ thống camera Leica chuyên nghiệp và màn hình 144Hz siêu mượt.",
+  "price": 10990000,
+  "category": "xiaomi",
+  "stock": 60,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/ee5f3f5d04686985b5c5f31d735b942c.webp"
+  ],
+  "variants": [
+    {
+      "colorName": "Xanh Tuyết Sơn",
+      "colorCode": "#adc6da",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/6d73199d532d6b9c73d98ddb39f25c99.webp"
+      ],
+      "options": [
+        {
+          "storage": "256GB",
+          "price": 10990000,
+          "stock": 40,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae21"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae22"
+      }
+    },
+    {
+      "colorName": "Đen",
+      "colorCode": "#1e1e1e",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/163ab412cc5dcb49cacc747ea673ef6a.webp"
+      ],
+      "options": [
+        {
+          "storage": "256GB",
+          "price": 10990000,
+          "stock": 20,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae23"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae24"
+      }
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Camera Leica đích thực.",
+      "description": "Hai phong cách nhiếp ảnh Leica Authentic và Leica Vibrant độc quyền.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae25"
+      }
+    },
+    {
+      "title": "Sạc nhanh 67W.",
+      "description": "Nạp đầy năng lượng chỉ trong thời gian ngắn, đáp ứng nhu cầu sử dụng cả ngày dài.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae26"
+      }
+    }
+  ],
+  "specifications": {
+    "Màn hình": "6.67-inch CrystalRes AMOLED, 144Hz",
+    "Vi xử lý": "MediaTek Dimensity 8200-Ultra",
+    "Camera": "50MP Leica | 50MP Tele | 12MP Ultra Wide",
+    "Pin": "5000 mAh",
+    "Kháng nước": "IP68"
+  },
+  "createdAt": {
+    "$date": "2026-05-12T16:05:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-12T09:48:50.461Z"
+  },
+  "__v": 0,
+  "image": "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/ee5f3f5d04686985b5c5f31d735b942c.webp"
+},
+{
+  "_id": {
+    "$oid": "6a017d6769c9808c4649ae30"
+  },
+  "name": "Xiaomi Redmi Note 13 Pro+ 5G",
+  "description": "Đột phá phân khúc với màn hình cong cao cấp và camera siêu độ phân giải 200MP.",
+  "price": 9990000,
+  "category": "xiaomi",
+  "stock": 100,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/e89496d715cc26c7e147f52d047391d3.webp"
+  ],
+  "variants": [
+    {
+      "colorName": "Tím Cực Quang",
+      "colorCode": "#e6e6fa",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/8654b6652106531705e94df85c6449fb.webp"
+      ],
+      "options": [
+        {
+          "storage": "256GB",
+          "price": 9990000,
+          "stock": 50,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae31"
+          }
+        },
+        {
+          "storage": "512GB",
+          "price": 10990000,
+          "stock": 25,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae32"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae33"
+      }
+    },
+    {
+      "colorName": "Đen Bán Dạ",
+      "colorCode": "#121212",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/redmi_note_13_pro_plus_black_v1.webp"
+      ],
+      "options": [
+        {
+          "storage": "256GB",
+          "price": 9990000,
+          "stock": 25,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae34"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae35"
+      }
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Camera 200MP chống rung OIS.",
+      "description": "Chụp ảnh sắc nét đến từng chi tiết ngay cả khi zoom cận cảnh.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae36"
+      }
+    },
+    {
+      "title": "Sạc nhanh HyperCharge 120W.",
+      "description": "Sạc đầy 100% pin chỉ trong khoảng 19 phút.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae37"
+      }
+    }
+  ],
+  "specifications": {
+    "Màn hình": "6.67-inch Curved AMOLED, 1.5K, 120Hz",
+    "Vi xử lý": "MediaTek Dimensity 7200-Ultra",
+    "Camera": "200MP Main | 8MP Ultra Wide | 2MP Macro",
+    "Pin": "5000 mAh",
+    "Bảo vệ": "Kính cường lực Gorilla Glass Victus"
+  },
+  "createdAt": {
+    "$date": "2026-05-12T16:10:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-12T09:51:36.030Z"
+  },
+  "__v": 0,
+  "image": "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/e89496d715cc26c7e147f52d047391d3.webp"
+},
+{
+  "_id": {
+    "$oid": "6a017d6769c9808c4649ae40"
+  },
+  "name": "OPPO Find X7 Ultra",
+  "description": "Bậc thầy nhiếp ảnh với hệ thống camera tiềm vọng kép đầu tiên trên thế giới. Đỉnh cao công nghệ màn hình và hiệu năng.",
+  "price": 25990000,
+  "category": "oppo",
+  "stock": 25,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/773fb8209aed491f9ef233f9167b73c1.webp"
+  ],
+  "variants": [
+    {
+      "colorName": "Nâu Đại Dương (Sepia Brown)",
+      "colorCode": "#704214",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/c1d3178fa959e4b39d3998fbe79d3bb8.webp"
+      ],
+      "options": [
+        {
+          "storage": "256GB",
+          "price": 25990000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae41"
+          }
+        },
+        {
+          "storage": "512GB",
+          "price": 28990000,
+          "stock": 5,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae42"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae43"
+      }
+    },
+    {
+      "colorName": "Xanh Biển Sâu",
+      "colorCode": "#003366",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/1a0b789e9e3f28c46f5d25d6949d5f0a.webp"
+      ],
+      "options": [
+        {
+          "storage": "512GB",
+          "price": 28990000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae44"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae45"
+      }
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Hệ thống Camera Hasselblad.",
+      "description": "Bốn camera chính 50MP với cảm biến 1 inch, mang lại màu sắc và độ chi tiết huyền thoại.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae46"
+      }
+    },
+    {
+      "title": "Màn hình 2K siêu sáng.",
+      "description": "Độ sáng tối đa lên tới 4500 nits, hiển thị rõ nét ngay cả dưới ánh nắng gắt.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae47"
+      }
+    }
+  ],
+  "specifications": {
+    "Màn hình": "6.82-inch LTPO AMOLED, 120Hz, 1 tỷ màu",
+    "Vi xử lý": "Snapdragon 8 Gen 3 (4nm)",
+    "Camera": "50MP Wide | 50MP Periscope (3x) | 50MP Periscope (6x) | 50MP Ultra Wide",
+    "Pin": "5000 mAh, Sạc nhanh 100W",
+    "Chống nước": "IP68"
+  },
+  "createdAt": {
+    "$date": "2026-05-12T16:20:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-12T09:55:23.358Z"
+  },
+  "__v": 0,
+  "image": "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/773fb8209aed491f9ef233f9167b73c1.webp"
+},
+{
+  "_id": {
+    "$oid": "6a017d6769c9808c4649ae50"
+  },
+  "name": "OPPO Reno11 Pro 5G",
+  "description": "Chuyên gia chân dung với thiết kế mỏng nhẹ tinh tế và khả năng chụp ảnh nghệ thuật.",
+  "price": 16990000,
+  "category": "oppo",
+  "stock": 45,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/fc4544209101adb4c0b489442186e16e.webp"
+  ],
+  "variants": [
+    {
+      "colorName": "Trắng Ngọc Trai",
+      "colorCode": "#fff",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/e4b58b0ac7e210be231b46a91a3e3e41.webp"
+      ],
+      "options": [
+        {
+          "storage": "512GB",
+          "price": 16990000,
+          "stock": 25,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae51"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae52"
+      }
+    },
+    {
+      "colorName": "Xám San Hô",
+      "colorCode": "#4b4b4b",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/953a0fbf1ca81aae586d77e7c9fd5d9d.webp"
+      ],
+      "options": [
+        {
+          "storage": "512GB",
+          "price": 16990000,
+          "stock": 20,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae53"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae54"
+      }
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Camera chân dung tele 32MP.",
+      "description": "Tiêu chuẩn chuyên nghiệp cho những bức ảnh xóa phông tự nhiên và sắc nét.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae55"
+      }
+    },
+    {
+      "title": "Sạc siêu nhanh SuperVOOC 80W.",
+      "description": "Sạc đầy 45% pin chỉ trong 10 phút, luôn sẵn sàng cho mọi hành trình.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae56"
+      }
+    }
+  ],
+  "specifications": {
+    "Màn hình": "6.7-inch AMOLED, 120Hz, cong 3D",
+    "Vi xử lý": "MediaTek Dimensity 8200",
+    "Camera": "50MP Main (OIS) | 32MP Tele | 8MP Ultra Wide",
+    "Pin": "4600 mAh",
+    "Trọng lượng": "181g"
+  },
+  "createdAt": {
+    "$date": "2026-05-12T16:25:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-12T09:57:00.998Z"
+  },
+  "__v": 0,
+  "image": "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/fc4544209101adb4c0b489442186e16e.webp"
+},
+{
+  "_id": {
+    "$oid": "6a017d6769c9808c4649ae60"
+  },
+  "name": "OPPO A98 5G",
+  "description": "Lướt mượt cả ngày với pin lớn, sạc nhanh cấp tốc và màn hình 120Hz sống động.",
+  "price": 8490000,
+  "category": "oppo",
+  "stock": 80,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/f5a5499ca9cb44d8266b66821441efcd.webp"
+  ],
+  "variants": [
+    {
+      "colorName": "Xanh Đại Dương",
+      "colorCode": "#87ceeb",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/bfcac494fb4c4e8b8aa86ebab9564d71.webp"
+      ],
+      "options": [
+        {
+          "storage": "256GB",
+          "price": 8490000,
+          "stock": 50,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae61"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae62"
+      }
+    },
+    {
+      "colorName": "Đen Huyền Bí",
+      "colorCode": "#000000",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/695bd9bfb6367a5d7c62a90cc684e757.webp"
+      ],
+      "options": [
+        {
+          "storage": "256GB",
+          "price": 8490000,
+          "stock": 30,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae63"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae64"
+      }
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Sạc nhanh SuperVOOC 67W.",
+      "description": "Nạp đầy 50% pin chỉ trong 18 phút, an toàn và hiệu quả.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae65"
+      }
+    },
+    {
+      "title": "Camera kính hiển vi 40x.",
+      "description": "Khám phá thế giới siêu nhỏ với khả năng phóng đại cực đại độc đáo.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae66"
+      }
+    }
+  ],
+  "specifications": {
+    "Màn hình": "6.72-inch LTPS LCD, 120Hz",
+    "Vi xử lý": "Snapdragon 695 5G",
+    "Camera": "64MP Main | 2MP Mono | 2MP Microscope",
+    "Pin": "5000 mAh",
+    "RAM": "8GB (+8GB RAM ảo)"
+  },
+  "createdAt": {
+    "$date": "2026-05-12T16:30:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-12T09:58:01.812Z"
+  },
+  "__v": 0,
+  "image": "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/f5a5499ca9cb44d8266b66821441efcd.webp"
+},
+{
+  "_id": {
+    "$oid": "6a017d6769c9808c4649ae70"
+  },
+  "name": "iPad Air 11-inch (M2)",
+  "description": "Sức mạnh từ chip M2 vượt trội. Thiết kế mỏng nhẹ cùng màn hình Liquid Retina sắc nét, hỗ trợ Apple Pencil Pro mới.",
+  "price": 16990000,
+  "category": "ipad",
+  "stock": 35,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/ada10423bbfcf0b01ebc817ac90484c0.webp"
+  ],
+  "variants": [
+    {
+      "colorName": "Xanh Dương (Blue)",
+      "colorCode": "#d1dce5",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/958ebc913ba2e94d2d0e7367354f54e7.webp"
+      ],
+      "options": [
+        {
+          "storage": "128GB",
+          "price": 16990000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae71"
+          }
+        },
+        {
+          "storage": "256GB",
+          "price": 19490000,
+          "stock": 5,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae72"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae73"
+      }
+    },
+    {
+      "colorName": "Xám Không Gian",
+      "colorCode": "#3c3d3a",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/d62a8f0714b2d492f8047bca7bddf807.webp"
+      ],
+      "options": [
+        {
+          "storage": "128GB",
+          "price": 16990000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae74"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae75"
+      }
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Chip M2 siêu tốc.",
+      "description": "Hiệu năng CPU nhanh hơn 15% và đồ họa nhanh hơn 25% so với thế hệ trước.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae76"
+      }
+    },
+    {
+      "title": "Camera trước Ultra Wide.",
+      "description": "Camera 12MP nằm ngang với tính năng Trung Tâm Màn Hình (Center Stage).",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae77"
+      }
+    }
+  ],
+  "specifications": {
+    "Màn hình": "11-inch Liquid Retina, True Tone, P3 wide color",
+    "Vi xử lý": "Apple M2 chip (8-core CPU, 9-core GPU)",
+    "Camera": "12MP Wide back camera | 12MP Landscape Ultra Wide front camera",
+    "Kết nối": "Wi-Fi 6E, Bluetooth 5.3, USB-C (3.1 Gen 2)",
+    "Phụ kiện": "Hỗ trợ Apple Pencil Pro, Apple Pencil (USB-C)"
+  },
+  "createdAt": {
+    "$date": "2026-05-12T17:00:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-12T11:42:54.366Z"
+  },
+  "__v": 0,
+  "image": "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/ada10423bbfcf0b01ebc817ac90484c0.webp"
+},
+{
+  "_id": {
+    "$oid": "6a017d6769c9808c4649ae80"
+  },
+  "name": "iPad Mini 6",
+  "description": "Sức mạnh lớn trong một thiết kế nhỏ gọn. Hoàn hảo để ghi chú, đọc sách và giải trí di động.",
+  "price": 12490000,
+  "category": "ipad",
+  "stock": 40,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/4a95ce5d1f0890b13f4ac7f8d51dc4f3.webp"
+  ],
+  "variants": [
+    {
+      "colorName": "Tím (Purple)",
+      "colorCode": "#b1b0c8",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/60b033b8522a249a8de09d2d889c1ee0.webp"
+      ],
+      "options": [
+        {
+          "storage": "64GB",
+          "price": 12490000,
+          "stock": 20,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae81"
+          }
+        },
+        {
+          "storage": "256GB",
+          "price": 15990000,
+          "stock": 5,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae82"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae83"
+      }
+    },
+    {
+      "colorName": "Ánh Sao (Starlight)",
+      "colorCode": "#faf3e8",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/0e334dfeb9ba335e86770a4dca7834f5.webp"
+      ],
+      "options": [
+        {
+          "storage": "64GB",
+          "price": 12490000,
+          "stock": 15,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae84"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae85"
+      }
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Thiết kế tràn viền.",
+      "description": "Màn hình 8.3 inch cực kỳ nhỏ gọn, vừa vặn trong lòng bàn tay.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae86"
+      }
+    },
+    {
+      "title": "Chip A15 Bionic.",
+      "description": "Hiệu năng mạnh mẽ cho phép chạy các ứng dụng đồ họa và game nặng nhất.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae87"
+      }
+    }
+  ],
+  "specifications": {
+    "Màn hình": "8.3-inch Liquid Retina, 500 nits brightness",
+    "Vi xử lý": "A15 Bionic chip with 64-bit architecture",
+    "Camera": "12MP Wide camera | 12MP Ultra Wide front camera",
+    "Bảo mật": "Touch ID tích hợp nút nguồn",
+    "Cổng sạc": "USB-C"
+  },
+  "createdAt": {
+    "$date": "2026-05-12T17:05:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-12T11:43:59.673Z"
+  },
+  "__v": 0,
+  "image": "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/4a95ce5d1f0890b13f4ac7f8d51dc4f3.webp"
+},
+{
+  "_id": {
+    "$oid": "6a017d6769c9808c4649ae90"
+  },
+  "name": "iPad (Gen 10)",
+  "description": "iPad phiên bản tiêu chuẩn hoàn toàn mới. Màu sắc rực rỡ, linh hoạt và dễ sử dụng cho mọi tác vụ hàng ngày.",
+  "price": 9490000,
+  "category": "ipad",
+  "stock": 100,
+  "images": [
+    "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/82eb95b6c4b44a38b751181bed9b1c15.jpg"
+  ],
+  "variants": [
+    {
+      "colorName": "Bạc (Silver)",
+      "colorCode": "#e3e4e5",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/ee0059e6639109189de20113ec29b0c0.jpg"
+      ],
+      "options": [
+        {
+          "storage": "64GB",
+          "price": 9490000,
+          "stock": 50,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae91"
+          }
+        },
+        {
+          "storage": "256GB",
+          "price": 12990000,
+          "stock": 10,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae92"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae93"
+      }
+    },
+    {
+      "colorName": "Xanh Dương",
+      "colorCode": "#4a7ebb",
+      "images": [
+        "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/24f80c82656939392464fa51a00f703a.jpg"
+      ],
+      "options": [
+        {
+          "storage": "64GB",
+          "price": 9490000,
+          "stock": 40,
+          "_id": {
+            "$oid": "6a017d6769c9808c4649ae94"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae95"
+      }
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Thiết kế tràn cạnh.",
+      "description": "Màn hình Liquid Retina 10.9 inch mang đến không gian rộng rãi để làm việc và sáng tạo.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae96"
+      }
+    },
+    {
+      "title": "Kết nối USB-C.",
+      "description": "Dễ dàng kết nối với ổ cứng, dock và các thiết bị ngoại vi khác.",
+      "_id": {
+        "$oid": "6a017d6769c9808c4649ae97"
+      }
+    }
+  ],
+  "specifications": {
+    "Màn hình": "10.9-inch Liquid Retina, sRGB color",
+    "Vi xử lý": "A14 Bionic chip (6-core CPU, 4-core GPU)",
+    "Camera": "12MP Wide camera | 12MP Landscape Ultra Wide front camera",
+    "Phụ kiện": "Hỗ trợ Magic Keyboard Folio, Apple Pencil (USB-C)",
+    "Cổng sạc": "USB-C"
+  },
+  "createdAt": {
+    "$date": "2026-05-12T17:10:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-12T13:07:25.082Z"
+  },
+  "__v": 0,
+  "image": "https://s3-kttkpm-product-service.s3.ap-southeast-1.amazonaws.com/products/82eb95b6c4b44a38b751181bed9b1c15.jpg"
 }]
