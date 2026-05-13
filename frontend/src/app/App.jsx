@@ -21,40 +21,46 @@ import CustomerManagement from '../pages/admin/CustomerManagement';
 import ReviewsManagement from '../pages/admin/ReviewsManagement';
 import Analytics from '../pages/admin/Analytics';
 import Settings from '../pages/admin/Settings';
+import ChatDashboard from '../pages/admin/ChatDashboard';
+import ChatWidget from '../components/common/ChatWidget';
 
 import '../admin.css'; // Tailwind & Admin Styles
 
 function App() {
   return (
-    <Routes>
-      {/* Customer Routes */}
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/account" element={<Account />} />
-      <Route path="/category/:brand" element={<CategoryPage />} />
-      <Route path="/support" element={<Support />} />
-      <Route path="/store" element={<Store />} />
-      <Route path="/product/:id" element={<ProductDetail />} />
+    <>
+      <Routes>
+        {/* Customer Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/category/:brand" element={<CategoryPage />} />
+        <Route path="/support" element={<Support />} />
+        <Route path="/store" element={<Store />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
 
-      {/* Admin Routes */}
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="products" element={<ProductManagement />} />
-        <Route path="products/new" element={<AddProduct />} />
-        <Route path="products/edit/:id" element={<EditProduct />} />
-        <Route path="categories" element={<CategoryManagement />} />
-        <Route path="orders" element={<OrderManagement />} />
-        <Route path="customers" element={<CustomerManagement />} />
-        <Route path="reviews" element={<ReviewsManagement />} />
-        <Route path="analytics" element={<Analytics />} />
-        <Route path="settings" element={<Settings />} />
-      </Route>
+        {/* Admin Routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="products" element={<ProductManagement />} />
+          <Route path="products/new" element={<AddProduct />} />
+          <Route path="products/edit/:id" element={<EditProduct />} />
+          <Route path="categories" element={<CategoryManagement />} />
+          <Route path="orders" element={<OrderManagement />} />
+          <Route path="customers" element={<CustomerManagement />} />
+          <Route path="chat" element={<ChatDashboard />} />
+          <Route path="reviews" element={<ReviewsManagement />} />
+          <Route path="analytics" element={<Analytics />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
 
-      {/* Fallback */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <ChatWidget />
+    </>
   );
 }
 

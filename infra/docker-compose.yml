@@ -10,10 +10,12 @@ services:
       NODE_ENV: development
       AUTH_SERVICE_URL: http://auth-service:3001
       PRODUCT_SERVICE_URL: http://product-service:3002
+      CHAT_SERVICE_URL: http://chat-service:3005
       JWT_SECRET: change_me_in_dev
     depends_on:
       - auth-service
       - product-service
+      - chat-service
 
   auth-service:
     build:
@@ -49,6 +51,20 @@ services:
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_REGION: ${AWS_REGION}
       AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
+    depends_on:
+      - mongodb
+
+  chat-service:
+    build:
+      context: ../services/chat-service
+    container_name: chat-service
+    ports:
+      - '3005:3005'
+    environment:
+      PORT: 3005
+      NODE_ENV: development
+      MONGO_URI: mongodb://mongodb:27017/chat_service
+      JWT_SECRET: change_me_in_dev
     depends_on:
       - mongodb
 

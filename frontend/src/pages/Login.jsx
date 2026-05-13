@@ -3,8 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/common/Navbar';
 import { apiRequest } from '../services/api/client';
 import { motion } from 'framer-motion';
+import { useAuthStore } from '../store/useAuthStore';
 
 function Login() {
+  const { setAuth } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -20,8 +22,7 @@ function Login() {
       });
       const result = await response.json();
       if (result.success) {
-        localStorage.setItem('token', result.data.token);
-        localStorage.setItem('user', JSON.stringify(result.data.user));
+        setAuth(result.data.user, result.data.token);
         
         // Redirect based on role
         if (result.data.user.role === 'admin') {

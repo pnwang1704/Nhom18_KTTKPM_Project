@@ -10,6 +10,8 @@ const correlationMiddleware = require('./src/middlewares/correlation.middleware'
 const healthRoutes = require('./src/routes/health.routes');
 const authRoutes = require('./src/routes/auth.routes');
 const productRoutes = require('./src/routes/product.routes');
+const categoryRoutes = require('./src/routes/category.routes');
+const chatRoutes = require('./src/routes/chat.routes');
 
 const app = express();
 
@@ -65,6 +67,8 @@ app.use(loggerMiddleware);
 app.use('/api/auth', authRoutes);
 
 app.use('/api/products', productRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/chat', chatRoutes);
 
 app.get('/test', (req, res) => res.json({ message: 'Gateway is reachable' }));
 
