@@ -1,14 +1,14 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const { productServiceUrl } = require('../config/env');
 
-function createProductProxyMiddleware() {
+function createProductProxyMiddleware(prefix = '/products') {
   return createProxyMiddleware({
     target: productServiceUrl,
     changeOrigin: true,
     logLevel: 'silent',
     timeout: 5000,
     proxyTimeout: 5000,
-    pathRewrite: (path) => `/products${path}`,
+    pathRewrite: (path) => `${prefix}${path}`,
     onProxyReq: (proxyReq, req) => {
       // Forward Correlation ID
       if (req.correlationId) {

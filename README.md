@@ -22,6 +22,8 @@ Hệ thống gồm các thành phần chính:
 - MongoDB: dữ liệu sản phẩm linh hoạt
 - Redis: cache và dữ liệu giỏ hàng tạm thời
 
+
+
 Luồng cơ bản:
 Frontend -> API Gateway -> các service backend -> database tương ứng.
 

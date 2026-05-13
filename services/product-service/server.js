@@ -4,6 +4,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const connectDB = require('./src/config/db');
 const productRoutes = require('./src/routes/product.routes');
+const categoryRoutes = require('./src/routes/category.routes');
 const errorHandler = require('./src/middlewares/errorHandler');
 
 // Connect to Database
@@ -20,6 +21,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Routes
 app.use('/products', productRoutes);
+app.use('/categories', categoryRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
