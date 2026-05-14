@@ -77,6 +77,49 @@ class ProductController {
       next(error);
     }
   }
+
+  async createReview(req, res, next) {
+    try {
+      const { rating, comment, userName, user } = req.body;
+      const product = await productService.createProductReview(req.params.id, {
+        rating: Number(rating),
+        comment,
+        userName,
+        user
+      });
+      res.status(201).json({
+        success: true,
+        data: product
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getAllReviews(req, res, next) {
+    try {
+      const reviews = await productService.getAllReviews();
+      res.status(200).json({
+        success: true,
+        data: reviews
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteReview(req, res, next) {
+    try {
+      const { productId, reviewId } = req.params;
+      const product = await productService.deleteReview(productId, reviewId);
+      res.status(200).json({
+        success: true,
+        data: product
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new ProductController();

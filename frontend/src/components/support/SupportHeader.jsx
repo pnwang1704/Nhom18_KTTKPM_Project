@@ -5,13 +5,6 @@ import { Search } from 'lucide-react';
 const SupportHeader = () => {
   return (
     <section className="bg-white pt-32 pb-16 flex flex-col items-center">
-      <motion.div 
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mb-8 shadow-lg shadow-blue-500/20"
-      >
-        <span className="text-white font-bold text-2xl">E</span>
-      </motion.div>
 
       <div className="text-center px-gutter max-w-[800px] mx-auto">
         <motion.h1 

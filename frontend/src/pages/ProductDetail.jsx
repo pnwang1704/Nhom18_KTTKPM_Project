@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, ChevronRight, Shield, Truck, RotateCcw } from 'lucide-react';
+import { ShoppingBag, ChevronRight, Shield, Truck, RotateCcw, Star, User, MessageCircle } from 'lucide-react';
 import Navbar from '../components/common/Navbar';
 import axios from 'axios';
 import MinimalProductCard from '../components/category/MinimalProductCard';
 import { apiRequest } from '../services/api/client';
+import { useAuthStore } from '../store/useAuthStore';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -16,7 +17,10 @@ const ProductDetail = () => {
   const [selectedStorage, setSelectedStorage] = useState(0);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
+  const { user, isAuthenticated } = useAuthStore();
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const [starRating, setStarRating] = useState(0);
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -309,6 +313,185 @@ const ProductDetail = () => {
                   </div>
                 </>
               )}
+           </div>
+        </section>
+        
+        {/* Review Section */}
+        <section className="mt-32 max-w-[800px] mx-auto">
+           <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4 text-elppa-obsidian">Đánh giá & Bình luận.</h2>
+              <div className="flex flex-col items-center gap-2">
+                 <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star 
+                        key={star} 
+                        size={24} 
+                        fill={star <= Math.round(product.averageRating || 0) ? "#f59e0b" : "none"} 
+                        className={star <= Math.round(product.averageRating || 0) ? "text-amber-500" : "text-elppa-gray-border"}
+                      />
+                    ))}
+                 </div>
+                 <p className="text-xl font-bold text-elppa-obsidian">
+                   {(product.averageRating || 0).toFixed(1)} 
+                   <span className="text-elppa-gray font-medium text-base ml-2">/ 5 dựa trên {product.numReviews || 0} đánh giá</span>
+                 </p>
+              </div>
+           </div>
+
+           <div className="space-y-12">
+              {/* Review Form - Only for logged in users */}
+              {isAuthenticated ? (
+                <div className="bg-white p-8 md:p-10 rounded-[40px] shadow-sm border border-elppa-gray-border/10">
+                   <div className="flex items-center gap-4 mb-8">
+                      <div className="w-12 h-12 rounded-full bg-elppa-blue/10 flex items-center justify-center text-elppa-blue">
+                         <User size={24} />
+                      </div>
+                      <div>
+                         <p className="text-xs font-bold text-elppa-gray uppercase tracking-widest">Đang đăng nhập với tư cách</p>
+                         <p className="font-bold text-lg text-elppa-obsidian">{user?.fullName || 'Người dùng Apple'}</p>
+                      </div>
+                   </div>
+
+                   <form onSubmit={async (e) => {
+                       e.preventDefault();
+                       const formData = new FormData(e.target);
+                       const rating = formData.get('rating');
+                       const comment = formData.get('comment');
+
+                       if (!rating || rating === '0') {
+                         alert('Vui lòng chọn số sao đánh giá');
+                         return;
+                       }
+                       if (!comment) {
+                         alert('Vui lòng nhập nội dung đánh giá');
+                         return;
+                       }
+
+                       setIsSubmittingReview(true);
+                       try {
+                         const res = await apiRequest(`/api/products/${product._id}/reviews`, {
+                           method: 'POST',
+                           body: JSON.stringify({
+                             rating: Number(rating),
+                             comment,
+                             userName: user?.fullName || 'Khách hàng',
+                             user: user?._id || user?.id || 'anonymous'
+                           })
+                         });
+                         const result = await res.json();
+                         if (result.success) {
+                           setProduct(result.data);
+                           e.target.reset();
+                           setStarRating(0);
+                         }
+                       } catch (err) {
+                         console.error('Review error:', err);
+                       } finally {
+                         setIsSubmittingReview(false);
+                       }
+                   }}>
+                      <div className="space-y-8">
+                         <div>
+                            <label className="text-xs font-bold text-elppa-gray uppercase tracking-widest block mb-4">Bạn đánh giá sản phẩm này mấy sao?</label>
+                            <div className="flex gap-3">
+                               {[1, 2, 3, 4, 5].map((s) => (
+                                 <button 
+                                   key={s}
+                                   type="button"
+                                   onClick={() => setStarRating(s)}
+                                   className="hover:scale-125 transition-all duration-300 transform"
+                                 >
+                                   <Star 
+                                     size={32} 
+                                     fill={s <= starRating ? "#f59e0b" : "none"} 
+                                     className={s <= starRating ? "text-amber-500" : "text-elppa-gray-border"}
+                                   />
+                                 </button>
+                               ))}
+                               <input type="hidden" name="rating" value={starRating} />
+                            </div>
+                         </div>
+
+                         <div className="space-y-3">
+                            <label className="text-xs font-bold text-elppa-gray uppercase tracking-widest">Nội dung đánh giá</label>
+                            <textarea 
+                               name="comment"
+                               placeholder="Chia sẻ trải nghiệm thực tế của bạn về sản phẩm này..."
+                               className="w-full bg-[#f5f5f7] border-none rounded-3xl px-6 py-5 outline-none focus:ring-2 focus:ring-elppa-blue/20 transition-all text-base font-medium h-40 resize-none"
+                            />
+                         </div>
+
+                         <button 
+                           type="submit"
+                           disabled={isSubmittingReview}
+                           className="w-full bg-elppa-blue text-white py-5 rounded-[24px] font-bold text-base hover:bg-opacity-90 transition-all shadow-xl shadow-elppa-blue/20 flex items-center justify-center gap-3 disabled:opacity-50"
+                         >
+                            {isSubmittingReview ? 'Đang gửi...' : 'Gửi đánh giá ngay'}
+                         </button>
+                      </div>
+                   </form>
+                </div>
+              ) : (
+                <div className="bg-white p-12 rounded-[40px] text-center border border-elppa-gray-border/10 shadow-sm">
+                   <div className="w-20 h-20 bg-[#f5f5f7] rounded-full flex items-center justify-center mx-auto mb-6 text-elppa-gray">
+                      <Shield size={32} />
+                   </div>
+                   <h3 className="text-2xl font-bold mb-3 text-elppa-obsidian">Chia sẻ cảm nhận của bạn</h3>
+                   <p className="text-elppa-gray font-medium mb-8 max-w-md mx-auto">Vui lòng đăng nhập tài khoản Apple của bạn để có thể gửi đánh giá và bình luận về sản phẩm này.</p>
+                   <button 
+                      onClick={() => navigate('/login', { state: { from: `/product/${id}` } })}
+                      className="px-10 py-4 bg-elppa-obsidian text-white rounded-full font-bold hover:bg-black transition-all shadow-lg"
+                   >
+                      Đăng nhập ngay
+                   </button>
+                </div>
+              )}
+
+              {/* Review List */}
+              <div className="space-y-6 pt-12 border-t border-elppa-gray-border/20">
+                 <h3 className="text-xl font-bold mb-8">Tất cả bình luận ({product.numReviews || 0})</h3>
+                 {product.reviews && product.reviews.length > 0 ? (
+                   product.reviews.map((rev, idx) => (
+                     <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        key={idx} 
+                        className="bg-white p-8 rounded-[32px] border border-elppa-gray-border/10 hover:shadow-md transition-shadow"
+                     >
+                        <div className="flex justify-between items-start mb-6">
+                           <div className="flex items-center gap-4">
+                              <div className="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center text-elppa-gray border border-elppa-gray-border/10">
+                                 <User size={24} />
+                              </div>
+                              <div>
+                                 <p className="font-bold text-base text-elppa-obsidian">{rev.userName}</p>
+                                 <p className="text-xs text-elppa-gray font-medium">{new Date(rev.createdAt).toLocaleDateString('vi-VN', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                              </div>
+                           </div>
+                           <div className="flex gap-0.5 bg-amber-50 px-3 py-1.5 rounded-full">
+                              {[1, 2, 3, 4, 5].map((s) => (
+                                <Star 
+                                  key={s} 
+                                  size={14} 
+                                  fill={s <= rev.rating ? "#f59e0b" : "none"} 
+                                  className={s <= rev.rating ? "text-amber-500" : "text-amber-200"}
+                                />
+                              ))}
+                           </div>
+                        </div>
+                        <p className="text-elppa-obsidian text-base leading-relaxed font-medium pl-2 border-l-4 border-elppa-blue/10">
+                          {rev.comment}
+                        </p>
+                     </motion.div>
+                   ))
+                 ) : (
+                   <div className="py-20 text-center opacity-50">
+                      <MessageCircle className="w-16 h-16 mx-auto mb-4 text-elppa-gray-border" />
+                      <p className="text-lg font-medium text-elppa-gray">Sản phẩm này chưa có bình luận nào.</p>
+                   </div>
+                 )}
+              </div>
            </div>
         </section>
 

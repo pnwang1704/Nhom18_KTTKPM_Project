@@ -27,13 +27,13 @@ import {
 import { cn } from '../../utils/admin-utils';
 
 const monthlySales = [
-  { name: 'Jan', revenue: 45000, orders: 320, profit: 12000 },
-  { name: 'Feb', revenue: 52000, orders: 380, profit: 15000 },
-  { name: 'Mar', revenue: 48000, orders: 350, profit: 13500 },
-  { name: 'Apr', revenue: 61000, orders: 420, profit: 18000 },
-  { name: 'May', revenue: 55000, orders: 390, profit: 16500 },
-  { name: 'Jun', revenue: 67000, orders: 480, profit: 21000 },
-  { name: 'Jul', revenue: 72000, orders: 510, profit: 23000 },
+  { name: 'T1', revenue: 45000, orders: 320, profit: 12000 },
+  { name: 'T2', revenue: 52000, orders: 380, profit: 15000 },
+  { name: 'T3', revenue: 48000, orders: 350, profit: 13500 },
+  { name: 'T4', revenue: 61000, orders: 420, profit: 18000 },
+  { name: 'T5', revenue: 55000, orders: 390, profit: 16500 },
+  { name: 'T6', revenue: 67000, orders: 480, profit: 21000 },
+  { name: 'T7', revenue: 72000, orders: 510, profit: 23000 },
 ];
 
 const categoryData = [
@@ -41,7 +41,7 @@ const categoryData = [
   { name: 'Samsung', value: 25, color: '#10b981' },
   { name: 'iPad', value: 15, color: '#8b5cf6' },
   { name: 'Xiaomi', value: 10, color: '#f59e0b' },
-  { name: 'Others', value: 5, color: '#64748b' },
+  { name: 'Khác', value: 5, color: '#64748b' },
 ];
 
 const Analytics = () => {
@@ -49,27 +49,27 @@ const Analytics = () => {
     <div className="space-y-8 pb-10">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Business Analytics</h1>
-          <p className="text-muted-foreground mt-1">Deep dive into your store performance and sales trends.</p>
+          <h1 className="text-3xl font-bold tracking-tight">Phân tích Kinh doanh</h1>
+          <p className="text-muted-foreground mt-1">Phân tích chuyên sâu về hiệu suất và xu hướng bán hàng của cửa hàng.</p>
         </div>
         <div className="flex items-center gap-2">
            <button className="flex items-center gap-2 px-4 py-2 border border-border rounded-xl text-sm font-bold hover:bg-muted transition-all">
               <Calendar className="w-4 h-4" />
-              Custom Range
+              Tùy chỉnh thời gian
            </button>
            <button className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20">
               <Download className="w-4 h-4" />
-              Download Report
+              Tải báo cáo
            </button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Avg. Order Value', value: '$842.50', trend: '+5.4%', isUp: true },
-          { label: 'Conversion Rate', value: '3.24%', trend: '+0.8%', isUp: true },
-          { label: 'Customer Retention', value: '68.2%', trend: '-2.1%', isUp: false },
-          { label: 'Net Profit Margin', value: '24.5%', trend: '+1.2%', isUp: true },
+          { label: 'Giá trị đơn hàng TB', value: '24.500.000đ', trend: '+5.4%', isUp: true },
+          { label: 'Tỷ lệ chuyển đổi', value: '3.24%', trend: '+0.8%', isUp: true },
+          { label: 'Tỷ lệ giữ chân KH', value: '68.2%', trend: '-2.1%', isUp: false },
+          { label: 'Biên lợi nhuận ròng', value: '24.5%', trend: '+1.2%', isUp: true },
         ].map((stat) => (
           <div key={stat.label} className="bg-card p-6 rounded-3xl border border-border">
              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{stat.label}</p>
@@ -89,7 +89,7 @@ const Analytics = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 bg-card p-8 rounded-3xl border border-border">
-           <h3 className="text-xl font-bold mb-8">Revenue vs Profit Growth</h3>
+           <h3 className="text-xl font-bold mb-8">Tăng trưởng Doanh thu & Lợi nhuận</h3>
            <div className="h-[400px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                  <AreaChart data={monthlySales}>
@@ -107,17 +107,18 @@ const Analytics = () => {
                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} />
                     <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} />
                     <Tooltip 
-                       contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '12px' }}
+                       contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '12px', color: 'hsl(var(--foreground))' }}
+                       itemStyle={{ color: 'hsl(var(--foreground))' }}
                     />
-                    <Area type="monotone" dataKey="revenue" stroke="#2563eb" strokeWidth={3} fillOpacity={1} fill="url(#colorRev)" />
-                    <Area type="monotone" dataKey="profit" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorProfit)" />
+                    <Area name="Doanh thu" type="monotone" dataKey="revenue" stroke="#2563eb" strokeWidth={3} fillOpacity={1} fill="url(#colorRev)" />
+                    <Area name="Lợi nhuận" type="monotone" dataKey="profit" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorProfit)" />
                  </AreaChart>
               </ResponsiveContainer>
            </div>
         </div>
 
         <div className="bg-card p-8 rounded-3xl border border-border">
-           <h3 className="text-xl font-bold mb-8">Sales by Brand</h3>
+           <h3 className="text-xl font-bold mb-8">Doanh số theo Thương hiệu</h3>
            <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                  <PieChart>
