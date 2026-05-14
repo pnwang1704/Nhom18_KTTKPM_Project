@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, ChevronRight, Shield, Truck, RotateCcw, Star, User, MessageCircle } from 'lucide-react';
 import Navbar from '../components/common/Navbar';
+import Footer from '../components/common/Footer';
 import axios from 'axios';
 import MinimalProductCard from '../components/category/MinimalProductCard';
 import { apiRequest } from '../services/api/client';
@@ -506,6 +507,8 @@ const ProductDetail = () => {
           </section>
         )}
       </main>
+
+      <Footer />
     </div>
   );
 };

@@ -5,6 +5,7 @@ import CategoryNavbar from '../components/category/CategoryNavbar';
 import CategoryHero from '../components/category/CategoryHero';
 import MinimalProductCard from '../components/category/MinimalProductCard';
 import { apiRequest } from '../services/api/client';
+import Footer from '../components/common/Footer';
 
 const categoryData = {
   iphone: {
@@ -152,11 +153,7 @@ const CategoryPage = () => {
         </section>
       </main>
 
-      <footer className="py-20 px-gutter border-t border-elppa-gray-border/30 bg-elppa-light">
-        <div className="max-w-[1024px] mx-auto text-xs text-elppa-gray leading-loose text-center">
-          <p>© 2024 Cửa hàng tối giản ELPPA. Bảo lưu mọi quyền.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
