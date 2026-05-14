@@ -28,6 +28,7 @@ const EditProduct = () => {
   const [fetching, setFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+  const [categories, setCategories] = useState([]);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -44,7 +45,20 @@ const EditProduct = () => {
 
   useEffect(() => {
     fetchProduct();
+    fetchCategories();
   }, [id]);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await apiRequest('/api/categories');
+      const result = await res.json();
+      if (result.success) {
+        setCategories(result.data);
+      }
+    } catch (err) {
+      console.error('Fetch categories error:', err);
+    }
+  };
 
   const fetchProduct = async () => {
     setFetching(true);
@@ -354,7 +368,7 @@ const EditProduct = () => {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="VD: iPhone 15 Pro Max"
-                  className="w-full bg-muted/50 border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                  className="w-full bg-muted/50 border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium text-foreground"
                 />
               </div>
               <div className="space-y-2">
@@ -363,13 +377,11 @@ const EditProduct = () => {
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
-                  className="w-full bg-muted/50 border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold capitalize"
+                  className="w-full bg-muted/50 border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold capitalize text-foreground"
                 >
-                  <option value="iphone">iPhone</option>
-                  <option value="ipad">iPad</option>
-                  <option value="samsung">Samsung</option>
-                  <option value="oppo">Oppo</option>
-                  <option value="xiaomi">Xiaomi</option>
+                  {categories.map(cat => (
+                    <option key={cat._id} value={cat.slug}>{cat.name}</option>
+                  ))}
                 </select>
               </div>
               <div className="space-y-2">
@@ -379,7 +391,7 @@ const EditProduct = () => {
                   value={formData.description}
                   onChange={handleChange}
                   placeholder="Mô tả chi tiết sản phẩm..."
-                  className="w-full bg-muted/50 border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium h-32 resize-none"
+                  className="w-full bg-muted/50 border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium h-32 resize-none text-foreground"
                 />
               </div>
             </div>
@@ -422,7 +434,7 @@ const EditProduct = () => {
                         placeholder="Titan Xanh"
                         value={variant.colorName}
                         onChange={(e) => handleVariantChange(vIdx, 'colorName', e.target.value)}
-                        className="w-full bg-card border border-border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-primary/20 text-sm font-medium"
+                        className="w-full bg-card border border-border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-primary/20 text-sm font-medium text-foreground"
                       />
                     </div>
                     <div className="space-y-4">
@@ -477,7 +489,7 @@ const EditProduct = () => {
                           placeholder="#000000"
                           value={variant.colorCode}
                           onChange={(e) => handleVariantChange(vIdx, 'colorCode', e.target.value)}
-                          className="flex-1 bg-card border border-border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-primary/20 text-sm font-mono"
+                          className="flex-1 bg-card border border-border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-primary/20 text-sm font-mono text-foreground"
                         />
                         <div className="w-10 h-10 rounded-lg border border-border shadow-inner" style={{ backgroundColor: variant.colorCode || '#eee' }} />
                       </div>
@@ -507,7 +519,7 @@ const EditProduct = () => {
                               placeholder="256GB"
                               value={opt.storage}
                               onChange={(e) => handleOptionChange(vIdx, oIdx, 'storage', e.target.value)}
-                              className="w-full bg-card border border-border rounded-xl px-3 py-2.5 text-xs outline-none focus:ring-2 focus:ring-primary/10 transition-all font-medium"
+                              className="w-full bg-card border border-border rounded-xl px-3 py-2.5 text-xs outline-none focus:ring-2 focus:ring-primary/10 transition-all font-medium text-foreground"
                             />
                           </div>
                           
@@ -533,7 +545,7 @@ const EditProduct = () => {
                               placeholder="0"
                               value={opt.stock}
                               onChange={(e) => handleOptionChange(vIdx, oIdx, 'stock', e.target.value)}
-                              className="w-full bg-card border border-border rounded-xl px-3 py-2.5 text-xs outline-none focus:ring-2 focus:ring-primary/10 transition-all"
+                              className="w-full bg-card border border-border rounded-xl px-3 py-2.5 text-xs outline-none focus:ring-2 focus:ring-primary/10 transition-all text-foreground"
                             />
                           </div>
 
@@ -596,7 +608,7 @@ const EditProduct = () => {
                         placeholder="VD: Sức mạnh từ Chip M4"
                         value={item.title}
                         onChange={(e) => handleHighlightChange(index, 'title', e.target.value)}
-                        className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-xs outline-none focus:ring-2 focus:ring-primary/10 transition-all font-bold"
+                        className="w-full bg-card border border-border rounded-xl px-4 py-2.5 text-xs outline-none focus:ring-2 focus:ring-primary/10 transition-all font-bold text-foreground"
                       />
                     </div>
                     <div className="space-y-2">
@@ -605,7 +617,7 @@ const EditProduct = () => {
                         placeholder="Nhập mô tả cho đặc điểm này..."
                         value={item.description}
                         onChange={(e) => handleHighlightChange(index, 'description', e.target.value)}
-                        className="w-full bg-card border border-border rounded-xl px-4 py-3 text-xs outline-none focus:ring-2 focus:ring-primary/10 transition-all min-h-[80px]"
+                        className="w-full bg-card border border-border rounded-xl px-4 py-3 text-xs outline-none focus:ring-2 focus:ring-primary/10 transition-all min-h-[80px] text-foreground"
                       />
                     </div>
                   </div>
@@ -643,14 +655,14 @@ const EditProduct = () => {
                     placeholder="Tên thông số (VD: RAM)"
                     value={key}
                     onChange={(e) => handleSpecChange(key, e.target.value, value)}
-                    className="flex-1 bg-muted/50 border border-border rounded-xl px-4 py-2.5 text-xs outline-none focus:ring-2 focus:ring-primary/10 transition-all font-bold"
+                    className="flex-1 bg-muted/50 border border-border rounded-xl px-4 py-2.5 text-xs outline-none focus:ring-2 focus:ring-primary/10 transition-all font-bold text-foreground"
                   />
                   <input
                     type="text"
                     placeholder="Giá trị (VD: 8GB)"
                     value={value}
                     onChange={(e) => handleSpecChange(key, key, e.target.value)}
-                    className="flex-[2] bg-card border border-border rounded-xl px-4 py-2.5 text-xs outline-none focus:ring-2 focus:ring-primary/10 transition-all"
+                    className="flex-[2] bg-card border border-border rounded-xl px-4 py-2.5 text-xs outline-none focus:ring-2 focus:ring-primary/10 transition-all text-foreground"
                   />
                   <button
                     onClick={() => handleRemoveSpec(key)}
@@ -710,7 +722,7 @@ const EditProduct = () => {
                   value={formData.image}
                   onChange={handleChange}
                   placeholder="https://..."
-                  className="w-full bg-muted/50 border border-border rounded-lg px-3 py-2 text-xs outline-none focus:ring-1 focus:ring-primary/20"
+                  className="w-full bg-muted/50 border border-border rounded-lg px-3 py-2 text-xs outline-none focus:ring-1 focus:ring-primary/20 text-foreground"
                 />
               </div>
             </div>

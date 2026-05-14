@@ -1,12 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Store, 
-  Image as ImageIcon, 
-  Truck, 
-  CreditCard, 
-  ShieldCheck, 
-  Bell, 
+import {
+  Store,
+  Image as ImageIcon,
+  Truck,
+  CreditCard,
+  ShieldCheck,
+  Bell,
   Globe,
   Save,
   Trash2,
@@ -40,7 +40,7 @@ const Settings = () => {
             { icon: Bell, label: 'Notifications', active: false },
             { icon: Globe, label: 'Localization', active: false },
           ].map((item) => (
-            <button 
+            <button
               key={item.label}
               className={cn(
                 "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all text-left",
@@ -59,18 +59,18 @@ const Settings = () => {
           <div className="bg-card rounded-3xl border border-border p-8 space-y-6">
             <h3 className="text-lg font-bold border-b border-border pb-4">Store Information</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-               <div className="space-y-2">
-                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Store Name</label>
-                  <input type="text" defaultValue="ELPPA Store" className="w-full bg-muted/50 border border-border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
-               </div>
-               <div className="space-y-2">
-                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Support Email</label>
-                  <input type="email" defaultValue="support@elppa.com" className="w-full bg-muted/50 border border-border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
-               </div>
-               <div className="space-y-2 sm:col-span-2">
-                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Store Address</label>
-                  <textarea className="w-full bg-muted/50 border border-border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium h-24 resize-none" defaultValue="123 Apple Way, Cupertino, CA 95014" />
-               </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Store Name</label>
+                <input type="text" defaultValue="ELPPA Store" className="w-full bg-muted/50 border border-border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Support Email</label>
+                <input type="email" defaultValue="pnquangcn0406@gmail.com" className="w-full bg-muted/50 border border-border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
+              </div>
+              <div className="space-y-2 sm:col-span-2">
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Store Address</label>
+                <textarea className="w-full bg-muted/50 border border-border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium h-24 resize-none" defaultValue="Đại học Công nghiệp Thành phố Hồ Chí Minh" />
+              </div>
             </div>
           </div>
 
@@ -78,32 +78,32 @@ const Settings = () => {
           <div className="bg-card rounded-3xl border border-border p-8 space-y-6">
             <h3 className="text-lg font-bold border-b border-border pb-4">Branding & Visuals</h3>
             <div className="flex flex-col sm:flex-row gap-8">
-               <div className="space-y-4">
-                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Store Logo</p>
-                  <div className="w-32 h-32 rounded-3xl bg-muted border-2 border-dashed border-border flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-muted/80 transition-colors">
-                     <div className="w-12 h-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center font-bold text-xl">E</div>
-                     <span className="text-[10px] font-bold text-primary uppercase">Change Logo</span>
-                  </div>
-               </div>
-               <div className="flex-1 space-y-4">
-                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Hero Banner</p>
-                  <div className="w-full h-32 rounded-3xl bg-muted border-2 border-dashed border-border flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-muted/80 transition-colors relative overflow-hidden group">
-                     <img src="https://images.unsplash.com/photo-1616348436168-de43ad0db179?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform" />
-                     <Upload className="w-6 h-6 text-primary z-10" />
-                     <span className="text-xs font-bold text-primary uppercase z-10">Upload New Banner</span>
-                  </div>
-               </div>
+              <div className="space-y-4">
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Store Logo</p>
+                <div className="w-32 h-32 rounded-3xl bg-muted border-2 border-dashed border-border flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-muted/80 transition-colors">
+                  <div className="w-12 h-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center font-bold text-xl">E</div>
+                  <span className="text-[10px] font-bold text-primary uppercase">Change Logo</span>
+                </div>
+              </div>
+              <div className="flex-1 space-y-4">
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Hero Banner</p>
+                <div className="w-full h-32 rounded-3xl bg-muted border-2 border-dashed border-border flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-muted/80 transition-colors relative overflow-hidden group">
+                  <img src="https://images.unsplash.com/photo-1616348436168-de43ad0db179?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform" />
+                  <Upload className="w-6 h-6 text-primary z-10" />
+                  <span className="text-xs font-bold text-primary uppercase z-10">Upload New Banner</span>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Danger Zone */}
           <div className="bg-rose-50 border border-rose-100 rounded-3xl p-8 space-y-4">
-             <h3 className="text-lg font-bold text-rose-600">Danger Zone</h3>
-             <p className="text-sm text-rose-600/80 font-medium leading-relaxed">Once you delete your store data, there is no going back. Please be certain of your actions as they are permanent.</p>
-             <button className="flex items-center gap-2 px-6 py-2.5 bg-rose-600 text-white rounded-xl text-sm font-bold hover:bg-rose-700 transition-all shadow-lg shadow-rose-600/20">
-                <Trash2 className="w-4 h-4" />
-                Maintenance Mode
-             </button>
+            <h3 className="text-lg font-bold text-rose-600">Danger Zone</h3>
+            <p className="text-sm text-rose-600/80 font-medium leading-relaxed">Once you delete your store data, there is no going back. Please be certain of your actions as they are permanent.</p>
+            <button className="flex items-center gap-2 px-6 py-2.5 bg-rose-600 text-white rounded-xl text-sm font-bold hover:bg-rose-700 transition-all shadow-lg shadow-rose-600/20">
+              <Trash2 className="w-4 h-4" />
+              Maintenance Mode
+            </button>
           </div>
         </div>
       </div>

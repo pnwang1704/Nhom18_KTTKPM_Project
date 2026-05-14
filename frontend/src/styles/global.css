@@ -1,12 +1,32 @@
 @import "tailwindcss";
 
+@layer base {
+  :root {
+    --elppa-light: #FBFBFB;
+    --elppa-obsidian: #1D1D1F;
+    --elppa-gray: #86868B;
+    --elppa-gray-subtle: #F5F5F7;
+    --elppa-gray-border: #E5E7EB;
+    --elppa-blue: #0066CC;
+  }
+
+  .dark {
+    --elppa-light: #000000;
+    --elppa-obsidian: #F5F5F7;
+    --elppa-gray: #A1A1A6;
+    --elppa-gray-subtle: #1D1D1F;
+    --elppa-gray-border: #333336;
+    --elppa-blue: #0A84FF;
+  }
+}
+
 @theme {
-  --color-elppa-light: #FBFBFB;
-  --color-elppa-obsidian: #1D1D1F;
-  --color-elppa-gray: #86868B;
-  --color-elppa-gray-subtle: #F5F5F7;
-  --color-elppa-gray-border: #E5E7EB;
-  --color-elppa-blue: #0066CC;
+  --color-elppa-light: var(--elppa-light);
+  --color-elppa-obsidian: var(--elppa-obsidian);
+  --color-elppa-gray: var(--elppa-gray);
+  --color-elppa-gray-subtle: var(--elppa-gray-subtle);
+  --color-elppa-gray-border: var(--elppa-gray-border);
+  --color-elppa-blue: var(--elppa-blue);
   
   --font-sans: "Inter", "SF Pro Text", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   

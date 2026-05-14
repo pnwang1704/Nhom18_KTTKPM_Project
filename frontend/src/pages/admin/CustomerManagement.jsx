@@ -48,13 +48,13 @@ const CustomerManagement = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Customers</h1>
-          <p className="text-muted-foreground mt-1">Manage your customer relationships and view their purchase history.</p>
+          <h1 className="text-3xl font-bold tracking-tight">Khách hàng</h1>
+          <p className="text-muted-foreground mt-1">Quản lý quan hệ khách hàng và xem lịch sử mua hàng của họ.</p>
         </div>
         <div className="flex items-center gap-2">
           <button className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20">
             <UserPlus className="w-4 h-4" />
-            Add Customer
+            Thêm khách hàng
           </button>
         </div>
       </div>
@@ -62,15 +62,15 @@ const CustomerManagement = () => {
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
-          { label: 'Total Customers', value: customers.length.toLocaleString(), trend: '+0%', icon: Users },
-          { label: 'Verified', value: customers.filter(c => c.isVerified).length.toLocaleString(), trend: '+0%', icon: UserCheck },
-          { label: 'New This Week', value: customers.filter(c => new Date(c.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length.toLocaleString(), trend: '+0%', icon: UserPlus },
+          { label: 'Tổng khách hàng', value: customers.length.toLocaleString(), trend: '+0%', icon: Users },
+          { label: 'Đã xác minh', value: customers.filter(c => c.isVerified).length.toLocaleString(), trend: '+0%', icon: UserCheck },
+          { label: 'Mới trong tuần', value: customers.filter(c => new Date(c.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length.toLocaleString(), trend: '+0%', icon: UserPlus },
         ].map((stat, i) => (
           <div key={stat.label} className="bg-card p-6 rounded-3xl border border-border">
             <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{stat.label}</p>
             <div className="flex items-end justify-between mt-2">
               <p className="text-3xl font-bold tracking-tight">{stat.value}</p>
-              <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg">{stat.trend}</span>
+              <span className="text-xs font-bold text-emerald-600 bg-emerald-500/10 px-2 py-1 rounded-lg">{stat.trend}</span>
             </div>
           </div>
         ))}
@@ -83,14 +83,14 @@ const CustomerManagement = () => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input 
               type="text" 
-              placeholder="Search customers..." 
-              className="pl-10 pr-4 py-2 bg-card border border-border rounded-xl w-full sm:w-80 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm"
+              placeholder="Tìm kiếm khách hàng..." 
+              className="pl-10 pr-4 py-2 bg-card border border-border rounded-xl w-full sm:w-80 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm text-foreground"
             />
           </div>
           <div className="flex items-center gap-2">
             <button className="flex items-center gap-2 px-4 py-2 border border-border bg-card rounded-xl text-sm font-bold hover:bg-muted transition-all">
               <Filter className="w-4 h-4 text-muted-foreground" />
-              Advanced Filters
+              Bộ lọc nâng cao
             </button>
           </div>
         </div>
@@ -99,12 +99,12 @@ const CustomerManagement = () => {
           <table className="w-full text-left">
             <thead>
               <tr className="bg-muted/30 text-muted-foreground text-xs font-bold uppercase tracking-widest">
-                <th className="px-8 py-5">Customer</th>
-                <th className="px-8 py-5">Contact</th>
-                <th className="px-8 py-5">Orders</th>
-                <th className="px-8 py-5">Total Spent</th>
-                <th className="px-8 py-5">Status</th>
-                <th className="px-8 py-5 text-right">Actions</th>
+                <th className="px-8 py-5">Khách hàng</th>
+                <th className="px-8 py-5">Liên hệ</th>
+                <th className="px-8 py-5">Đơn hàng</th>
+                <th className="px-8 py-5">Tổng chi tiêu</th>
+                <th className="px-8 py-5">Trạng thái</th>
+                <th className="px-8 py-5 text-right">Thao tác</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -113,14 +113,14 @@ const CustomerManagement = () => {
                   <td colSpan={6} className="px-8 py-20 text-center">
                     <div className="flex flex-col items-center gap-2">
                       <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                      <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Loading customers...</p>
+                      <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Đang tải khách hàng...</p>
                     </div>
                   </td>
                 </tr>
               ) : customers.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-8 py-20 text-center text-muted-foreground">
-                    No customers found.
+                    Không tìm thấy khách hàng nào.
                   </td>
                 </tr>
               ) : (
@@ -142,7 +142,7 @@ const CustomerManagement = () => {
                         </div>
                         <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
                           <Phone className="w-3 h-3" />
-                          {customer.phoneNumber || 'N/A'}
+                          {customer.phoneNumber || 'Chưa cập nhật'}
                         </div>
                       </div>
                     </td>
@@ -153,14 +153,14 @@ const CustomerManagement = () => {
                       </div>
                     </td>
                     <td className="px-8 py-5 text-sm font-bold tracking-tight text-primary">
-                      $0
+                      0đ
                     </td>
                     <td className="px-8 py-5">
                       <span className={cn(
                         "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
-                        customer.isVerified ? 'text-emerald-600 bg-emerald-50' : 'text-rose-600 bg-rose-50'
+                        customer.isVerified ? 'text-emerald-600 bg-emerald-500/10' : 'text-rose-600 bg-rose-500/10'
                       )}>
-                        {customer.isVerified ? 'Verified' : 'Unverified'}
+                        {customer.isVerified ? 'Đã xác minh' : 'Chưa xác minh'}
                       </span>
                     </td>
                     <td className="px-8 py-5 text-right">

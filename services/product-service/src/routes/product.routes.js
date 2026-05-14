@@ -28,11 +28,14 @@ const upload = multer({
 });
 
 router.get('/', productController.getProducts);
+router.get('/reviews/all', productController.getAllReviews);
 router.get('/:id', productController.getProduct);
 
 router.post('/upload', upload.single('image'), productController.uploadImage);
 router.post('/', validateRequest(productSchema), productController.createProduct);
 router.put('/:id', productController.updateProduct);
 router.delete('/:id', productController.deleteProduct);
+router.post('/:id/reviews', productController.createReview);
+router.delete('/:productId/reviews/:reviewId', productController.deleteReview);
 
 module.exports = router;

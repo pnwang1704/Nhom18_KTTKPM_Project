@@ -84,6 +84,68 @@ class ProductService {
     }
     return product;
   }
+
+  async createProductReview(productId, reviewData) {
+    const product = await Product.findById(productId);
+    if (!product) {
+      const error = new Error('Product not found');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    product.reviews.push(reviewData);
+    product.numReviews = product.reviews.length;
+    
+    // Calculate average rating
+    const totalRating = product.reviews.reduce((acc, item) => item.rating + acc, 0);
+    product.averageRating = totalRating / product.reviews.length;
+
+    await product.save();
+    return product;
+  }
+
+  async getAllReviews() {
+    const products = await Product.aggregate([
+      { $unwind: "$reviews" },
+      {
+        $project: {
+          _id: 0,
+          productId: "$_id",
+          productName: "$name",
+          reviewId: "$reviews._id",
+          user: "$reviews.user",
+          userName: "$reviews.userName",
+          rating: "$reviews.rating",
+          comment: "$reviews.comment",
+          createdAt: "$reviews.createdAt"
+        }
+      },
+      { $sort: { createdAt: -1 } }
+    ]);
+    return products;
+  }
+
+  async deleteReview(productId, reviewId) {
+    const product = await Product.findById(productId);
+    if (!product) {
+      const error = new Error('Product not found');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    product.reviews = product.reviews.filter(r => r._id.toString() !== reviewId);
+    product.numReviews = product.reviews.length;
+
+    if (product.numReviews > 0) {
+      const totalRating = product.reviews.reduce((acc, item) => item.rating + acc, 0);
+      product.averageRating = totalRating / product.reviews.length;
+    } else {
+      product.averageRating = 0;
+    }
+
+    await product.save();
+    return product;
+  }
 }
 
 module.exports = new ProductService();

@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
+import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -8,12 +8,12 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { 
-  Search, 
-  Plus, 
-  Filter, 
-  Edit2, 
-  Trash2, 
+import {
+  Search,
+  Plus,
+  Filter,
+  Edit2,
+  Trash2,
   Eye,
   ChevronLeft,
   ChevronRight,
@@ -47,17 +47,17 @@ const ProductManagement = () => {
       const result = await response.json();
       const data = result.products || result.data || (Array.isArray(result) ? result : []);
       setTotalProducts(result.pagination?.total || data.length);
-      
+
       // Map data to ensure it has all fields for the table
       const mappedData = data.map(p => ({
         ...p,
         id: p._id,
         image: p.image || (p.images && p.images[0]) || (p.variants && p.variants[0]?.images[0]) || 'https://via.placeholder.com/100',
         stock: p.stock !== undefined ? p.stock : (p.variants?.reduce((vSum, v) => vSum + (v.options?.reduce((oSum, o) => oSum + (Number(o.stock) || 0), 0) || 0), 0) || 0),
-        status: (p.stock > 20 || (p.variants?.some(v => v.options?.some(o => o.stock > 20)))) ? 'Đang hoạt động' : 
-                (p.stock > 0 || (p.variants?.some(v => v.options?.some(o => o.stock > 0)))) ? 'Sắp hết hàng' : 'Hết hàng'
+        status: (p.stock > 20 || (p.variants?.some(v => v.options?.some(o => o.stock > 20)))) ? 'Đang hoạt động' :
+          (p.stock > 0 || (p.variants?.some(v => v.options?.some(o => o.stock > 0)))) ? 'Sắp hết hàng' : 'Hết hàng'
       }));
-      
+
       setProducts(mappedData);
     } catch (error) {
       console.error('Failed to fetch products:', error);
@@ -75,7 +75,7 @@ const ProductManagement = () => {
         method: 'DELETE'
       });
       const result = await response.json();
-      
+
       if (result.success) {
         setProducts(prev => prev.filter(p => p._id !== deleteModal.product.id));
         setDeleteModal({ open: false, product: null });
@@ -118,7 +118,7 @@ const ProductManagement = () => {
     {
       accessorKey: 'name',
       header: ({ column }) => (
-        <button 
+        <button
           className="flex items-center gap-1 hover:text-primary transition-colors"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
@@ -129,9 +129,9 @@ const ProductManagement = () => {
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-muted overflow-hidden border border-border">
-            <img 
-              src={row.original.image} 
-              alt={row.original.name} 
+            <img
+              src={row.original.image}
+              alt={row.original.name}
               className="w-full h-full object-cover"
               onError={(e) => { e.target.src = 'https://via.placeholder.com/100' }}
             />
@@ -146,7 +146,7 @@ const ProductManagement = () => {
     {
       accessorKey: 'price',
       header: 'Giá',
-      cell: ({ row }) => <span className="text-sm font-bold tracking-tight">{row.original.price?.toLocaleString()}₫</span>,
+      cell: ({ row }) => <span className="text-sm font-bold tracking-tight">{row.original.price?.toLocaleString()}đ</span>,
     },
     {
       accessorKey: 'stock',
@@ -154,12 +154,12 @@ const ProductManagement = () => {
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
           <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
-            <div 
+            <div
               className={cn(
                 "h-full rounded-full",
                 row.original.stock > 20 ? "bg-emerald-500" : row.original.stock > 0 ? "bg-orange-500" : "bg-rose-500"
-              )} 
-              style={{ width: `${Math.min(row.original.stock * 2, 100)}%` }} 
+              )}
+              style={{ width: `${Math.min(row.original.stock * 2, 100)}%` }}
             />
           </div>
           <span className="text-xs font-bold">{row.original.stock}</span>
@@ -184,13 +184,13 @@ const ProductManagement = () => {
       header: 'Thao tác',
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
-          <Link 
+          <Link
             to={`/admin/products/edit/${row.original.id}`}
             className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-primary transition-all"
           >
             <Edit2 className="w-4 h-4" />
           </Link>
-          <button 
+          <button
             onClick={() => setDeleteModal({ open: true, product: { id: row.original.id, name: row.original.name } })}
             className="p-2 rounded-lg hover:bg-rose-50 text-muted-foreground hover:text-rose-600 transition-all"
           >
@@ -224,14 +224,13 @@ const ProductManagement = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Sản phẩm</h1>
-          <p className="text-muted-foreground mt-1">Quản lý danh mục, giá cả và mức tồn kho của bạn.</p>
         </div>
         <div className="flex items-center gap-2">
           <button className="flex items-center gap-2 px-4 py-2 border border-border rounded-xl text-sm font-bold hover:bg-muted transition-all">
             <Download className="w-4 h-4" />
             Xuất file
           </button>
-          <Link 
+          <Link
             to="/admin/products/new"
             className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20"
           >
@@ -247,9 +246,9 @@ const ProductManagement = () => {
         <div className="p-6 border-b border-border flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-muted/20">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input 
-              type="text" 
-              placeholder="Tìm kiếm sản phẩm..." 
+            <input
+              type="text"
+              placeholder="Tìm kiếm sản phẩm..."
               value={globalFilter}
               onChange={(e) => setGlobalFilter(e.target.value)}
               className="pl-10 pr-4 py-2 bg-card border border-border rounded-xl w-full sm:w-80 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm"
@@ -260,7 +259,7 @@ const ProductManagement = () => {
               <Filter className="w-4 h-4 text-muted-foreground" />
               Bộ lọc
             </button>
-            <select 
+            <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="px-4 py-2 border border-border bg-card rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-primary/20 transition-all capitalize"
@@ -280,12 +279,12 @@ const ProductManagement = () => {
           {loading ? (
             <div className="absolute inset-0 flex items-center justify-center bg-card/50 z-10 backdrop-blur-sm">
               <div className="flex flex-col items-center gap-4">
-                 <Loader2 className="w-10 h-10 text-primary animate-spin" />
-                 <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Đang tải sản phẩm...</p>
+                <Loader2 className="w-10 h-10 text-primary animate-spin" />
+                <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Đang tải sản phẩm...</p>
               </div>
             </div>
           ) : null}
-          
+
           <table className="w-full text-left">
             <thead>
               {table.getHeaderGroups().map(headerGroup => (
@@ -307,9 +306,9 @@ const ProductManagement = () => {
                 </tr>
               ) : (
                 table.getRowModel().rows.map(row => (
-                  <motion.tr 
+                  <motion.tr
                     layout
-                    key={row.id} 
+                    key={row.id}
                     className={cn(
                       "hover:bg-muted/30 transition-colors group",
                       row.getIsSelected() && "bg-primary/5"
@@ -333,7 +332,7 @@ const ProductManagement = () => {
             Hiển thị <span className="font-bold text-foreground">{table.getRowModel().rows.length}</span> trong tổng số <span className="font-bold text-foreground">{totalProducts}</span> sản phẩm
           </p>
           <div className="flex items-center gap-2">
-            <button 
+            <button
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
               className="p-2 border border-border rounded-lg hover:bg-muted disabled:opacity-50 transition-all"
@@ -341,20 +340,20 @@ const ProductManagement = () => {
               <ChevronLeft className="w-4 h-4" />
             </button>
             {[...Array(table.getPageCount())].map((_, i) => (
-              <button 
+              <button
                 key={i}
                 onClick={() => table.setPageIndex(i)}
                 className={cn(
                   "w-8 h-8 rounded-lg text-sm font-bold transition-all",
-                  table.getState().pagination.pageIndex === i 
-                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
+                  table.getState().pagination.pageIndex === i
+                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
                     : "hover:bg-muted text-muted-foreground"
                 )}
               >
                 {i + 1}
               </button>
             ))}
-            <button 
+            <button
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
               className="p-2 border border-border rounded-lg hover:bg-muted disabled:opacity-50 transition-all"
@@ -384,11 +383,11 @@ const ProductManagement = () => {
               <div className="w-16 h-16 rounded-2xl bg-rose-50 flex items-center justify-center mx-auto">
                 <Trash2 className="w-8 h-8 text-rose-600" />
               </div>
-              
+
               <div className="text-center space-y-2">
                 <h3 className="text-xl font-bold">Xác nhận xóa sản phẩm?</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Bạn đang yêu cầu xóa sản phẩm <span className="font-bold text-foreground">"{deleteModal.product?.name}"</span>. 
+                  Bạn đang yêu cầu xóa sản phẩm <span className="font-bold text-foreground">"{deleteModal.product?.name}"</span>.
                   Hành động này sẽ xóa vĩnh viễn dữ liệu và không thể hoàn tác.
                 </p>
               </div>
