@@ -93,7 +93,7 @@ Truy cập ứng dụng tại: `http://localhost:5173`
 
 ## 👨‍💻 Đội ngũ phát triển (Team 18)
 
-- **Phan Nhật Quang**: Phụ trách Auth Service, API Gateway, Product Service & Admin UI.
+- **Phan Nhật Quang**: Phụ trách Auth Service, API Gateway, Product Service, Chat Service & Admin UI.
 - **Thái Bảo**: Phụ trách Cart Service, Order Service & Notification Service.
 
 ---
