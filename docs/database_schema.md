@@ -107,4 +107,4 @@ erDiagram
 - **Bảng `order_items`**: Lưu trữ chi tiết từng sản phẩm trong đơn hàng, liên kết với `product_id` từ Product Service.
 
 ---
-*Tài liệu được tạo tự động bởi Antigravity AI - 14/05/2026*
+
