@@ -91,6 +91,10 @@ Truy cập ứng dụng tại: `http://localhost:5173`
 
 ---
 
+## 📄 Tài liệu dự án
+- [Sơ đồ Cơ sở dữ liệu (Database Schema)](./docs/database_schema.md)
+- [Kế hoạch Phân công Công việc](./docs/work_assignment.md)
+
 ## 👨‍💻 Đội ngũ phát triển (Team 18)
 
 - **Phan Nhật Quang**: Phụ trách Auth Service, API Gateway, Product Service, Chat Service & Admin UI.

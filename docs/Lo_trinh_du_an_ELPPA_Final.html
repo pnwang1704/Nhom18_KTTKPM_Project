@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Kế hoạch Phân công Công việc Dự án ELPPA</title>
+    <style>
+        body { font-family: 'Times New Roman', Times, serif; line-height: 1.6; padding: 40px; color: #333; }
+        h1 { text-align: center; color: #000; text-transform: uppercase; border-bottom: 2px solid #000; padding-bottom: 10px; }
+        h2 { color: #000; border-left: 5px solid #333; padding-left: 10px; margin-top: 30px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #000; padding: 12px; text-align: left; vertical-align: top; font-size: 13pt; }
+        th { background-color: #f2f2f2; font-weight: bold; text-align: center; }
+        .highlight { background-color: #f9f9f9; font-weight: bold; }
+        .holiday { background-color: #fff4f4; font-style: italic; color: #d32f2f; text-align: center; }
+        .footer { margin-top: 50px; text-align: right; font-style: italic; font-size: 11pt; }
+    </style>
+</head>
+<body>
+
+    <h1>KẾ HOẠCH PHÂN CÔNG CÔNG VIỆC DỰ ÁN ELPPA (10 TUẦN)</h1>
+
+    <h2>1. THÔNG TIN CHUNG</h2>
+    <ul>
+        <li><strong>Mục tiêu:</strong> Hoàn thiện MVP hệ thống bán điện thoại ELPPA.</li>
+        <li><strong>Nhân sự:</strong>
+            <ul>
+                <li><strong>Phan Nhật Quang:</strong> API Gateway, Auth Service, Product Service, Chat Service, Admin UI.</li>
+                <li><strong>Thái Bảo:</strong> Cart Service, Order Service, Notification Service.</li>
+            </ul>
+        </li>
+        <li><strong>Thời gian bắt đầu:</strong> 26/01/2026.</li>
+        <li><strong>Thời gian kết thúc:</strong> 17/05/2026 (Chủ nhật tuần này).</li>
+    </ul>
+
+    <h2>2. LỘ TRÌNH CHI TIẾT</h2>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 15%;">Tuần (Thời gian)</th>
+                <th style="width: 15%;">Giai đoạn</th>
+                <th style="width: 35%;">Công việc của Quang</th>
+                <th style="width: 35%;">Công việc của Bảo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="highlight">Tuần 1<br>(26/01 - 01/02)</td>
+                <td>Setup & Auth</td>
+                <td>- Hoàn thiện auth-service: Đăng ký, Đăng nhập (JWT).<br>- Cấu hình api-gateway: Proxy requests, Auth middleware.</td>
+                <td>- Khởi tạo 3 service: cart, order, notification.<br>- Thiết lập DB PostgreSQL cho Order và Redis cho Cart.</td>
+            </tr>
+            <tr>
+                <td class="highlight">Tuần 2<br>(02/02 - 08/02)</td>
+                <td>Core Identity</td>
+                <td>- Xử lý Refresh Token và Logout.<br>- Phân quyền (Role-based: User/Admin).<br>- Làm trang Login/Register ở Frontend.</td>
+                <td>- Xây dựng logic giỏ hàng cơ bản trên Redis.<br>- API thêm sản phẩm vào giỏ hàng.</td>
+            </tr>
+            <tr>
+                <td class="highlight">Tuần 3<br>(09/02 - 15/02)</td>
+                <td>Product Schema</td>
+                <td>- Thiết kế MongoDB Schema cho Product (nhiều variant, cấu hình).<br>- API lấy danh sách và chi tiết sản phẩm.</td>
+                <td>- Hoàn thiện API Cart (cập nhật số lượng, xóa item).<br>- Làm giao diện Giỏ hàng ở Frontend.</td>
+            </tr>
+            <tr class="holiday">
+                <td colspan="2">NGHỈ TẾT (16/02 - 01/03)</td>
+                <td colspan="2">Nghỉ Tết Nguyên Đán 2026 (2 tuần - Không tính vào lộ trình công việc)</td>
+            </tr>
+            <tr>
+                <td class="highlight">Tuần 4<br>(02/03 - 08/03)</td>
+                <td>Admin Product</td>
+                <td>- Xây dựng trang Admin: Thêm/Sửa/Xóa sản phẩm.<br>- Tích hợp dịch vụ lưu trữ hình ảnh (S3/Cloudinary).</td>
+                <td>- Thiết kế logic đặt hàng (Checkout).<br>- Kiểm tra tồn kho từ Product Service (gọi qua Gateway).</td>
+            </tr>
+            <tr>
+                <td class="highlight">Tuần 5<br>(09/03 - 15/03)</td>
+                <td>User Experience</td>
+                <td>- Xây dựng trang chủ (Home), danh mục (Category).<br>- Tính năng Tìm kiếm & Lọc (Search & Filter).</td>
+                <td>- Xây dựng order-service: Tạo đơn hàng, lưu DB PostgreSQL.<br>- Quản lý trạng thái đơn hàng (Pending, Paid).</td>
+            </tr>
+            <tr>
+                <td class="highlight">Tuần 6<br>(16/03 - 22/03)</td>
+                <td>Notification</td>
+                <td>- Xây dựng trang thông tin cá nhân (User Profile).<br>- Tối ưu hóa hiệu năng Frontend (Lazy loading).</td>
+                <td>- Xây dựng notification-service.<br>- Tích hợp Nodemailer gửi mail xác nhận khi đặt hàng thành công.</td>
+            </tr>
+            <tr>
+                <td class="highlight">Tuần 7<br>(20/04 - 26/04)</td>
+                <td>Order & Chat</td>
+                <td>- Xây dựng chat-service (Socket.io).<br>- Tích hợp Lịch sử mua hàng vào Profile.</td>
+                <td>- Xử lý logic hủy đơn hàng, hoàn trả kho.<br>- Cập nhật trạng thái đơn hàng thời gian thực.</td>
+            </tr>
+            <tr>
+                <td class="highlight">Tuần 8<br>(30/03 - 12/04)</td>
+                <td>Payment</td>
+                <td>- Bảo mật API Gateway (Rate limiting, CORS).<br>- Kiểm thử luồng end-to-end từ chọn máy đến thanh toán.</td>
+                <td>- Tích hợp Mock Payment hoặc VNPay Sandbox.<br>- Xử lý Webhook từ cổng thanh toán để cập nhật Order.</td>
+            </tr>
+            <tr>
+                <td class="highlight">Tuần 9<br>(13/04 - 26/04)</td>
+                <td>Optimization</td>
+                <td>- Thêm Logging & Monitoring (Winston/ELK).<br>- Viết tài liệu API chi tiết (Swagger).</td>
+                <td>- Unit Test cho các logic nghiệp vụ quan trọng.<br>- Tối ưu hóa Database queries & Indexing.</td>
+            </tr>
+            <tr class="holiday">
+                <td colspan="2">NGHỈ LỄ (27/04 - 03/05)</td>
+                <td colspan="2">Nghỉ lễ 30/04 & 01/05 (1 tuần - Không tính vào lộ trình công việc)</td>
+            </tr>
+            <tr>
+                <td class="highlight">Tuần 10<br>(04/05 - 17/05)</td>
+                <td>MVP Final</td>
+                <td>- Hoàn thiện Chat Dashboard, Việt hóa & Dark Mode.<br>- Dọn dẹp code, fix bug & Bàn giao dự án.</td>
+                <td>- Viết tài liệu hướng dẫn vận hành.<br>- Kiểm tra tính nhất quán dữ liệu & Demo cuối kỳ.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        Tài liệu được cập nhật bởi Antigravity AI Assistant - Ngày 14/05/2026
+    </div>
+
+</body>
+</html>
