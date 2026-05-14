@@ -1,182 +1,105 @@
-# Nhom18 KTTKPM Project
+# 🍎 ELPPA - Premium Apple-Style E-Commerce Experience
 
-## Project Introduction
-Nhom18 KTTKPM Project là website thương mại điện tử theo mô hình cửa hàng điện thoại (phone store), được xây dựng theo kiến trúc Microservices để dễ mở rộng và phân chia công việc cho nhóm nhỏ.
+[![React](https://img.shields.io/badge/Frontend-React%2018-blue.svg)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Backend-Node.js%2018-green.svg)](https://nodejs.org/)
+[![Microservices](https://img.shields.io/badge/Architecture-Microservices-orange.svg)]()
+[![Docker](https://img.shields.io/badge/DevOps-Docker-blue.svg)](https://www.docker.com/)
 
-Mục tiêu giai đoạn hiện tại là MVP:
-- Có nền tảng backend và frontend hoạt động ổn định
-- Tách service rõ ràng theo nghiệp vụ
-- Dễ triển khai local bằng Docker Compose
+**ELPPA** là một nền tảng thương mại điện tử cao cấp chuyên về các sản phẩm công nghệ (Phone Store), được lấy cảm hứng từ ngôn ngữ thiết kế tối giản và sang trọng của Apple. Dự án được xây dựng trên kiến trúc Microservices mạnh mẽ, đảm bảo khả năng mở rộng và hiệu suất cao.
 
-## Architecture Overview
-Hệ thống gồm các thành phần chính:
+---
 
-- Frontend (React + Vite): giao diện người dùng
-- API Gateway: điểm vào duy nhất cho client
-- Auth Service: xác thực người dùng
-- Product Service: quản lý sản phẩm
-- Cart Service: giỏ hàng
-- Order Service: đơn hàng
-- Notification Service: gửi thông báo
-- PostgreSQL: dữ liệu giao dịch (Auth, Order)
-- MongoDB: dữ liệu sản phẩm linh hoạt
-- Redis: cache và dữ liệu giỏ hàng tạm thời
+## ✨ Tính năng nổi bật
 
+### 🎨 Trải nghiệm Người dùng (UX/UI)
+- **Apple Design Language**: Giao diện tinh tế, sử dụng hiệu ứng Glassmorphism và chuyển động mượt mà với Framer Motion.
+- **Dynamic Dark Mode**: Hỗ trợ chế độ sáng/tối đồng bộ toàn diện trên cả trang người dùng và quản trị.
+- **Responsive Design**: Hiển thị hoàn hảo trên mọi thiết bị từ Mobile đến Desktop.
 
+### 🛠 Hệ thống Quản trị (Admin Dashboard)
+- **Business Analytics**: Biểu đồ trực quan về doanh thu, lợi nhuận và xu hướng bán hàng (Recharts).
+- **Real-time Chat Support**: Hệ thống hỗ trợ khách hàng trực tuyến thông qua Socket.io.
+- **Inventory Management**: Quản lý sản phẩm, đơn hàng, khách hàng và danh mục một cách chuyên nghiệp.
+- **Localization**: Hỗ trợ tiếng Việt 100% và đơn vị tiền tệ VNĐ.
 
-Luồng cơ bản:
-Frontend -> API Gateway -> các service backend -> database tương ứng.
+### 🏗 Kiến trúc Microservices
+- **API Gateway**: Điểm điều phối duy nhất cho mọi yêu cầu từ Client.
+- **Auth Service**: Quản lý định danh, bảo mật JWT.
+- **Product Service**: Quản lý kho dữ liệu sản phẩm linh hoạt (MongoDB).
+- **Cart Service**: Quản lý giỏ hàng và lưu trữ tạm thời (Redis).
+- **Order Service**: Xử lý đơn hàng, thanh toán và lịch sử giao dịch (PostgreSQL).
+- **Chat Service**: Xử lý tin nhắn thời gian thực.
+- **Database**: Sử dụng kết hợp PostgreSQL (Dữ liệu giao dịch) và MongoDB (Dữ liệu sản phẩm).
 
-## Tech Stack
-- Frontend: React, Vite
-- Backend: Node.js, Express
-- Databases:
-  - PostgreSQL (Auth, Order)
-  - MongoDB (Product)
-  - Redis (Cart, cache)
-- Infrastructure: Docker, Docker Compose
-- Version Control: Git, GitHub
+---
 
-## Project Structure
-    .
-    ├─ frontend/
-    │  ├─ src/
-    │  │  ├─ app/
-    │  │  ├─ pages/
-    │  │  ├─ components/
-    │  │  └─ services/api/
-    │  └─ package.json
-    ├─ infra/
-    │  └─ docker-compose.yml
-    ├─ services/
-    │  ├─ api-gateway/
-    │  │  ├─ src/
-    │  │  │  ├─ config/
-    │  │  │  ├─ routes/
-    │  │  │  ├─ controllers/
-    │  │  │  ├─ services/
-    │  │  │  └─ middlewares/
-    │  │  ├─ server.js
-    │  │  └─ package.json
-    │  ├─ auth-service/
-    │  │  ├─ src/
-    │  │  │  ├─ config/
-    │  │  │  ├─ routes/
-    │  │  │  ├─ controllers/
-    │  │  │  ├─ services/
-    │  │  │  └─ middlewares/
-    │  │  ├─ server.js
-    │  │  └─ package.json
-    │  ├─ product-service/          (placeholder)
-    │  ├─ cart-service/             (placeholder)
-    │  ├─ order-service/            (placeholder)
-    │  └─ notification-service/     (placeholder)
-    ├─ .gitignore
-    └─ package.json
+## 🚀 Công nghệ sử dụng (Tech Stack)
 
-## Getting Started (Very Important)
+| Thành phần | Công nghệ |
+| :--- | :--- |
+| **Frontend** | React, Vite, Tailwind CSS, Framer Motion, Recharts, Lucide React |
+| **Backend** | Node.js, Express.js, Socket.io |
+| **Database** | MongoDB, PostgreSQL, Redis |
+| **DevOps** | Docker, Docker Compose |
 
-### 1) Clone project
-    git clone https://github.com/pnwang1704/Nhom18_KTTKPM_Project.git
-    cd Nhom18_KTTKPM_Project
+---
 
-### 2) Run full backend stack with Docker Compose
-Chạy từ thư mục gốc project:
+## 🛠 Hướng dẫn cài đặt & Chạy dự án
 
-    docker compose -f docker-compose.yml up --build
+### 1. Yêu cầu hệ thống
+- Đã cài đặt **Docker** và **Docker Compose**.
+- Node.js (phiên bản 18 trở lên) nếu muốn chạy Local.
 
-Dịch vụ chính sau khi chạy:
-- API Gateway: http://localhost:3000
-- Auth Service: http://localhost:3001
-- PostgreSQL: localhost:5432
-- MongoDB: localhost:27017
-- Redis: localhost:6379
+### 2. Khởi chạy toàn bộ hệ thống (Backend & Database)
+Chạy lệnh sau từ thư mục gốc của dự án:
+```bash
+docker compose -f infra/docker-compose.yml up --build
+```
+Hệ thống sẽ khởi chạy các dịch vụ:
+- **API Gateway**: `http://localhost:3000`
+- **Auth Service**: `http://localhost:3001`
+- **Database**: MongoDB (27017), PostgreSQL (5432), Redis (6379)
 
-Health check nhanh:
-    curl http://localhost:3000/health
-    curl http://localhost:3001/health
+### 3. Chạy Frontend (Dev Mode)
+Mở một terminal mới:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Truy cập ứng dụng tại: `http://localhost:5173`
 
-### 3) Run frontend locally (optional, dev mode)
-Mở terminal mới:
+---
 
-    cd frontend
-    npm install
-    npm run dev
+## 📁 Cấu trúc thư mục (Project Structure)
 
-### 4) Install dependencies for backend services (optional, if not using Docker)
-    cd services/api-gateway
-    npm install
+```text
+.
+├── frontend/               # React Application (Apple UI)
+│   ├── src/
+│   │   ├── components/     # UI Components (Common, Support, Admin)
+│   │   ├── pages/          # Admin & Client Pages
+│   │   ├── styles/         # Global CSS & Tailwind Config
+│   │   └── services/       # API Clients
+├── infra/                  # Docker & Infrastructure Config
+└── services/               # Microservices Backend
+    ├── api-gateway/        # Central Entry Point
+    ├── auth-service/       # Identity Management
+    ├── product-service/    # Inventory & Product Logic
+    └── chat-service/       # Real-time Communication
+```
 
-    cd ../auth-service
-    npm install
+---
 
-## API Overview (Short)
-- API Gateway:
-  - GET /health
-  - /auth (route placeholder đến auth-service)
-- Auth Service:
-  - GET /health
-  - POST /auth/register (placeholder)
-  - POST /auth/login (placeholder)
-  - POST /auth/refresh (placeholder)
-  - POST /auth/logout (placeholder)
-  - GET /auth/me (placeholder)
+## 👨‍💻 Đội ngũ phát triển (Team 18)
 
-## Git Workflow (3 Branches)
-Nhánh sử dụng:
-- main: nhánh ổn định
-- nhatquang: nhánh làm việc của Quang
-- thaibao: nhánh làm việc của Bảo
+- **Phan Nhật Quang**: Phụ trách Auth Service, API Gateway, Product Service & Admin UI.
+- **Thái Bảo**: Phụ trách Cart Service, Order Service & Notification Service.
 
-Quy trình đơn giản:
-1. Mỗi người code trên nhánh của mình.
-2. Trước khi code, kéo main mới nhất vào nhánh cá nhân.
-3. Sau khi hoàn thành, merge nhánh cá nhân vào main.
-4. Người còn lại kéo main mới nhất vào nhánh của mình.
+---
 
-Lệnh mẫu:
+## 📝 Ghi chú & Liên hệ
+Dự án đang trong giai đoạn hoàn thiện các tính năng nâng cao như thanh toán online và hệ thống gợi ý sản phẩm. Mọi ý kiến đóng góp vui lòng liên hệ qua email quản trị tại [pnquangcn0406@gmail.com](mailto:pnquangcn0406@gmail.com).
 
-Pull main vào nhánh cá nhân:
-    git checkout main
-    git pull origin main
-    git checkout nhatquang
-    git merge main
-    git push origin nhatquang
-
-Merge nhánh cá nhân vào main:
-    git checkout main
-    git pull origin main
-    git merge nhatquang
-    git push origin main
-
-## Future Improvements
-- Hoàn thiện business logic cho Product, Cart, Order, Notification services
-- Thêm JWT auth đầy đủ và role-based access (user/admin)
-- Thêm logging/monitoring tốt hơn
-- Tích hợp thanh toán online
-- Tìm kiếm nâng cao (Elasticsearch/OpenSearch)
-- Gợi ý sản phẩm (recommendation)
-
-## Notes
-- Dự án đang theo hướng MVP: đơn giản, dễ chạy, dễ mở rộng.
-- Ưu tiên hoàn thiện luồng chính trước khi tối ưu sâu kiến trúc.
-
-Phân công công việc cho team 2 dev
-
-Quang phụ trách:
-
-auth-service
-api-gateway
-product-service
-Bảo phụ trách:
-
-cart-service
-order-service
-notification-service
-Nguyên tắc làm việc
-
-Mỗi người chỉ sửa service của mình.
-Không sửa chéo sang service của người còn lại nếu chưa trao đổi trước.
-Các file dùng chung như docker-compose, README, root package.json chỉ nên có một người chỉnh chính hoặc phải thống nhất trước khi sửa.
-Trước khi code luôn pull main mới nhất.
-Sau khi xong task thì commit rõ ràng và merge về main theo quy ước của team.
+---
+*© 2024 ELPPA Project - Nhom 18 KTTKPM - IUH*
