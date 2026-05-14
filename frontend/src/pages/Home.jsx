@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/common/Navbar';
+import Footer from '../components/common/Footer';
 import PromoBanner from '../components/home/PromoBanner';
 import HeroSection from '../components/home/HeroSection';
 import ProductShelf from '../components/home/ProductShelf';
@@ -102,16 +103,7 @@ function Home() {
         <ProductGrid products={products} />
       </main>
 
-      <footer className="py-20 px-gutter border-t border-elppa-gray-border/30 bg-elppa-light">
-        <div className="max-w-[1024px] mx-auto text-xs text-elppa-gray leading-loose">
-          <p>© 2024 Cửa hàng tối giản ELPPA. Bảo lưu mọi quyền. Được xây dựng với tâm huyết và sự tỉ mỉ.</p>
-          <div className="flex gap-4 mt-4">
-            <button className="hover:underline">Chính sách bảo mật</button>
-            <button className="hover:underline">Điều khoản sử dụng</button>
-            <button className="hover:underline">Chính sách bán hàng</button>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

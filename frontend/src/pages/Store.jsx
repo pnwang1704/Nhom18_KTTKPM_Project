@@ -5,6 +5,7 @@ import StoreCategoryNav from '../components/store/StoreCategoryNav';
 import StoreCarousel from '../components/store/StoreCarousel';
 import StoreCard from '../components/store/StoreCard';
 import { apiRequest } from '../services/api/client';
+import Footer from '../components/common/Footer';
 
 const Store = () => {
   const [products, setProducts] = useState([]);
@@ -85,11 +86,7 @@ const Store = () => {
         )}
       </main>
 
-      <footer className="py-20 px-gutter border-t border-elppa-gray-border/30 bg-elppa-light">
-        <div className="max-w-[1024px] mx-auto text-xs text-elppa-gray leading-loose text-center">
-          <p>© 2024 Cửa hàng tối giản ELPPA. Bảo lưu mọi quyền.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

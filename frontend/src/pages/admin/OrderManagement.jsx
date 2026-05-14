@@ -18,7 +18,7 @@ const mockOrders = [
   { id: '#ORD-9281', customer: 'Phan Nhật Quang', email: 'quang@example.com', products: 2, total: 32990000, status: 'Delivered', payment: 'Paid', date: '2024-05-10', method: 'Credit Card' },
   { id: '#ORD-9282', customer: 'Nguyễn Văn A', email: 'vana@example.com', products: 1, total: 21490000, status: 'Pending', payment: 'Unpaid', date: '2024-05-11', method: 'Bank Transfer' },
   { id: '#ORD-9283', customer: 'Trần Thị B', email: 'thib@example.com', products: 3, total: 45150000, status: 'Shipping', payment: 'Paid', date: '2024-05-11', method: 'E-Wallet' },
-  { id: '#ORD-9284', customer: 'Lê Văn C', customer: 'Lê Văn C', email: 'vanc@example.com', products: 1, total: 15750000, status: 'Delivered', payment: 'Paid', date: '2024-05-09', method: 'Credit Card' },
+  { id: '#ORD-9284', customer: 'Lê Văn C', email: 'vanc@example.com', products: 1, total: 15750000, status: 'Delivered', payment: 'Paid', date: '2024-05-09', method: 'Credit Card' },
   { id: '#ORD-9285', customer: 'Phạm Minh D', email: 'minhd@example.com', products: 2, total: 12100000, status: 'Cancelled', payment: 'Refunded', date: '2024-05-08', method: 'Bank Transfer' },
   { id: '#ORD-9286', customer: 'Hoàng Thị E', email: 'thie@example.com', products: 1, total: 10990000, status: 'Pending', payment: 'Unpaid', date: '2024-05-12', method: 'COD' },
 ];

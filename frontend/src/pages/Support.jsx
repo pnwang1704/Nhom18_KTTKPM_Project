@@ -4,6 +4,7 @@ import Navbar from '../components/common/Navbar';
 import SupportHeader from '../components/support/SupportHeader';
 import SupportQuickTools from '../components/support/SupportQuickTools';
 import SupportPromoSection from '../components/support/SupportPromoSection';
+import Footer from '../components/common/Footer';
 
 const Support = () => {
   useEffect(() => {
@@ -87,11 +88,7 @@ const Support = () => {
         </section>
       </main>
 
-      <footer className="py-20 px-gutter border-t border-elppa-gray-border/30 bg-elppa-light">
-        <div className="max-w-[1024px] mx-auto text-xs text-elppa-gray leading-loose text-center">
-          <p>© 2024 Cửa hàng tối giản ELPPA. Bảo lưu mọi quyền.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
