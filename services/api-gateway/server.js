@@ -12,6 +12,7 @@ const authRoutes = require('./src/routes/auth.routes');
 const productRoutes = require('./src/routes/product.routes');
 const categoryRoutes = require('./src/routes/category.routes');
 const chatRoutes = require('./src/routes/chat.routes');
+const orderRoutes = require('./src/routes/order.routes');
 
 const app = express();
 
@@ -69,6 +70,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api', orderRoutes);
 
 app.get('/test', (req, res) => res.json({ message: 'Gateway is reachable' }));
 

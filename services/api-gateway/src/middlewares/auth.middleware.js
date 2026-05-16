@@ -36,7 +36,7 @@ const authMiddleware = (roles = []) => {
 
       next();
     } catch (error) {
-      console.error('[auth error]', error.message);
+      console.error('[auth error]', error.name, error.message, '| Secret used:', jwtSecret.substring(0, 8) + '...');
       
       const isExpired = error.name === 'TokenExpiredError';
       
@@ -44,7 +44,8 @@ const authMiddleware = (roles = []) => {
         success: false,
         message: isExpired ? 'Unauthorized: Token has expired' : 'Unauthorized: Invalid token',
         data: null,
-        errorCode: isExpired ? 'TOKEN_EXPIRED' : 'INVALID_TOKEN'
+        errorCode: isExpired ? 'TOKEN_EXPIRED' : 'INVALID_TOKEN',
+        reason: error.message
       });
     }
   };

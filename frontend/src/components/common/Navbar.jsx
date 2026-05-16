@@ -3,10 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Search, ShoppingBag, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { apiRequest } from '../../services/api/client';
+import { useCartStore } from '../../store/useCartStore';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user') || 'null');
+  const totalItems = useCartStore(state => state.getTotalItems());
   
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -74,12 +76,14 @@ const Navbar = () => {
             >
               <Search size={16} />
             </button>
-            <button className="hover:text-elppa-obsidian transition-colors relative">
+            <Link to="/cart" className="hover:text-elppa-obsidian transition-colors relative block">
               <ShoppingBag size={16} />
-              <span className="absolute -top-1 -right-1 bg-elppa-blue text-white text-[10px] w-3 h-3 rounded-full flex items-center justify-center font-bold">
-                0
-              </span>
-            </button>
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-elppa-blue text-white text-[10px] w-3 h-3 rounded-full flex items-center justify-center font-bold">
+                  {totalItems}
+                </span>
+              )}
+            </Link>
             
             {user ? (
               <div className="flex items-center gap-4">

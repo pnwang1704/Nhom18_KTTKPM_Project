@@ -1,0 +1,1221 @@
+const Order = require("../models/order.model");
+const { getProductById } = require("./productClient.service");
+const payos = require("./payos.service");
+const mongoose = require("mongoose");
+const crypto = require("crypto");
+const eventBus = require("./eventBus.service");
+
+class BadRequest extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "BadRequest";
+    this.statusCode = 400;
+  }
+}
+
+function log(level, event, meta = {}) {
+  const msg = { ts: new Date().toISOString(), level, event, ...meta };
+  if (level === "error") console.error(JSON.stringify(msg));
+  else if (level === "warn") console.warn(JSON.stringify(msg));
+  else console.info(JSON.stringify(msg));
+}
+
+// Simple in-process metrics collector (replace with Prometheus client in prod)
+const metrics = {
+  counters: {
+    checkout_success: 0,
+    checkout_failure: 0,
+    retries: 0,
+    webhook_replays: 0,
+    reconcile_processed: 0,
+  },
+  inc(name, v = 1) {
+    if (!this.counters[name]) this.counters[name] = 0;
+    this.counters[name] += v;
+  },
+};
+
+// Retry helper with exponential backoff
+function isTransientError(err) {
+  if (!err) return false;
+  if (!err.response) return true; // network error
+  const status = err.response.status;
+  if (status >= 500 || status === 429) return true;
+  return false;
+}
+
+async function retryWithBackoff(
+  fn,
+  {
+    retries = 3,
+    baseDelay = 200,
+    factor = 2,
+    onRetry,
+    isTransient = isTransientError,
+  } = {},
+) {
+  let attempt = 0;
+  let lastErr;
+  while (attempt <= retries) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastErr = err;
+      if (!isTransient(err)) throw err;
+      if (attempt === retries) break;
+      const delay = baseDelay * Math.pow(factor, attempt);
+      if (onRetry) onRetry(attempt + 1, err);
+      // record retry metric
+      try {
+        metrics.inc("retries");
+      } catch (e) {}
+      await new Promise((r) => setTimeout(r, delay));
+      attempt += 1;
+    }
+  }
+  throw lastErr;
+}
+
+function computeIdempotencyKey(userId, cart) {
+  // Normalize cart items ordering to make idempotency key invariant to item order
+  const items = (cart.items || []).map((it) => ({
+    productId: String(it.productId),
+    quantity: Number(it.quantity),
+  }));
+  items.sort((a, b) => {
+    if (a.productId < b.productId) return -1;
+    if (a.productId > b.productId) return 1;
+    return a.quantity - b.quantity;
+  });
+  const hash = crypto.createHash("sha256");
+  hash.update(JSON.stringify({ userId, items }));
+  return hash.digest("hex");
+}
+
+function paymentStatusToOrderStatus(status) {
+  const normalized = String(status || "").toLowerCase();
+  if (normalized === "success" || normalized === "paid") {
+    return "PAID";
+  }
+  if (
+    normalized === "failed" ||
+    normalized === "cancel" ||
+    normalized === "cancelled"
+  ) {
+    return "FAILED";
+  }
+  return null;
+}
+
+function resolveReturnUrl(returnUrl) {
+  const fallback =
+    process.env.PAYOS_RETURN_URL ||
+    process.env.CLIENT_RETURN_URL ||
+    "http://localhost:3000/payments/return";
+  return typeof returnUrl === "string" && returnUrl.trim()
+    ? returnUrl.trim()
+    : fallback;
+}
+
+function isValidCheckoutUrl(checkoutUrl) {
+  if (typeof checkoutUrl !== "string" || !checkoutUrl.trim()) return false;
+  const normalized = checkoutUrl.trim();
+  if (!/^https?:\/\//i.test(normalized)) return false;
+  if (normalized.includes("payos.example")) return false;
+  return true;
+}
+
+class OrderService {
+  isValidTransition(from, to) {
+    const allowed = {
+      PENDING: ["WAITING_PAYMENT"],
+      WAITING_PAYMENT: ["PAID", "FAILED"],
+      PAID: ["COMPLETED"],
+      FAILED: [],
+      CANCELLED: [],
+      COMPLETED: [],
+    };
+    return Array.isArray(allowed[from]) && allowed[from].includes(to);
+  }
+
+  async _createPayment(order, returnUrl, correlationId = null) {
+    const finalReturnUrl = resolveReturnUrl(returnUrl);
+    // Ensure PayOS will redirect back with our internal order id so frontend can resolve it
+    const returnWithOrderId = `${finalReturnUrl}${finalReturnUrl.includes("?") ? "&" : "?"}orderId=${encodeURIComponent(
+      String(order._id),
+    )}`;
+    const paymentResp = await retryWithBackoff(
+      () => payos.createPayment(order, order.totalPrice, returnWithOrderId),
+      {
+        retries: 3,
+        baseDelay: 300,
+        onRetry: (attempt, err) =>
+          log("warn", "checkout:payment-retry", {
+            orderId: order._id.toString(),
+            attempt,
+            error: err.message,
+            correlationId,
+          }),
+      },
+    );
+
+    const paymentId = paymentResp.paymentId || paymentResp.paymentLinkId;
+    const checkoutUrl =
+      paymentResp.checkoutUrl ||
+      paymentResp.checkout_url ||
+      paymentResp.checkoutLink;
+    if (!paymentId) {
+      throw new Error("PayOS did not return paymentId");
+    }
+
+    return { paymentId, checkoutUrl, returnUrl: returnWithOrderId };
+  }
+
+  async _claimCartClear(orderId) {
+    return Order.findOneAndUpdate(
+      { _id: orderId, cartCleared: false },
+      { $set: { cartCleared: true }, $inc: { lockVersion: 1 } },
+      { new: true },
+    );
+  }
+
+  async _publishCartClear(order) {
+    const claimed = await this._claimCartClear(order._id);
+    if (!claimed) {
+      return null;
+    }
+
+    await retryWithBackoff(
+      () =>
+        eventBus.publish("ClearCart", {
+          userId: claimed.userId,
+          orderId: claimed._id.toString(),
+          cartVersion: claimed.cartVersion,
+        }),
+      { retries: 2 },
+    );
+
+    return claimed;
+  }
+
+  // Create order from request items. ctx: { items, correlationId }
+  async createOrderFromCart(userId, returnUrl, idempotencyKey, ctx = {}) {
+    const correlationId = ctx.correlationId || null;
+    if (!userId) {
+      const e = new Error("userId required");
+      e.statusCode = 400;
+      throw e;
+    }
+
+    const items = Array.isArray(ctx.items) ? ctx.items : [];
+    if (!items || items.length === 0) {
+      throw new BadRequest("Cart is empty");
+    }
+
+    for (const item of items) {
+      if (!item || !item.productId) {
+        throw new BadRequest("Invalid item: productId is required");
+      }
+      if (
+        !Number.isFinite(Number(item.quantity)) ||
+        Number(item.quantity) <= 0
+      ) {
+        throw new BadRequest(`Invalid quantity for product ${item.productId}`);
+      }
+      if (!Number.isFinite(Number(item.price)) || Number(item.price) <= 0) {
+        throw new BadRequest(`Invalid price for product ${item.productId}`);
+      }
+    }
+
+    const totalAmount = items.reduce(
+      (sum, item) => sum + Number(item.price) * Number(item.quantity),
+      0,
+    );
+
+    // Compute idempotencyKey from request snapshot if not provided
+    if (!idempotencyKey) {
+      const cartSnapshot = {
+        items,
+        totalPrice: totalAmount,
+      };
+      idempotencyKey = computeIdempotencyKey(userId, cartSnapshot);
+      log("info", "checkout:computed-idempotency", {
+        userId,
+        idempotencyKey,
+        correlationId,
+      });
+    }
+
+    // cartVersion is kept for webhook side effects compatibility
+    const cartVersion = 0;
+
+    const ensureCheckoutUrlForActiveOrder = async (existingOrder) => {
+      const existingCheckoutUrl =
+        existingOrder &&
+        existingOrder.metadata &&
+        typeof existingOrder.metadata.checkoutUrl === "string"
+          ? existingOrder.metadata.checkoutUrl
+          : null;
+
+      const isExpiredPayment =
+        existingOrder &&
+        existingOrder.paymentExpiresAt &&
+        new Date(existingOrder.paymentExpiresAt).getTime() <= Date.now();
+
+      // If checkoutUrl looks valid and not expired, verify payment amount
+      if (isValidCheckoutUrl(existingCheckoutUrl) && !isExpiredPayment) {
+        try {
+          // compute desired payment amount from the canonical order total
+          const desiredAmount = Math.round(existingOrder.totalPrice || 0);
+
+          if (existingOrder.paymentId) {
+            const payInfo = await payos.getPaymentStatus(
+              existingOrder.paymentId,
+            );
+            if (
+              typeof payInfo.amount !== "undefined" &&
+              Number(payInfo.amount) !== Number(desiredAmount)
+            ) {
+              // mismatch -> treat as invalid so we will recreate a correct checkout
+              log("info", "checkout:checkout-amount-mismatch", {
+                userId,
+                orderId: existingOrder._id.toString(),
+                paymentAmount: payInfo.amount,
+                expectedAmount: desiredAmount,
+                correlationId,
+              });
+            } else {
+              return {
+                order: existingOrder,
+                checkoutUrl: existingCheckoutUrl,
+                returnUrl:
+                  existingOrder.metadata && existingOrder.metadata.returnUrl
+                    ? existingOrder.metadata.returnUrl
+                    : resolveReturnUrl(returnUrl),
+              };
+            }
+          } else {
+            return {
+              order: existingOrder,
+              checkoutUrl: existingCheckoutUrl,
+              returnUrl:
+                existingOrder.metadata && existingOrder.metadata.returnUrl
+                  ? existingOrder.metadata.returnUrl
+                  : resolveReturnUrl(returnUrl),
+            };
+          }
+        } catch (err) {
+          // if verification fails, fall through to recreate payment
+          log("warn", "checkout:verify-payment-failed", {
+            orderId: existingOrder._id.toString(),
+            error: err.message,
+            correlationId,
+          });
+        }
+      }
+
+      if (
+        !existingOrder ||
+        !["PENDING", "WAITING_PAYMENT"].includes(existingOrder.status)
+      ) {
+        return {
+          order: existingOrder,
+          checkoutUrl: null,
+          returnUrl: resolveReturnUrl(returnUrl),
+        };
+      }
+
+      if (existingOrder.status === "PENDING") {
+        const waitingOrder = await Order.findOne({
+          userId,
+          status: "WAITING_PAYMENT",
+          _id: { $ne: existingOrder._id },
+        }).sort({ createdAt: -1 });
+        if (waitingOrder) {
+          return ensureCheckoutUrlForActiveOrder(waitingOrder);
+        }
+      }
+
+      const paymentResp = await this._createPayment(
+        existingOrder,
+        returnUrl,
+        correlationId,
+      );
+      const finalReturnUrl = paymentResp.returnUrl;
+      const nextCheckoutUrl =
+        paymentResp.checkoutUrl ||
+        (existingOrder.metadata && existingOrder.metadata.checkoutUrl) ||
+        null;
+      const nextPaymentId = paymentResp.paymentId || paymentResp.paymentLinkId;
+      const nextPaymentAmount =
+        typeof paymentResp.amount !== "undefined" ? paymentResp.amount : null;
+
+      let updatedOrder = null;
+      try {
+        updatedOrder = await Order.findOneAndUpdate(
+          {
+            _id: existingOrder._id,
+            status: { $in: ["PENDING", "WAITING_PAYMENT"] },
+          },
+          {
+            $set: {
+              paymentId: nextPaymentId,
+              status: "WAITING_PAYMENT",
+              paymentAttemptedAt: new Date(),
+              paymentExpiresAt: new Date(Date.now() + 15 * 60 * 1000),
+              metadata: Object.assign({}, existingOrder.metadata || {}, {
+                checkoutUrl: nextCheckoutUrl,
+                returnUrl: finalReturnUrl,
+                paymentAmount: nextPaymentAmount,
+              }),
+            },
+            $inc: { lockVersion: 1 },
+          },
+          { new: true },
+        );
+      } catch (err) {
+        if (err && err.code === 11000) {
+          const fallbackWaitingOrder = await Order.findOne({
+            userId,
+            status: "WAITING_PAYMENT",
+          }).sort({ createdAt: -1 });
+          if (fallbackWaitingOrder) {
+            return ensureCheckoutUrlForActiveOrder(fallbackWaitingOrder);
+          }
+        }
+        throw err;
+      }
+
+      return {
+        order: updatedOrder || existingOrder,
+        checkoutUrl:
+          (updatedOrder &&
+            updatedOrder.metadata &&
+            updatedOrder.metadata.checkoutUrl) ||
+          nextCheckoutUrl,
+        returnUrl: finalReturnUrl,
+      };
+    };
+
+    // If an order with the same idempotencyKey exists, log it but continue
+    // to create a fresh checkout (force new payment link) to avoid returning
+    // an old/paid checkout. We will not attach the same idempotencyKey to the
+    // new order to avoid duplicate-key conflicts.
+    let existingByIdempotency = null;
+    if (idempotencyKey) {
+      existingByIdempotency = await Order.findOne({ idempotencyKey });
+      if (existingByIdempotency) {
+        log("info", "checkout:idempotent-hit-forced-new", {
+          userId,
+          orderId: existingByIdempotency._id.toString(),
+          correlationId,
+        });
+        // Drop idempotencyKey for the new order to force creation of a new
+        // checkout instead of returning the existing one.
+        idempotencyKey = null;
+      }
+    }
+
+    // Reuse latest active waiting-payment order for this user only when it
+    // corresponds to the same cart snapshot (idempotencyKey). If the user
+    // started a different checkout earlier, cancel that previous waiting
+    // order so we can create a new checkout for the current items.
+    const existingWaitingOrder = await Order.findOne({
+      userId,
+      status: "WAITING_PAYMENT",
+    }).sort({ createdAt: -1 });
+    if (existingWaitingOrder) {
+      // Always attempt to cancel any existing WAITING_PAYMENT order to force
+      // creation of a fresh checkout (even if idempotency previously matched).
+      try {
+        const cancelled = await Order.findOneAndUpdate(
+          { _id: existingWaitingOrder._id, status: "WAITING_PAYMENT" },
+          { $set: { status: "CANCELLED" }, $inc: { lockVersion: 1 } },
+          { new: true },
+        );
+        if (cancelled) {
+          log("info", "checkout:cancelled-old-waiting-order", {
+            userId,
+            orderId: cancelled._id.toString(),
+            correlationId,
+          });
+        }
+      } catch (err) {
+        log("warn", "checkout:cancel-waiting-failed", {
+          userId,
+          orderId: existingWaitingOrder._id.toString(),
+          error: err.message,
+          correlationId,
+        });
+        const resolved =
+          await ensureCheckoutUrlForActiveOrder(existingWaitingOrder);
+        return {
+          orderId: existingWaitingOrder._id.toString(),
+          checkoutUrl: resolved.checkoutUrl,
+          returnUrl: resolved.returnUrl,
+          order: resolved.order,
+        };
+      }
+    }
+
+    // Validate each item against product service (with retries)
+    const snapshots = [];
+    for (const it of items) {
+      const p = await retryWithBackoff(() => getProductById(it.productId), {
+        retries: 2,
+        baseDelay: 150,
+        onRetry: (attempt, err) =>
+          log("warn", "checkout:product-retry", {
+            productId: it.productId,
+            attempt,
+            error: err.message,
+            correlationId,
+          }),
+      });
+      if (!p) {
+        const e = new Error(`Product ${it.productId} not found`);
+        e.statusCode = 404;
+        throw e;
+      }
+      if (p.stock < it.quantity) {
+        const e = new Error(`Insufficient stock for product ${it.productId}`);
+        e.statusCode = 400;
+        throw e;
+      }
+      snapshots.push({
+        productId: new mongoose.Types.ObjectId(p._id),
+        name:
+          typeof it.name === "string" && it.name.trim()
+            ? it.name.trim()
+            : p.name,
+        price: Number(it.price),
+        quantity: Number(it.quantity),
+      });
+    }
+
+    // Build order document
+    const orderDoc = {
+      userId,
+      items: snapshots,
+      totalPrice: totalAmount,
+      status: "PENDING",
+      cartVersion,
+    };
+    if (idempotencyKey) orderDoc.idempotencyKey = idempotencyKey;
+
+    // Try create (may throw duplicate key if idempotencyKey collided)
+    let order;
+    try {
+      order = await Order.create(orderDoc);
+      log("info", "checkout:created-order", {
+        userId,
+        orderId: order._id.toString(),
+        totalPrice: totalAmount,
+        correlationId,
+      });
+    } catch (err) {
+      if (err && err.code === 11000) {
+        log("warn", "checkout:duplicate-key", {
+          userId,
+          error: err.message,
+          correlationId,
+        });
+        if (idempotencyKey) {
+          const existing = await Order.findOne({ idempotencyKey });
+          if (existing) {
+            const resolved = await ensureCheckoutUrlForActiveOrder(existing);
+            log("info", "checkout:return-existing-by-idempotency", {
+              userId,
+              orderId: existing._id.toString(),
+              hasCheckoutUrl: Boolean(resolved.checkoutUrl),
+              correlationId,
+            });
+            return {
+              orderId: existing._id.toString(),
+              checkoutUrl: resolved.checkoutUrl,
+              returnUrl: resolved.returnUrl,
+              order: resolved.order,
+            };
+          }
+        }
+        // fallback: attempt to find any active order for same user
+        const fallback = await Order.findOne({
+          userId,
+          status: { $in: ["PENDING", "WAITING_PAYMENT"] },
+        }).sort({ createdAt: -1 });
+        if (fallback) {
+          const resolved = await ensureCheckoutUrlForActiveOrder(fallback);
+          return {
+            orderId: fallback._id.toString(),
+            checkoutUrl: resolved.checkoutUrl,
+            returnUrl: resolved.returnUrl,
+            order: resolved.order,
+          };
+        }
+      }
+      throw err;
+    }
+
+    // Create payment with retries
+    let paymentResp;
+    try {
+      paymentResp = await this._createPayment(order, returnUrl, correlationId);
+    } catch (err) {
+      // mark order failed
+      await Order.findOneAndUpdate(
+        { _id: order._id, status: "PENDING" },
+        { $set: { status: "FAILED" }, $inc: { lockVersion: 1 } },
+      );
+      log("error", "checkout:payment-create-failed", {
+        orderId: order._id.toString(),
+        error: err.message,
+        correlationId,
+      });
+      try {
+        metrics.inc("checkout_failure");
+      } catch (e) {}
+      const e = new Error("Payment creation failed");
+      e.statusCode = 502;
+      throw e;
+    }
+
+    const {
+      paymentId,
+      checkoutUrl,
+      returnUrl: finalReturnUrl,
+      amount: paymentAmount,
+    } = paymentResp;
+
+    // Optimistic update to WAITING_PAYMENT using lockVersion
+    let updated = null;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const current = await Order.findById(order._id).lean();
+      if (!this.isValidTransition(current.status, "WAITING_PAYMENT")) {
+        log("error", "checkout:invalid-transition", {
+          orderId: order._id.toString(),
+          from: current.status,
+          to: "WAITING_PAYMENT",
+          correlationId,
+        });
+        throw new Error("Invalid state transition");
+      }
+      try {
+        updated = await Order.findOneAndUpdate(
+          {
+            _id: order._id,
+            status: "PENDING",
+            lockVersion: current.lockVersion,
+          },
+          {
+            $set: {
+              paymentId,
+              status: "WAITING_PAYMENT",
+              paymentAttemptedAt: new Date(),
+              // set expiration for payment (15 minutes)
+              paymentExpiresAt: new Date(Date.now() + 15 * 60 * 1000),
+              metadata: Object.assign({}, current.metadata || {}, {
+                checkoutUrl,
+                returnUrl: finalReturnUrl,
+                paymentAmount:
+                  typeof paymentAmount !== "undefined" ? paymentAmount : null,
+              }),
+            },
+            $inc: { lockVersion: 1 },
+          },
+          { new: true },
+        );
+      } catch (err) {
+        if (err && err.code === 11000) {
+          const fallbackWaitingOrder = await Order.findOne({
+            userId,
+            status: "WAITING_PAYMENT",
+          }).sort({ createdAt: -1 });
+          if (fallbackWaitingOrder) {
+            log("warn", "checkout:status-conflict-reuse-waiting-order", {
+              userId,
+              createdOrderId: order._id.toString(),
+              waitingOrderId: fallbackWaitingOrder._id.toString(),
+              correlationId,
+            });
+            const resolved =
+              await ensureCheckoutUrlForActiveOrder(fallbackWaitingOrder);
+            return {
+              orderId: fallbackWaitingOrder._id.toString(),
+              checkoutUrl: resolved.checkoutUrl,
+              returnUrl: resolved.returnUrl,
+              order: resolved.order,
+            };
+          }
+        }
+        throw err;
+      }
+      if (updated) break;
+      await new Promise((r) => setTimeout(r, 100 * (attempt + 1)));
+    }
+    if (!updated) {
+      log("error", "checkout:lock-failed", {
+        orderId: order._id.toString(),
+        correlationId,
+      });
+      throw new Error(
+        "Failed to update order state due to concurrent modification",
+      );
+    }
+
+    log("info", "checkout:payment-created", {
+      orderId: order._id.toString(),
+      paymentId,
+      correlationId,
+    });
+    return {
+      orderId: updated._id.toString(),
+      checkoutUrl,
+      returnUrl: finalReturnUrl,
+      order: updated,
+    };
+  }
+
+  async getOrderById(orderId, userId) {
+    let order = null;
+    try {
+      if (mongoose.Types.ObjectId.isValid(String(orderId))) {
+        order = await Order.findOne({ _id: orderId, userId });
+      } else {
+        // fallback: match by paymentId, metadata.paymentId, metadata.orderCode, or idempotencyKey
+        order = await Order.findOne({
+          userId,
+          $or: [
+            { paymentId: String(orderId) },
+            { ["metadata.paymentId"]: String(orderId) },
+            { ["metadata.orderCode"]: String(orderId) },
+            { idempotencyKey: String(orderId) },
+          ],
+        });
+      }
+    } catch (err) {
+      // in case of cast errors or others, fall through to not found
+      order = null;
+    }
+    if (!order) {
+      const e = new Error("Order not found");
+      e.statusCode = 404;
+      throw e;
+    }
+    // On-demand reconciliation: if order is WAITING_PAYMENT but we haven't
+    // processed PayOS webhook (e.g., webhooks not delivered), attempt to
+    // verify payment status directly and mark PAID when appropriate.
+    if (order.status === "WAITING_PAYMENT" && order.paymentId) {
+      try {
+        const payInfo = await payos.getPaymentStatus(order.paymentId);
+        const normalized = String(
+          (payInfo && payInfo.status) || "",
+        ).toLowerCase();
+        if (normalized === "paid" || normalized === "success") {
+          // verify amount matches the canonical order total
+          const desiredAmount = Math.round(order.totalPrice || 0);
+          if (
+            typeof payInfo.amount === "undefined" ||
+            Number(payInfo.amount) === Number(desiredAmount)
+          ) {
+            const paymentId = payInfo.paymentId || order.paymentId;
+            const cond = {
+              _id: order._id,
+              status: "WAITING_PAYMENT",
+              processedPaymentIds: { $ne: paymentId },
+            };
+            const update = {
+              $set: { status: "PAID", paymentId },
+              $inc: { lockVersion: 1 },
+            };
+            update.$addToSet = { processedPaymentIds: paymentId };
+            const updated = await Order.findOneAndUpdate(cond, update, {
+              new: true,
+            });
+            if (updated) {
+              // enqueue cart clear
+              try {
+                await this._publishCartClear(updated);
+              } catch (e) {}
+              return updated;
+            }
+          }
+        }
+      } catch (err) {
+        // ignore reconciliation errors and return current order
+      }
+    }
+    return order;
+  }
+
+  async getMyOrders(userId) {
+    return Order.find({ userId }).sort({ createdAt: -1 }).lean();
+  }
+
+  async getAllOrders() {
+    return Order.find({}).sort({ createdAt: -1 }).lean();
+  }
+
+  // Handle PayOS webhook
+  async handlePayOsWebhook(rawBody, signature, ctx = {}) {
+    const correlationId = ctx.correlationId || null;
+    const verified = payos.verifyWebhookSignature(rawBody, signature);
+    if (!verified) {
+      log("warn", "webhook:invalid-signature", { correlationId });
+      const e = new Error("Invalid signature");
+      e.statusCode = 401;
+      throw e;
+    }
+    let payload;
+    try {
+      payload = JSON.parse(rawBody.toString());
+    } catch (err) {
+      const e = new Error("Invalid payload");
+      e.statusCode = 400;
+      throw e;
+    }
+
+    const { paymentId, orderId, status, webhookId } = payload;
+    log("info", "webhook:received", {
+      orderId,
+      paymentId,
+      status,
+      webhookId,
+      correlationId,
+    });
+
+    // Fetch canonical order record
+    const canonicalOrder = await Order.findById(orderId).lean();
+    if (!canonicalOrder) {
+      log("warn", "webhook:order-not-found", {
+        orderId,
+        paymentId,
+        correlationId,
+      });
+      const e = new Error("Order not found");
+      e.statusCode = 404;
+      throw e;
+    }
+
+    // Verify payment with PayOS before acting on webhook
+    let paymentInfo = null;
+    try {
+      paymentInfo = await retryWithBackoff(
+        () => payos.getPaymentStatus(paymentId),
+        {
+          retries: 2,
+          baseDelay: 200,
+        },
+      );
+    } catch (err) {
+      log("error", "webhook:payos-status-failed", {
+        orderId,
+        paymentId,
+        error: err.message,
+        correlationId,
+      });
+      // don't mark paid if we cannot verify
+      throw err;
+    }
+
+    // Validate amount and intended order id
+    if (
+      (typeof paymentInfo.amount !== "undefined" &&
+        Number(paymentInfo.amount) !== Number(canonicalOrder.totalPrice)) ||
+      (paymentInfo.orderId && String(paymentInfo.orderId) !== String(orderId))
+    ) {
+      log("error", "webhook:payment-mismatch", {
+        orderId,
+        paymentId,
+        paymentAmount: paymentInfo.amount,
+        expectedAmount: canonicalOrder.totalPrice,
+        paymentOrderId: paymentInfo.orderId,
+        correlationId,
+      });
+      // do not mark order as PAID on mismatch
+      return canonicalOrder;
+    }
+
+    if (
+      webhookId &&
+      Array.isArray(canonicalOrder.processedWebhookIds) &&
+      canonicalOrder.processedWebhookIds.includes(webhookId)
+    ) {
+      log("warn", "webhook:duplicate", {
+        orderId,
+        paymentId,
+        webhookId,
+        correlationId,
+      });
+      try {
+        metrics.inc("webhook_replays");
+      } catch (e) {}
+      return canonicalOrder;
+    }
+
+    // Prepare atomic update condition: must be WAITING_PAYMENT and paymentId not seen
+    const cond = {
+      _id: orderId,
+      status: "WAITING_PAYMENT",
+      processedPaymentIds: { $ne: paymentId },
+    };
+    if (webhookId) {
+      cond.processedWebhookIds = { $ne: webhookId };
+    }
+
+    const update = { $inc: { lockVersion: 1 } };
+    update.$addToSet = { processedPaymentIds: paymentId };
+    if (webhookId)
+      update.$addToSet = Object.assign(update.$addToSet || {}, {
+        processedWebhookIds: webhookId,
+      });
+
+    const normalizedWebhookStatus = String(status || "").toLowerCase();
+    const normalizedPaymentStatus = String(
+      (paymentInfo && paymentInfo.status) || "",
+    ).toLowerCase();
+    const canonicalStatus = paymentStatusToOrderStatus(
+      normalizedPaymentStatus || normalizedWebhookStatus,
+    );
+
+    if (canonicalStatus === "PAID") {
+      if (
+        Number(canonicalOrder.totalPrice) !== Number(paymentInfo.amount) ||
+        String(paymentInfo.orderId) !== String(orderId)
+      ) {
+        log("error", "webhook:payment-mismatch", {
+          orderId,
+          paymentId,
+          paymentAmount: paymentInfo.amount,
+          expectedAmount: canonicalOrder.totalPrice,
+          paymentOrderId: paymentInfo.orderId,
+          correlationId,
+        });
+        return canonicalOrder;
+      }
+
+      update.$set = Object.assign(update.$set || {}, {
+        status: "PAID",
+        paymentId,
+      });
+      const updated = await Order.findOneAndUpdate(cond, update, { new: true });
+      if (!updated) {
+        const current = await Order.findById(orderId).lean();
+        if (
+          current &&
+          current.processedPaymentIds &&
+          current.processedPaymentIds.includes(paymentId)
+        ) {
+          log("warn", "webhook:duplicate", {
+            orderId,
+            paymentId,
+            correlationId,
+          });
+          try {
+            metrics.inc("webhook_replays");
+          } catch (e) {}
+          return current;
+        }
+        log("warn", "webhook:invalid-transition", {
+          orderId,
+          paymentId,
+          currentStatus: current && current.status,
+          correlationId,
+        });
+        return current;
+      }
+
+      // Enqueue cart clearing via outbox to ensure idempotent side-effect and retries
+      try {
+        const claimed = await this._publishCartClear(updated);
+        if (claimed) {
+          log("info", "webhook:clear-cart-enqueued", {
+            orderId: claimed._id.toString(),
+            correlationId,
+          });
+        }
+      } catch (err) {
+        log("warn", "webhook:clear-cart-enqueue-failed", {
+          orderId: updated._id.toString(),
+          error: err.message,
+          correlationId,
+        });
+      }
+
+      log("info", "webhook:paid", { orderId, paymentId, correlationId });
+      try {
+        await retryWithBackoff(
+          () =>
+            eventBus.publish("OrderPaid", {
+              orderId,
+              paymentId,
+              correlationId,
+            }),
+          { retries: 2 },
+        );
+      } catch (e) {
+        log("warn", "webhook:event-publish-failed", {
+          orderId,
+          paymentId,
+          correlationId,
+          error: e.message,
+        });
+      }
+      return updated;
+    }
+
+    if (canonicalStatus === "FAILED") {
+      update.$set = Object.assign(update.$set || {}, {
+        status: "FAILED",
+        paymentId,
+      });
+      const updated = await Order.findOneAndUpdate(cond, update, { new: true });
+      if (!updated) {
+        const current = await Order.findById(orderId).lean();
+        if (
+          current &&
+          current.processedPaymentIds &&
+          current.processedPaymentIds.includes(paymentId)
+        ) {
+          log("warn", "webhook:duplicate", {
+            orderId,
+            paymentId,
+            correlationId,
+          });
+          try {
+            metrics.inc("webhook_replays");
+          } catch (e) {}
+          return current;
+        }
+        log("warn", "webhook:invalid-transition", {
+          orderId,
+          paymentId,
+          currentStatus: current && current.status,
+          correlationId,
+        });
+        return current;
+      }
+      log("info", "webhook:failed", { orderId, paymentId, correlationId });
+      try {
+        await retryWithBackoff(
+          () =>
+            eventBus.publish("OrderFailed", {
+              orderId,
+              paymentId,
+              correlationId,
+            }),
+          { retries: 2 },
+        );
+      } catch (e) {
+        log("warn", "webhook:event-publish-failed", {
+          orderId,
+          paymentId,
+          correlationId,
+          error: e.message,
+        });
+      }
+      return updated;
+    }
+
+    log("warn", "webhook:unknown-status", { orderId, status, correlationId });
+    return await Order.findById(orderId);
+  }
+
+  // Reconcile waiting payments; processes in batches with cursor + delay to avoid overload.
+  // Options: { batchSize, batchDelayMs, maxBatches, startAfterId, correlationId }
+  async reconcilePayments(opts = {}) {
+    const {
+      batchSize = 100,
+      batchDelayMs = 200,
+      maxBatches = 0, // 0 = unlimited
+      startAfterId = null,
+      correlationId = null,
+    } = typeof opts === "number" ? { batchSize: opts } : opts;
+
+    log("info", "reconcile:start", {
+      correlationId,
+      batchSize,
+      batchDelayMs,
+      maxBatches,
+    });
+    let lastId = startAfterId;
+    let batches = 0;
+    let processed = 0;
+    while (true) {
+      if (maxBatches && batches >= maxBatches) break;
+      // include WAITING_PAYMENT and recently-attempted FAILED orders (allow resurrection)
+      const recentWindow = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      const query = {
+        $or: [
+          { status: "WAITING_PAYMENT" },
+          { status: "FAILED", paymentAttemptedAt: { $gte: recentWindow } },
+        ],
+      };
+      if (lastId) query._id = { $gt: lastId };
+      const orders = await Order.find(query).sort({ _id: 1 }).limit(batchSize);
+      if (!orders || orders.length === 0) break;
+      for (const order of orders) {
+        try {
+          if (!order.paymentId) {
+            log("warn", "reconcile:no-paymentId", {
+              orderId: order._id.toString(),
+              correlationId,
+            });
+            continue;
+          }
+
+          const statusResp = await retryWithBackoff(
+            () => payos.getPaymentStatus(order.paymentId),
+            {
+              retries: 2,
+              baseDelay: 300,
+              onRetry: (a, err) =>
+                log("warn", "reconcile:payos-retry", {
+                  orderId: order._id.toString(),
+                  attempt: a,
+                  error: err.message,
+                  correlationId,
+                }),
+            },
+          );
+          const status = (statusResp && statusResp.status) || statusResp;
+          log("info", "reconcile:payment-status", {
+            orderId: order._id.toString(),
+            paymentId: order.paymentId,
+            status,
+            correlationId,
+          });
+
+          const mappedStatus = paymentStatusToOrderStatus(status);
+          if (mappedStatus === "PAID") {
+            const updated = await Order.findOneAndUpdate(
+              {
+                _id: order._id,
+                status: "WAITING_PAYMENT",
+                processedPaymentIds: { $ne: order.paymentId },
+              },
+              {
+                $addToSet: { processedPaymentIds: order.paymentId },
+                $set: { status: "PAID" },
+                $inc: { lockVersion: 1 },
+              },
+              { new: true },
+            );
+            if (updated) {
+              try {
+                const claimed = await this._publishCartClear(updated);
+                if (claimed) {
+                  log("info", "reconcile:clear-cart-enqueued", {
+                    orderId: claimed._id.toString(),
+                    correlationId,
+                  });
+                }
+              } catch (err) {
+                log("warn", "reconcile:clear-cart-enqueue-failed", {
+                  orderId: updated._id.toString(),
+                  error: err.message,
+                  correlationId,
+                });
+              }
+              try {
+                await eventBus.publish("OrderPaid", {
+                  orderId: updated._id.toString(),
+                  paymentId: updated.paymentId,
+                  correlationId,
+                });
+              } catch (e) {
+                log("warn", "reconcile:event-publish-failed", {
+                  orderId: updated._id.toString(),
+                  paymentId: updated.paymentId,
+                  correlationId,
+                  error: e.message,
+                });
+              }
+            }
+          } else if (mappedStatus === "FAILED") {
+            await Order.findOneAndUpdate(
+              { _id: order._id, status: "WAITING_PAYMENT" },
+              { $set: { status: "FAILED" }, $inc: { lockVersion: 1 } },
+            );
+            try {
+              await eventBus.publish("OrderFailed", {
+                orderId: order._id.toString(),
+                paymentId: order.paymentId,
+                correlationId,
+              });
+            } catch (e) {
+              log("warn", "reconcile:event-publish-failed", {
+                orderId: order._id.toString(),
+                paymentId: order.paymentId,
+                correlationId,
+                error: e.message,
+              });
+            }
+          } else {
+            // still pending
+          }
+        } catch (err) {
+          log("error", "reconcile:error", {
+            orderId: order._id.toString(),
+            error: err.message,
+            correlationId,
+          });
+        }
+        processed += 1;
+        try {
+          metrics.inc("reconcile_processed");
+        } catch (e) {}
+        lastId = order._id;
+      }
+      batches += 1;
+      // delay between batches
+      await new Promise((r) => setTimeout(r, batchDelayMs));
+    }
+    log("info", "reconcile:done", { processed, batches, correlationId });
+    return { processed, batches };
+  }
+
+  // Expire orders where paymentExpiresAt has passed: mark them FAILED and emit OrderFailed
+  async expirePendingPayments(opts = {}) {
+    const { batchSize = 100, correlationId = null } = opts;
+    const now = new Date();
+    const toExpire = await Order.find({
+      status: "WAITING_PAYMENT",
+      paymentExpiresAt: { $lte: now },
+    })
+      .limit(batchSize)
+      .lean();
+    for (const o of toExpire) {
+      try {
+        await Order.findOneAndUpdate(
+          { _id: o._id, status: "WAITING_PAYMENT" },
+          { $set: { status: "FAILED" }, $inc: { lockVersion: 1 } },
+        );
+        try {
+          await eventBus.publish("OrderFailed", {
+            orderId: o._id.toString(),
+            paymentId: o.paymentId,
+            correlationId,
+            reason: "payment_expired",
+          });
+        } catch (e) {
+          log("warn", "expire:event-publish-failed", {
+            orderId: o._id.toString(),
+            error: e.message,
+            correlationId,
+          });
+        }
+      } catch (err) {
+        log("error", "expire:error", {
+          orderId: o._id.toString(),
+          error: err.message,
+          correlationId,
+        });
+      }
+    }
+    return { expired: toExpire.length };
+  }
+}
+
+const service = new OrderService();
+service.eventBus = eventBus;
+module.exports = service;
