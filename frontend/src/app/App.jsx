@@ -8,6 +8,8 @@ import Store from '../pages/Store';
 import ProductDetail from '../pages/ProductDetail';
 import ForgotPassword from '../pages/ForgotPassword';
 import Account from '../pages/Account';
+import PaymentReturn from '../pages/PaymentReturn';
+import CartPage from '../pages/CartPage';
 
 // Admin Imports
 import AdminLayout from '../layouts/admin/AdminLayout';
@@ -23,6 +25,7 @@ import Analytics from '../pages/admin/Analytics';
 import Settings from '../pages/admin/Settings';
 import ChatDashboard from '../pages/admin/ChatDashboard';
 import ChatWidget from '../components/common/ChatWidget';
+import ToastContainer from '../components/common/ToastContainer';
 
 import '../admin.css'; // Tailwind & Admin Styles
 
@@ -40,6 +43,8 @@ function App() {
         <Route path="/support" element={<Support />} />
         <Route path="/store" element={<Store />} />
         <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/payment/return" element={<PaymentReturn />} />
+        <Route path="/cart" element={<CartPage />} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
@@ -60,6 +65,7 @@ function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <ChatWidget />
+      <ToastContainer />
     </>
   );
 }
