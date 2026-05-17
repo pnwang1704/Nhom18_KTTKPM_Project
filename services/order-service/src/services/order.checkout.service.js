@@ -6,6 +6,7 @@ class BadRequestException extends Error {
     super(message);
     this.name = "BadRequestException";
     this.statusCode = 400;
+    this.errorCode = "BAD_REQUEST";
   }
 }
 
@@ -14,6 +15,7 @@ class ConflictException extends Error {
     super(message);
     this.name = "ConflictException";
     this.statusCode = 409;
+    this.errorCode = "CONFLICT";
   }
 }
 
@@ -193,6 +195,58 @@ class OrderCheckoutService {
   async handlePayOsWebhook() {
     console.log("[Checkout] Webhook ignored");
     return { ok: true };
+  }
+
+  async handlePaymentSuccess({ orderId, status }) {
+    if (!orderId || !String(orderId).trim()) {
+      throw new BadRequestException("orderId is required");
+    }
+
+    const normalizedStatus = String(status || "").toUpperCase();
+    if (!normalizedStatus) {
+      throw new BadRequestException("status is required");
+    }
+
+    const nextStatus = normalizedStatus === "PAID" ? "SUCCESS" : "FAILED";
+    const existing = await this.orderModel.findById(orderId).lean();
+    if (!existing) {
+      return null;
+    }
+    if (existing.status === "SUCCESS") {
+      console.log(
+        "[ORDER_SERVICE] [CALLBACK] [IGNORED] order already SUCCESS",
+        {
+          orderId: existing._id.toString(),
+        },
+      );
+      return existing;
+    }
+    if (existing.status === "FAILED" && nextStatus === "SUCCESS") {
+      console.log(
+        "[ORDER_SERVICE] [CALLBACK] [IGNORED] terminal FAILED state",
+        {
+          orderId: existing._id.toString(),
+        },
+      );
+      return existing;
+    }
+
+    const updated = await this.orderModel.findOneAndUpdate(
+      { _id: orderId },
+      { $set: { status: nextStatus } },
+      { new: true },
+    );
+
+    if (!updated) {
+      return null;
+    }
+
+    console.log("[FLOW] ORDER_UPDATED", {
+      orderId: updated._id.toString(),
+      status: updated.status,
+    });
+
+    return updated;
   }
 }
 

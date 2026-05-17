@@ -71,6 +71,21 @@ async function payosWebhook(req, res, next) {
   }
 }
 
+async function internalPaymentSuccess(req, res, next) {
+  try {
+    console.log("[ORDER_SERVICE] [CALLBACK] [RECEIVED]", {
+      orderId: req.body && req.body.orderId,
+      status: req.body && req.body.status,
+    });
+    const updated = await orderCheckoutService.handlePaymentSuccess(
+      req.body || {},
+    );
+    res.status(200).json({ success: true, data: updated });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   createOrder,
   checkout,
@@ -78,4 +93,5 @@ module.exports = {
   getMyOrders,
   getAllOrders,
   payosWebhook,
+  internalPaymentSuccess,
 };
