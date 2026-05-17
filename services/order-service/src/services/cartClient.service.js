@@ -18,7 +18,10 @@ async function clearCart(userId, expectedVersion) {
     data: expectedVersion !== undefined ? { expectedVersion } : undefined,
   };
   const resp = await client.delete("/cart/clear", opts);
-  if (resp.status === 200 && resp.data) return resp.data.data || resp.data;
+  if (resp.status === 200 && resp.data) {
+    if (resp.data.cleared === false || resp.data.data === null) return null;
+    return resp.data.data || resp.data;
+  }
   return null;
 }
 
