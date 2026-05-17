@@ -4,7 +4,6 @@ const bodyParser = require("body-parser");
 const { port } = require("./src/config/env");
 const connectDb = require("./src/config/db");
 const orderRoutes = require("./src/routes/order.routes");
-const webhookRoutes = require("./src/routes/webhook.routes");
 const errorHandler = require("./src/middlewares/errorHandler");
 
 const app = express();
@@ -22,27 +21,21 @@ app.use((req, res, next) => {
   next();
 });
 
-// Need raw body for webhook signature verification
-app.use(
-  bodyParser.json({
-    verify: (req, res, buf) => {
-      req.rawBody = buf;
-    },
-  }),
-);
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", service: "order-service" });
 });
 
-app.post("/internal/payment-success", (req, res, next) => {
+const internalAuth = require("./src/middlewares/internalAuth");
+app.post("/internal/payment-success", internalAuth, (req, res, next) => {
   const ctrl = require("./src/controllers/order.controller");
   return ctrl.internalPaymentSuccess(req, res, next);
 });
 
 app.use("/orders", orderRoutes);
-app.use("/webhooks", webhookRoutes);
+// External payment webhooks are handled by Payment Service; Order Service only exposes internal callbacks
 
 app.use(errorHandler);
 

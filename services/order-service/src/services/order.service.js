@@ -1,6 +1,7 @@
 const Order = require("../models/order.model");
 const { getProductById } = require("./productClient.service");
-const payos = require("./payos.service");
+const axios = require("axios");
+const { paymentServiceUrl } = require("../config/env");
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 const eventBus = require("./eventBus.service");
@@ -76,6 +77,23 @@ async function retryWithBackoff(
   throw lastErr;
 }
 
+async function getPaymentStatusFromPaymentService(paymentId) {
+  if (!paymentId) return null;
+  if (!paymentServiceUrl) return null;
+  try {
+    const resp = await axios.get(
+      `${paymentServiceUrl.replace(/\/$/, "")}/payments/${encodeURIComponent(
+        String(paymentId),
+      )}`,
+      { timeout: 5000 },
+    );
+    return resp.data && resp.data.data ? resp.data.data : resp.data;
+  } catch (err) {
+    // treat as transient error for callers using retryWithBackoff
+    throw err;
+  }
+}
+
 function computeIdempotencyKey(userId, cart) {
   // Normalize cart items ordering to make idempotency key invariant to item order
   const items = (cart.items || []).map((it) => ({
@@ -109,9 +127,7 @@ function paymentStatusToOrderStatus(status) {
 
 function resolveReturnUrl(returnUrl) {
   const fallback =
-    process.env.PAYOS_RETURN_URL ||
-    process.env.CLIENT_RETURN_URL ||
-    "http://localhost:3000/payments/return";
+    process.env.CLIENT_RETURN_URL || "http://localhost:3000/payments/return";
   return typeof returnUrl === "string" && returnUrl.trim()
     ? returnUrl.trim()
     : fallback;
@@ -121,7 +137,7 @@ function isValidCheckoutUrl(checkoutUrl) {
   if (typeof checkoutUrl !== "string" || !checkoutUrl.trim()) return false;
   const normalized = checkoutUrl.trim();
   if (!/^https?:\/\//i.test(normalized)) return false;
-  if (normalized.includes("payos.example")) return false;
+  if (normalized.includes("example-payment-provider")) return false;
   return true;
 }
 
@@ -140,35 +156,63 @@ class OrderService {
 
   async _createPayment(order, returnUrl, correlationId = null) {
     const finalReturnUrl = resolveReturnUrl(returnUrl);
-    // Ensure PayOS will redirect back with our internal order id so frontend can resolve it
+    // Ensure Payment Service will redirect back with our internal order id so frontend can resolve it
     const returnWithOrderId = `${finalReturnUrl}${finalReturnUrl.includes("?") ? "&" : "?"}orderId=${encodeURIComponent(
       String(order._id),
     )}`;
-    const paymentResp = await retryWithBackoff(
-      () => payos.createPayment(order, order.totalPrice, returnWithOrderId),
-      {
-        retries: 3,
-        baseDelay: 300,
-        onRetry: (attempt, err) =>
-          log("warn", "checkout:payment-retry", {
-            orderId: order._id.toString(),
-            attempt,
-            error: err.message,
-            correlationId,
-          }),
-      },
-    );
 
-    const paymentId = paymentResp.paymentId || paymentResp.paymentLinkId;
+    const payload = {
+      orderId: String(order._id),
+      amount: Math.round(order.totalPrice || 0),
+      description: `Order ${order._id}`,
+    };
+
+    const createPayment = async () => {
+      if (!paymentServiceUrl) {
+        throw new Error("Payment service URL not configured");
+      }
+      const resp = await axios.post(
+        `${paymentServiceUrl.replace(/\/$/, "")}/payments`,
+        payload,
+        { timeout: 5000 },
+      );
+      return resp.data && resp.data.data ? resp.data.data : resp.data;
+    };
+
+    const axiosCall = async (payload) => {
+      return axios.post(
+        `${paymentServiceUrl.replace(/\/$/, "")}/payments`,
+        payload,
+        { timeout: 5000 },
+      );
+    };
+
+    const CircuitBreaker = require("../utils/circuitBreaker");
+    if (!this._paymentBreaker) {
+      this._paymentBreaker = new CircuitBreaker(
+        (payload) => axiosCall(payload),
+        { failureThreshold: 5, resetTimeout: 30000 },
+      );
+    }
+
+    const paymentResp = await this._paymentBreaker.fire(payload);
+
+    const paymentId =
+      paymentResp._id || paymentResp.paymentId || paymentResp.paymentLinkId;
     const checkoutUrl =
       paymentResp.checkoutUrl ||
       paymentResp.checkout_url ||
       paymentResp.checkoutLink;
     if (!paymentId) {
-      throw new Error("PayOS did not return paymentId");
+      throw new Error("Payment Service did not return paymentId");
     }
 
-    return { paymentId, checkoutUrl, returnUrl: returnWithOrderId };
+    return {
+      paymentId,
+      checkoutUrl,
+      returnUrl: returnWithOrderId,
+      amount: paymentResp.amount,
+    };
   }
 
   async _claimCartClear(orderId) {
@@ -269,7 +313,7 @@ class OrderService {
           const desiredAmount = Math.round(existingOrder.totalPrice || 0);
 
           if (existingOrder.paymentId) {
-            const payInfo = await payos.getPaymentStatus(
+            const payInfo = await getPaymentStatusFromPaymentService(
               existingOrder.paymentId,
             );
             if (
@@ -702,11 +746,13 @@ class OrderService {
       throw e;
     }
     // On-demand reconciliation: if order is WAITING_PAYMENT but we haven't
-    // processed PayOS webhook (e.g., webhooks not delivered), attempt to
+    // processed external payment webhook (e.g., webhooks not delivered), attempt to
     // verify payment status directly and mark PAID when appropriate.
     if (order.status === "WAITING_PAYMENT" && order.paymentId) {
       try {
-        const payInfo = await payos.getPaymentStatus(order.paymentId);
+        const payInfo = await getPaymentStatusFromPaymentService(
+          order.paymentId,
+        );
         const normalized = String(
           (payInfo && payInfo.status) || "",
         ).toLowerCase();
@@ -755,270 +801,7 @@ class OrderService {
     return Order.find({}).sort({ createdAt: -1 }).lean();
   }
 
-  // Handle PayOS webhook
-  async handlePayOsWebhook(rawBody, signature, ctx = {}) {
-    const correlationId = ctx.correlationId || null;
-    const verified = payos.verifyWebhookSignature(rawBody, signature);
-    if (!verified) {
-      log("warn", "webhook:invalid-signature", { correlationId });
-      const e = new Error("Invalid signature");
-      e.statusCode = 401;
-      throw e;
-    }
-    let payload;
-    try {
-      payload = JSON.parse(rawBody.toString());
-    } catch (err) {
-      const e = new Error("Invalid payload");
-      e.statusCode = 400;
-      throw e;
-    }
-
-    const { paymentId, orderId, status, webhookId } = payload;
-    log("info", "webhook:received", {
-      orderId,
-      paymentId,
-      status,
-      webhookId,
-      correlationId,
-    });
-
-    // Fetch canonical order record
-    const canonicalOrder = await Order.findById(orderId).lean();
-    if (!canonicalOrder) {
-      log("warn", "webhook:order-not-found", {
-        orderId,
-        paymentId,
-        correlationId,
-      });
-      const e = new Error("Order not found");
-      e.statusCode = 404;
-      throw e;
-    }
-
-    // Verify payment with PayOS before acting on webhook
-    let paymentInfo = null;
-    try {
-      paymentInfo = await retryWithBackoff(
-        () => payos.getPaymentStatus(paymentId),
-        {
-          retries: 2,
-          baseDelay: 200,
-        },
-      );
-    } catch (err) {
-      log("error", "webhook:payos-status-failed", {
-        orderId,
-        paymentId,
-        error: err.message,
-        correlationId,
-      });
-      // don't mark paid if we cannot verify
-      throw err;
-    }
-
-    // Validate amount and intended order id
-    if (
-      (typeof paymentInfo.amount !== "undefined" &&
-        Number(paymentInfo.amount) !== Number(canonicalOrder.totalPrice)) ||
-      (paymentInfo.orderId && String(paymentInfo.orderId) !== String(orderId))
-    ) {
-      log("error", "webhook:payment-mismatch", {
-        orderId,
-        paymentId,
-        paymentAmount: paymentInfo.amount,
-        expectedAmount: canonicalOrder.totalPrice,
-        paymentOrderId: paymentInfo.orderId,
-        correlationId,
-      });
-      // do not mark order as PAID on mismatch
-      return canonicalOrder;
-    }
-
-    if (
-      webhookId &&
-      Array.isArray(canonicalOrder.processedWebhookIds) &&
-      canonicalOrder.processedWebhookIds.includes(webhookId)
-    ) {
-      log("warn", "webhook:duplicate", {
-        orderId,
-        paymentId,
-        webhookId,
-        correlationId,
-      });
-      try {
-        metrics.inc("webhook_replays");
-      } catch (e) {}
-      return canonicalOrder;
-    }
-
-    // Prepare atomic update condition: must be WAITING_PAYMENT and paymentId not seen
-    const cond = {
-      _id: orderId,
-      status: "WAITING_PAYMENT",
-      processedPaymentIds: { $ne: paymentId },
-    };
-    if (webhookId) {
-      cond.processedWebhookIds = { $ne: webhookId };
-    }
-
-    const update = { $inc: { lockVersion: 1 } };
-    update.$addToSet = { processedPaymentIds: paymentId };
-    if (webhookId)
-      update.$addToSet = Object.assign(update.$addToSet || {}, {
-        processedWebhookIds: webhookId,
-      });
-
-    const normalizedWebhookStatus = String(status || "").toLowerCase();
-    const normalizedPaymentStatus = String(
-      (paymentInfo && paymentInfo.status) || "",
-    ).toLowerCase();
-    const canonicalStatus = paymentStatusToOrderStatus(
-      normalizedPaymentStatus || normalizedWebhookStatus,
-    );
-
-    if (canonicalStatus === "PAID") {
-      if (
-        Number(canonicalOrder.totalPrice) !== Number(paymentInfo.amount) ||
-        String(paymentInfo.orderId) !== String(orderId)
-      ) {
-        log("error", "webhook:payment-mismatch", {
-          orderId,
-          paymentId,
-          paymentAmount: paymentInfo.amount,
-          expectedAmount: canonicalOrder.totalPrice,
-          paymentOrderId: paymentInfo.orderId,
-          correlationId,
-        });
-        return canonicalOrder;
-      }
-
-      update.$set = Object.assign(update.$set || {}, {
-        status: "PAID",
-        paymentId,
-      });
-      const updated = await Order.findOneAndUpdate(cond, update, { new: true });
-      if (!updated) {
-        const current = await Order.findById(orderId).lean();
-        if (
-          current &&
-          current.processedPaymentIds &&
-          current.processedPaymentIds.includes(paymentId)
-        ) {
-          log("warn", "webhook:duplicate", {
-            orderId,
-            paymentId,
-            correlationId,
-          });
-          try {
-            metrics.inc("webhook_replays");
-          } catch (e) {}
-          return current;
-        }
-        log("warn", "webhook:invalid-transition", {
-          orderId,
-          paymentId,
-          currentStatus: current && current.status,
-          correlationId,
-        });
-        return current;
-      }
-
-      // Enqueue cart clearing via outbox to ensure idempotent side-effect and retries
-      try {
-        const claimed = await this._publishCartClear(updated);
-        if (claimed) {
-          log("info", "webhook:clear-cart-enqueued", {
-            orderId: claimed._id.toString(),
-            correlationId,
-          });
-        }
-      } catch (err) {
-        log("warn", "webhook:clear-cart-enqueue-failed", {
-          orderId: updated._id.toString(),
-          error: err.message,
-          correlationId,
-        });
-      }
-
-      log("info", "webhook:paid", { orderId, paymentId, correlationId });
-      try {
-        await retryWithBackoff(
-          () =>
-            eventBus.publish("OrderPaid", {
-              orderId,
-              paymentId,
-              correlationId,
-            }),
-          { retries: 2 },
-        );
-      } catch (e) {
-        log("warn", "webhook:event-publish-failed", {
-          orderId,
-          paymentId,
-          correlationId,
-          error: e.message,
-        });
-      }
-      return updated;
-    }
-
-    if (canonicalStatus === "FAILED") {
-      update.$set = Object.assign(update.$set || {}, {
-        status: "FAILED",
-        paymentId,
-      });
-      const updated = await Order.findOneAndUpdate(cond, update, { new: true });
-      if (!updated) {
-        const current = await Order.findById(orderId).lean();
-        if (
-          current &&
-          current.processedPaymentIds &&
-          current.processedPaymentIds.includes(paymentId)
-        ) {
-          log("warn", "webhook:duplicate", {
-            orderId,
-            paymentId,
-            correlationId,
-          });
-          try {
-            metrics.inc("webhook_replays");
-          } catch (e) {}
-          return current;
-        }
-        log("warn", "webhook:invalid-transition", {
-          orderId,
-          paymentId,
-          currentStatus: current && current.status,
-          correlationId,
-        });
-        return current;
-      }
-      log("info", "webhook:failed", { orderId, paymentId, correlationId });
-      try {
-        await retryWithBackoff(
-          () =>
-            eventBus.publish("OrderFailed", {
-              orderId,
-              paymentId,
-              correlationId,
-            }),
-          { retries: 2 },
-        );
-      } catch (e) {
-        log("warn", "webhook:event-publish-failed", {
-          orderId,
-          paymentId,
-          correlationId,
-          error: e.message,
-        });
-      }
-      return updated;
-    }
-
-    log("warn", "webhook:unknown-status", { orderId, status, correlationId });
-    return await Order.findById(orderId);
-  }
+  // External payment webhook handling removed from Order Service - handled by Payment Service
 
   // Reconcile waiting payments; processes in batches with cursor + delay to avoid overload.
   // Options: { batchSize, batchDelayMs, maxBatches, startAfterId, correlationId }
@@ -1064,12 +847,12 @@ class OrderService {
           }
 
           const statusResp = await retryWithBackoff(
-            () => payos.getPaymentStatus(order.paymentId),
+            () => getPaymentStatusFromPaymentService(order.paymentId),
             {
               retries: 2,
               baseDelay: 300,
               onRetry: (a, err) =>
-                log("warn", "reconcile:payos-retry", {
+                log("warn", "reconcile:payment-service-retry", {
                   orderId: order._id.toString(),
                   attempt: a,
                   error: err.message,

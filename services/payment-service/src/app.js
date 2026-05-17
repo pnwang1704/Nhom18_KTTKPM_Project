@@ -27,10 +27,43 @@ function createApp() {
   app.use(express.urlencoded({ extended: true }));
 
   app.get("/health", (req, res) => {
-    res.status(200).json({ status: "ok", service: "payment-service" });
+    // include outbox stats
+    const Outbox = require("./models/outbox.model");
+    Promise.all([
+      Outbox.countDocuments({}),
+      Outbox.countDocuments({ status: "PENDING" }),
+      Outbox.countDocuments({ status: "FAILED" }),
+    ])
+      .then(([total, pending, failed]) => {
+        res.status(200).json({
+          status: "ok",
+          uptime: process.uptime(),
+          timestamp: new Date().toISOString(),
+          outbox: { total, pending, failed },
+        });
+      })
+      .catch((err) => {
+        res
+          .status(200)
+          .json({
+            status: "ok",
+            uptime: process.uptime(),
+            timestamp: new Date().toISOString(),
+            outbox: { total: 0, pending: 0, failed: 0 },
+          });
+      });
   });
 
   app.use(paymentRoutes);
+  // admin routes (outbox management)
+  const adminRoutes = require("./routes/admin.routes");
+  app.use(adminRoutes);
+
+  // lightweight metrics endpoint
+  const metrics = require("./utils/metrics");
+  app.get("/metrics", (req, res) => {
+    res.json({ success: true, data: metrics.get() });
+  });
 
   app.use((err, req, res, next) => {
     const status = err.statusCode || err.status || 500;

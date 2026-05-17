@@ -9,6 +9,14 @@ async function bootstrap() {
   app.listen(port, () => {
     console.log(`Payment Service listening on ${port}`);
   });
+
+  // start outbox worker (background delivery)
+  try {
+    const outboxWorker = require("./src/workers/outbox.worker");
+    outboxWorker.start();
+  } catch (e) {
+    console.error("Failed to start outbox worker", e.message || e);
+  }
 }
 
 bootstrap().catch((error) => {

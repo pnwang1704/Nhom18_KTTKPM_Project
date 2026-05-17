@@ -11,6 +11,7 @@ const orderSchema = new mongoose.Schema(
       default: "PENDING",
       index: true,
     },
+    lastProcessedPaymentId: { type: String, index: true, sparse: true },
     cartVersion: { type: Number, required: true, min: 0 },
   },
   {

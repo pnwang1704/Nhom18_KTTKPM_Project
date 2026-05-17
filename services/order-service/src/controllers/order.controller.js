@@ -48,28 +48,7 @@ async function getAllOrders(req, res, next) {
   }
 }
 
-async function payosWebhook(req, res, next) {
-  try {
-    await orderCheckoutService.handlePayOsWebhook(
-      req.rawBody,
-      req.headers["x-payos-signature"] || "",
-    );
-    res.status(200).json({ success: true, message: "Webhook received" });
-  } catch (err) {
-    if (!res.headersSent) {
-      next(err);
-    } else {
-      console.error(
-        JSON.stringify({
-          ts: new Date().toISOString(),
-          level: "error",
-          event: "webhook:unexpected-error",
-          error: err.message,
-        }),
-      );
-    }
-  }
-}
+// External payment webhooks are handled by Payment Service. Order Service only accepts internal callbacks.
 
 async function internalPaymentSuccess(req, res, next) {
   try {
@@ -77,10 +56,22 @@ async function internalPaymentSuccess(req, res, next) {
       orderId: req.body && req.body.orderId,
       status: req.body && req.body.status,
     });
-    const updated = await orderCheckoutService.handlePaymentSuccess(
-      req.body || {},
-    );
-    res.status(200).json({ success: true, data: updated });
+    const logger = require("../utils/logger");
+    logger.info("internalPaymentSuccess:received", {
+      orderId: req.body && req.body.orderId,
+      status: req.body && req.body.status,
+    });
+    await orderCheckoutService.handlePaymentSuccess({
+      orderId: req.body.orderId,
+      status: req.body.status,
+      paymentId: req.body.paymentId,
+    });
+    logger.info("internalPaymentSuccess:handled", {
+      orderId: req.body.orderId,
+      status: req.body.status,
+      paymentId: req.body.paymentId,
+    });
+    return res.json({ success: true });
   } catch (err) {
     next(err);
   }
@@ -92,6 +83,5 @@ module.exports = {
   getOrder,
   getMyOrders,
   getAllOrders,
-  payosWebhook,
   internalPaymentSuccess,
 };
