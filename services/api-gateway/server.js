@@ -1,27 +1,35 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const express = require('express');
-const cors = require('cors');
-const { rateLimit } = require('express-rate-limit');
-const { port } = require('./src/config/env');
-const loggerMiddleware = require('./src/middlewares/logger');
-const errorHandlerMiddleware = require('./src/middlewares/errorHandler');
-const correlationMiddleware = require('./src/middlewares/correlation.middleware');
-const healthRoutes = require('./src/routes/health.routes');
-const authRoutes = require('./src/routes/auth.routes');
-const productRoutes = require('./src/routes/product.routes');
-const categoryRoutes = require('./src/routes/category.routes');
-const chatRoutes = require('./src/routes/chat.routes');
-const orderRoutes = require('./src/routes/order.routes');
+const express = require("express");
+const cors = require("cors");
+const { rateLimit } = require("express-rate-limit");
+const { port } = require("./src/config/env");
+const loggerMiddleware = require("./src/middlewares/logger");
+const errorHandlerMiddleware = require("./src/middlewares/errorHandler");
+const correlationMiddleware = require("./src/middlewares/correlation.middleware");
+const healthRoutes = require("./src/routes/health.routes");
+const authRoutes = require("./src/routes/auth.routes");
+const productRoutes = require("./src/routes/product.routes");
+const categoryRoutes = require("./src/routes/category.routes");
+const chatRoutes = require("./src/routes/chat.routes");
+const orderRoutes = require("./src/routes/order.routes");
+const paymentRoutes = require("./src/routes/payment.routes");
 
 const app = express();
 
-app.use(cors({
-  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Correlation-ID', 'X-Requested-With']
-}));
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Correlation-ID",
+      "X-Requested-With",
+    ],
+  }),
+);
 
 // --- Rate Limiters ---
 
@@ -65,22 +73,23 @@ app.use(correlationMiddleware);
 app.use(loggerMiddleware);
 
 // app.use('/api/auth', authLimiter, authRoutes);
-app.use('/api/auth', authRoutes);
+app.use("/api/auth", authRoutes);
 
-app.use('/api/products', productRoutes);
-app.use('/api/categories', categoryRoutes);
-app.use('/api/chat', chatRoutes);
-app.use('/api', orderRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/chat", chatRoutes);
+app.use("/api", orderRoutes);
+app.use("/api", paymentRoutes);
 
-app.get('/test', (req, res) => res.json({ message: 'Gateway is reachable' }));
+app.get("/test", (req, res) => res.json({ message: "Gateway is reachable" }));
 
 // Standard 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: 'Route not found',
+    message: "Route not found",
     data: null,
-    errorCode: 'ROUTE_NOT_FOUND'
+    errorCode: "ROUTE_NOT_FOUND",
   });
 });
 

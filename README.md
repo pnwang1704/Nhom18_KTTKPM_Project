@@ -9,6 +9,30 @@
 
 ---
 
+## Phase 3 Integration Notes
+
+### Chạy service local
+
+- API Gateway: `npm run dev:gateway`
+- Order Service: chạy trong `services/order-service` bằng `npm start`
+- Payment Service: chạy trong `services/payment-service` bằng `npm start`
+
+### Chạy E2E
+
+Từ thư mục gốc:
+
+```bash
+npm run test:e2e
+```
+
+### Giả lập webhook PayOS
+
+```bash
+npm run fake:webhook -- <orderCode>
+```
+
+Mặc định script sẽ gửi webhook `PAID` đến Payment Service và dùng chữ ký mock hợp lệ từ `PAYOS_CHECKSUM_KEY` hoặc `PAYOS_SECRET`.
+
 ## ✨ Tính năng nổi bật
 
 ### 🎨 Trải nghiệm Người dùng (UX/UI)
