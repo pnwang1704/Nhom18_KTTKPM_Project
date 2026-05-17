@@ -5,6 +5,7 @@ const {
   verifyWebhookSignature,
 } = require("../integrations/payos.client");
 const { orderServiceUrl } = require("../config/env");
+const { internalServiceSecret } = require("../config/env");
 const { logPaymentEvent } = require("../utils/logger");
 
 function badRequest(message) {
@@ -225,40 +226,128 @@ class PaymentService {
       transactionId: updated.transactionId,
     });
 
-    await this.notifyOrderService(updated.orderId, "PAID");
+    // Enqueue delivery via Outbox for eventual delivery to Order Service
+    try {
+      const Outbox = require("../models/outbox.model");
+      const out = await Outbox.create({
+        type: "PAYMENT_SUCCESS",
+        payload: {
+          orderId: updated.orderId,
+          paymentId: String(updated._id),
+          status: "PAID",
+        },
+        status: "PENDING",
+        retryCount: 0,
+        nextRetryAt: new Date(),
+      });
+      logPaymentEvent("OUTBOX_CREATED", {
+        outboxId: out._id,
+        orderId: updated.orderId,
+      });
+    } catch (e) {
+      logPaymentEvent("OUTBOX_CREATE_ERROR", { message: e.message });
+      // Fallback: best-effort direct notify to avoid losing the event if outbox persist fails
+      try {
+        await this.notifyOrderService(updated.orderId, "PAID");
+      } catch (err) {
+        logPaymentEvent("NOTIFY_FALLBACK_FAILED", { message: err.message });
+      }
+    }
+
     return updated;
   }
 
   async notifyOrderService(orderId, status) {
     if (!orderServiceUrl) return;
+    const maxRetries = 5;
+    let attempt = 0;
+    const delay = (n) => new Promise((r) => setTimeout(r, n));
+    const headers = {
+      "x-internal-secret": require("../config/env").internalServiceSecret,
+    };
+
+    const url = `${orderServiceUrl.replace(/\/$/, "")}/internal/payment-success`;
     console.log("[PAYMENT_SERVICE] [CALL_ORDER_SERVICE] [START]", {
       orderId,
       status,
-      url: `${orderServiceUrl}/internal/payment-success`,
+      url,
     });
 
-    try {
-      await retryWithBackoff(
-        () =>
-          axios.post(
-            `${orderServiceUrl}/internal/payment-success`,
-            { orderId, status },
-            { timeout: 5000 },
-          ),
-        2,
-      );
-      console.log("[PAYMENT_SERVICE] [CALL_ORDER_SERVICE] [SUCCESS]", {
-        orderId,
-        status,
-      });
-    } catch (error) {
-      console.error("[PAYMENT_SERVICE] [CALL_ORDER_SERVICE] [FAILED]", {
-        orderId,
-        status,
-        message: error.message,
-      });
-      throw error;
+    while (attempt < maxRetries) {
+      try {
+        await axios.post(url, { orderId, status }, { timeout: 5000, headers });
+        console.log("[PAYMENT_SERVICE] [CALL_ORDER_SERVICE] [SUCCESS]", {
+          orderId,
+          status,
+          attempt: attempt + 1,
+        });
+        // reset callbackAttempts metadata if any
+        try {
+          await this.paymentModel.findOneAndUpdate(
+            { orderId },
+            { $set: { callbackAttempts: 0, callbackStatus: "DELIVERED" } },
+          );
+        } catch (e) {}
+        return;
+      } catch (error) {
+        attempt += 1;
+        const backoff = 500 * Math.pow(2, attempt - 1);
+        console.error("[PAYMENT_SERVICE] [CALL_ORDER_SERVICE] [RETRY]", {
+          orderId,
+          status,
+          attempt,
+          message: error.message,
+          nextDelayMs: backoff,
+        });
+        // record attempt
+        try {
+          await this.paymentModel.findOneAndUpdate(
+            { orderId },
+            {
+              $inc: { callbackAttempts: 1 },
+              $set: { callbackLastError: error.message },
+            },
+          );
+        } catch (e) {}
+        if (attempt >= maxRetries) {
+          console.error("[PAYMENT_SERVICE] [CALL_ORDER_SERVICE] [FAILED]", {
+            orderId,
+            status,
+            attempts: attempt,
+            message: error.message,
+          });
+          // mark event as FAILED for future queue processing
+          try {
+            await this.paymentModel.findOneAndUpdate(
+              { orderId },
+              {
+                $set: {
+                  callbackStatus: "FAILED",
+                  callbackLastError: error.message,
+                },
+              },
+            );
+          } catch (e) {}
+          return;
+        }
+        await delay(backoff);
+      }
     }
+  }
+
+  async getPayment(id) {
+    if (!id) return null;
+    const payment = await this.paymentModel
+      .findOne({
+        $or: [
+          { orderId: String(id) },
+          { paymentLinkId: String(id) },
+          { transactionId: String(id) },
+          { _id: id },
+        ],
+      })
+      .lean();
+    return payment;
   }
 }
 

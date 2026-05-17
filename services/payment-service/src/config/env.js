@@ -8,4 +8,9 @@ module.exports = {
   payosChecksumKey:
     process.env.PAYOS_CHECKSUM_KEY || process.env.PAYOS_SECRET || "",
   orderServiceUrl: process.env.ORDER_SERVICE_URL || "http://localhost:3010",
+  internalServiceSecret: process.env.INTERNAL_SERVICE_SECRET || "change-me",
+  maxRetries: Number(process.env.MAX_RETRIES || 5),
+  backoffBaseMs: Number(process.env.BACKOFF_BASE_MS || 500),
+  outboxPollInterval: Number(process.env.OUTBOX_POLL_INTERVAL || 5000),
+  adminSecret: process.env.ADMIN_SECRET || "change-me-admin",
 };

@@ -192,12 +192,9 @@ class OrderCheckoutService {
     return this.orderModel.find({}).sort({ createdAt: -1 }).lean();
   }
 
-  async handlePayOsWebhook() {
-    console.log("[Checkout] Webhook ignored");
-    return { ok: true };
-  }
+  // External payment webhook handling removed; Payment Service processes webhooks and notifies Order Service via internal callback.
 
-  async handlePaymentSuccess({ orderId, status }) {
+  async handlePaymentSuccess({ orderId, status, paymentId = null }) {
     if (!orderId || !String(orderId).trim()) {
       throw new BadRequestException("orderId is required");
     }
@@ -211,6 +208,18 @@ class OrderCheckoutService {
     const existing = await this.orderModel.findById(orderId).lean();
     if (!existing) {
       return null;
+    }
+    // Idempotency: if we've already processed this paymentId, ignore
+    if (
+      paymentId &&
+      existing.lastProcessedPaymentId &&
+      String(existing.lastProcessedPaymentId) === String(paymentId)
+    ) {
+      console.log("[ORDER_SERVICE] [CALLBACK] [IGNORED] duplicate paymentId", {
+        orderId: existing._id.toString(),
+        paymentId,
+      });
+      return existing;
     }
     if (existing.status === "SUCCESS") {
       console.log(
@@ -231,9 +240,11 @@ class OrderCheckoutService {
       return existing;
     }
 
+    const updateDoc = { $set: { status: nextStatus } };
+    if (paymentId) updateDoc.$set.lastProcessedPaymentId = String(paymentId);
     const updated = await this.orderModel.findOneAndUpdate(
       { _id: orderId },
-      { $set: { status: nextStatus } },
+      updateDoc,
       { new: true },
     );
 
