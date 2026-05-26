@@ -20,6 +20,7 @@ import EditProduct from '../pages/admin/EditProduct';
 import CategoryManagement from '../pages/admin/CategoryManagement';
 import OrderManagement from '../pages/admin/OrderManagement';
 import CustomerManagement from '../pages/admin/CustomerManagement';
+import AccountManagement from '../pages/admin/AccountManagement';
 import ReviewsManagement from '../pages/admin/ReviewsManagement';
 import Analytics from '../pages/admin/Analytics';
 import Settings from '../pages/admin/Settings';
@@ -81,6 +82,7 @@ function App() {
           <Route path="categories" element={<CategoryManagement />} />
           <Route path="orders" element={<OrderManagement />} />
           <Route path="customers" element={<CustomerManagement />} />
+          <Route path="accounts" element={<AccountManagement />} />
           <Route path="chat" element={<ChatDashboard />} />
           <Route path="reviews" element={<ReviewsManagement />} />
           <Route path="analytics" element={<Analytics />} />
