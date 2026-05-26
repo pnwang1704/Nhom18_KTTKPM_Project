@@ -100,6 +100,7 @@ services:
       JWT_SECRET: change_me_in_dev
       CART_SERVICE_URL: http://cart-service:3003
       PRODUCT_SERVICE_URL: http://product-service:3002
+      PAYMENT_SERVICE_URL: http://payment-service:5003
       PAYOS_CLIENT_ID: ${PAYOS_CLIENT_ID}
       PAYOS_API_KEY: ${PAYOS_API_KEY}
       PAYOS_CHECKSUM_KEY: ${PAYOS_CHECKSUM_KEY}
@@ -107,6 +108,27 @@ services:
       PAYOS_RETURN_URL: ${PAYOS_RETURN_URL}
     depends_on:
       - mongodb
+
+  payment-service:
+    build:
+      context: ../services/payment-service
+    container_name: payment-service
+    ports:
+      - "5003:5003"
+    environment:
+      PORT: 5003
+      NODE_ENV: development
+      MONGO_URI: mongodb://mongodb:27017/payment_service
+      ORDER_SERVICE_URL: http://order-service:3004
+      INTERNAL_SERVICE_SECRET: change-me
+      ADMIN_SECRET: change-me-admin
+      PAYOS_CLIENT_ID: ${PAYOS_CLIENT_ID}
+      PAYOS_API_KEY: ${PAYOS_API_KEY}
+      PAYOS_CHECKSUM_KEY: ${PAYOS_CHECKSUM_KEY}
+      PAYOS_API_URL: ${PAYOS_API_URL}
+    depends_on:
+      - mongodb
+      - order-service
 
   postgres:
     image: postgres:16-alpine

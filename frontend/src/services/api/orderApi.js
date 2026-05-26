@@ -1,15 +1,37 @@
 import { apiRequest } from "./client";
 
+function getCurrentUserId() {
+  try {
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser) return null;
+
+    const parsedUser = JSON.parse(storedUser);
+    return parsedUser?.userId || parsedUser?.id || null;
+  } catch {
+    return null;
+  }
+}
+
 export const orderApi = {
   checkout: async (items) => {
     if (!items || items.length === 0) {
       throw new Error("Cart is empty");
     }
 
+    const userId = getCurrentUserId();
+    if (!userId) {
+      throw new Error("userId is required");
+    }
+
+    const returnUrl =
+      typeof window !== "undefined" && window.location?.origin
+        ? `${window.location.origin}/payment/return`
+        : "http://localhost:5173/payment/return";
+
     try {
       const response = await apiRequest("/api/checkout", {
         method: "POST",
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({ userId, items, returnUrl }),
       });
       const result = await response.json();
       if (!response.ok) {
@@ -27,6 +49,23 @@ export const orderApi = {
       const result = await response.json();
       if (!response.ok) {
         throw new Error(result?.message || result?.error || "Get order failed");
+      }
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  },
+  confirmPaymentReturn: async (id, payload) => {
+    try {
+      const response = await apiRequest(`/api/orders/${id}/confirm-payment-return`, {
+        method: "POST",
+        body: JSON.stringify(payload || {}),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(
+          result?.message || result?.error || "Confirm payment failed",
+        );
       }
       return result;
     } catch (error) {
