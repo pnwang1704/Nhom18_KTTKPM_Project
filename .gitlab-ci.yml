@@ -65,12 +65,12 @@ cart:build:
       - services/cart-service/dist/
     expire_in: 7 days
 
-deploy:staging:
+deploy_staging:
   stage: deploy
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       when: manual
     - when: never
   script:
-    - echo "Add your staging deploy commands here"
-    - echo "Example: docker compose -f infra/docker-compose.yml up -d --build"
+    - "echo Add your staging deploy commands here"
+    - "echo Example: docker compose -f infra/docker-compose.yml up -d --build"
