@@ -25,7 +25,7 @@ variables:
   npm_config_fund: "false"
   npm_config_audit: "false"
 
-syntax:check:
+"syntax:check":
   stage: validate
   script:
     - node --check services/api-gateway/server.js
@@ -35,17 +35,17 @@ syntax:check:
     - node --check services/chat-service/server.js
     - node --check services/product-service/server.js
 
-cart:test:
+"cart:test":
   stage: test
   script:
     - npm run test --workspace cart-service
 
-order:test:
+"order:test":
   stage: test
   script:
     - npm run test --workspace order-service
 
-frontend:build:
+"frontend:build":
   stage: build
   script:
     - npm run build --workspace frontend
@@ -55,7 +55,7 @@ frontend:build:
       - frontend/dist/
     expire_in: 7 days
 
-cart:build:
+"cart:build":
   stage: build
   script:
     - npm run build --workspace cart-service
