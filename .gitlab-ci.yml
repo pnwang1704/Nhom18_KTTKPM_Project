@@ -36,11 +36,13 @@ variables:
     - node --check services/product-service/server.js
 
 "cart:test":
+  image: node:22
   stage: test
   script:
     - npm run test --workspace cart-service
 
 "order:test":
+  image: node:22
   stage: test
   script:
     - npm run test --workspace order-service
