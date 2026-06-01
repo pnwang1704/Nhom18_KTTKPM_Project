@@ -1,10 +1,22 @@
 const orderService = require("../services/order.service");
+const { orderCheckoutService } = require("../services/order.checkout.service");
 
 async function createOrder(req, res, next) {
   try {
     const userId = req.body && req.body.userId;
     const items = Array.isArray(req.body && req.body.items) ? req.body.items : [];
+    const metadata = req.body && req.body.metadata;
 
+    // Direct Cash on Delivery (COD) order flow
+    if (metadata && metadata.paymentMethod === "COD") {
+      const order = await orderCheckoutService.createOrder(userId, {
+        items,
+        metadata,
+      });
+      return res.status(201).json({ success: true, data: order });
+    }
+
+    // Normal bank transfer payment (PayOS) flow
     if (items.length > 0) {
       const checkout = await orderService.createOrderFromCart(
         userId,
@@ -13,12 +25,16 @@ async function createOrder(req, res, next) {
         {
           items,
           correlationId: req.correlationId,
+          metadata,
         },
       );
       return res.status(201).json({ success: true, data: checkout });
     }
 
-    const order = await orderCheckoutService.createOrder(userId);
+    // Fallback order creation from cart database
+    const order = await orderCheckoutService.createOrder(userId, {
+      metadata,
+    });
     res.status(201).json({ success: true, data: order });
   } catch (err) {
     next(err);
@@ -96,7 +112,10 @@ async function confirmPaymentReturn(req, res, next) {
   try {
     const { id } = req.params;
     const userId = req.user && req.user.userId;
-    const order = await orderService.getOrderById(id, userId);
+    const role = req.user && req.user.role;
+    
+    // Admins bypass the userId constraint to confirm payments for any user order
+    const order = await orderService.getOrderById(id, role === "admin" ? null : userId);
 
     const status = req.body?.status;
     const paymentId =

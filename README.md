@@ -58,6 +58,14 @@ Mặc định script sẽ gửi webhook `PAID` đến Payment Service và dùng 
 - **Chat Service**: Xử lý tin nhắn thời gian thực.
 - **Database**: Sử dụng kết hợp PostgreSQL (Dữ liệu giao dịch) và MongoDB (Dữ liệu sản phẩm).
 
+### 🤖 AI Shopping Assistant
+
+- **AI Agent Service**: Phân loại ý định bằng LLM cục bộ qua Ollama và gọi công cụ dữ liệu thật.
+- **Inventory Tool**: Kiểm tra tồn kho từ dữ liệu sản phẩm hiện tại.
+- **Product Tool**: Tìm kiếm, lọc và so sánh sản phẩm theo danh mục, thương hiệu và khoảng giá.
+- **FAQ Tool**: Tra cứu chính sách bảo hành, đổi trả và thanh toán từ kho tri thức nội bộ.
+- **Frontend Widget**: Floating AI button, lịch sử chat, typing indicator và thẻ sản phẩm trực quan.
+
 ---
 
 ## 🚀 Công nghệ sử dụng (Tech Stack)
@@ -210,6 +218,15 @@ EOF
 ---
 
 ### 4. Bước 3: Khởi Chạy Backend & Database với Docker Compose
+
+> **Lưu ý cho AI Assistant**: Trước khi test trợ lý mua sắm, hãy chạy Ollama local và tải model.
+
+```bash
+ollama pull qwen3:latest
+ollama serve
+```
+
+Nếu bạn muốn dùng Gemma3 thì đổi model trong `infra/.env.example` hoặc `infra/.env` sang `gemma3:latest`.
 
 Từ thư mục gốc của dự án, chạy lệnh:
 

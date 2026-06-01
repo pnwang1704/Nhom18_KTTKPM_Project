@@ -13,7 +13,7 @@ function getCurrentUserId() {
 }
 
 export const orderApi = {
-  checkout: async (items) => {
+  checkout: async (items, metadata = {}) => {
     if (!items || items.length === 0) {
       throw new Error("Cart is empty");
     }
@@ -31,11 +31,31 @@ export const orderApi = {
     try {
       const response = await apiRequest("/api/checkout", {
         method: "POST",
-        body: JSON.stringify({ userId, items, returnUrl }),
+        body: JSON.stringify({ userId, items, returnUrl, metadata }),
       });
       const result = await response.json();
       if (!response.ok) {
         throw new Error(result?.message || result?.error || "Checkout failed");
+      }
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  },
+  createDirectOrder: async (items, metadata = {}) => {
+    const userId = getCurrentUserId();
+    if (!userId) {
+      throw new Error("userId is required");
+    }
+
+    try {
+      const response = await apiRequest("/api/orders", {
+        method: "POST",
+        body: JSON.stringify({ userId, items, metadata }),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result?.message || result?.error || "Đặt hàng thất bại");
       }
       return result;
     } catch (error) {

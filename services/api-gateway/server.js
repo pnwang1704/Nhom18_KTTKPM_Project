@@ -11,6 +11,7 @@ const healthRoutes = require("./src/routes/health.routes");
 const authRoutes = require("./src/routes/auth.routes");
 const productRoutes = require("./src/routes/product.routes");
 const categoryRoutes = require("./src/routes/category.routes");
+const aiRoutes = require("./src/routes/ai.routes");
 const chatRoutes = require("./src/routes/chat.routes");
 const orderRoutes = require("./src/routes/order.routes");
 const paymentRoutes = require("./src/routes/payment.routes");
@@ -77,6 +78,7 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/ai", aiRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api", orderRoutes);
 app.use("/api", paymentRoutes);

@@ -10,6 +10,7 @@ services:
       NODE_ENV: development
       AUTH_SERVICE_URL: http://auth-service:3001
       PRODUCT_SERVICE_URL: ${PRODUCT_SERVICE_URL:-http://product-service:3002}
+      AI_AGENT_SERVICE_URL: ${AI_AGENT_SERVICE_URL:-http://ai-agent-service:3010}
       CART_SERVICE_URL: http://cart-service:3003
       ORDER_SERVICE_URL: http://order-service:3004
       CHAT_SERVICE_URL: http://chat-service:3005
@@ -71,6 +72,23 @@ services:
       JWT_SECRET: change_me_in_dev
     depends_on:
       - mongodb
+
+  ai-agent-service:
+    build:
+      context: ../services/ai-agent-service
+    container_name: ai-agent-service
+    ports:
+      - "3010:3010"
+    environment:
+      PORT: 3010
+      NODE_ENV: development
+      API_GATEWAY_URL: http://api-gateway:3000
+      OLLAMA_URL: ${OLLAMA_URL:-http://host.docker.internal:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:latest}
+      FAQ_PATH: /app/data/faq.json
+      AI_ASSISTANT_NAME: ELPPA Assistant
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   cart-service:
     build:

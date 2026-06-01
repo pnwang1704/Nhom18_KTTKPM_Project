@@ -876,18 +876,20 @@ class OrderService {
     let order = null;
     try {
       if (mongoose.Types.ObjectId.isValid(String(orderId))) {
-        order = await Order.findOne({ _id: orderId, userId });
+        const query = { _id: orderId };
+        if (userId) query.userId = userId;
+        order = await Order.findOne(query);
       } else {
         // fallback: match by paymentId, metadata.paymentId, metadata.orderCode, or idempotencyKey
-        order = await Order.findOne({
-          userId,
-          $or: [
-            { paymentId: String(orderId) },
-            { ["metadata.paymentId"]: String(orderId) },
-            { ["metadata.orderCode"]: String(orderId) },
-            { idempotencyKey: String(orderId) },
-          ],
-        });
+        const query = {};
+        if (userId) query.userId = userId;
+        query.$or = [
+          { paymentId: String(orderId) },
+          { ["metadata.paymentId"]: String(orderId) },
+          { ["metadata.orderCode"]: String(orderId) },
+          { idempotencyKey: String(orderId) },
+        ];
+        order = await Order.findOne(query);
       }
     } catch (err) {
       // in case of cast errors or others, fall through to not found
