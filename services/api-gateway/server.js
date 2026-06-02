@@ -38,7 +38,7 @@ app.use(
 // Strict limiter for authentication (login/register)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // 10 attempts per IP
+  max: 100, // 10 attempts per IP
   standardHeaders: true,
   legacyHeaders: false,
   message: {
